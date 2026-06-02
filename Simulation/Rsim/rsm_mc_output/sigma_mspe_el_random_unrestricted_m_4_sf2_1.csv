@@ -1,0 +1,3 @@
+"k","rsm_bagged","rsm_subset_avg","equal_weight","full_estimated","oracle_optimal","design","m","sigma_f2","require_positive_weights"
+2,1.63845420103424,1.78681209927968,1.63379936991665,1.47852424080449,1.43381510098535,"el_random_unrestricted",4,1,FALSE
+3,1.57178765822071,1.65101172092208,1.63379936991665,1.47852424080449,1.43381510098535,"el_random_unrestricted",4,1,FALSE

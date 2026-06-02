@@ -1,0 +1,3 @@
+"design_label","min_rsm_bagged_mspe","min_rsm_subset_avg_mspe","equal_weight_mspe","oracle_optimal_mspe","kstar_empirical_bagged","kstar_empirical_subset_avg"
+"positive weights",1.49382732931354,1.54734001391068,1.49157774140018,1.46682492155242,2.88888888888889,4
+"unrestricted weights",1.5076762202967,1.56149361494076,1.54078736628247,1.44212027934202,3.55555555555556,4
