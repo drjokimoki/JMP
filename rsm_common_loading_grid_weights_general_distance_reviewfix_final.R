@@ -63,6 +63,8 @@ make_scenario_id <- function(prefix, m, T_train, B_scale, H_target) {
 }
 
 RUN_EXPERIMENTS <- c(
+  "baseline",
+  "scaling_T_m",
   "joint_B_H_grid"
 )
 
