@@ -1,0 +1,52 @@
+Sigma type: toeplitz   T= 200 
+
+k*(RMSFE) ~ m^beta:
+
+Call:
+lm(formula = log(best_z_rmsfe) ~ log(m), data = sub[valid, ])
+
+Residuals:
+       1        2        3        4        5 
+ 0.11591 -0.13192 -0.03868  0.02235  0.03235 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept)  0.13247    0.29052   0.456  0.67939   
+log(m)       0.61122    0.07357   8.308  0.00365 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1063 on 3 degrees of freedom
+Multiple R-squared:  0.9583,	Adjusted R-squared:  0.9445 
+F-statistic: 69.03 on 1 and 3 DF,  p-value: 0.003654
+
+k*(L_bag) ~ m^beta:
+
+Call:
+lm(formula = log(best_z_L_bag) ~ log(m), data = sub[valid & sub$best_z_L_bag > 
+    0, ])
+
+Residuals:
+       1        2        3        4        5 
+ 0.09945 -0.04351 -0.10055 -0.07364  0.11824 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -0.79631    0.32075  -2.483 0.089061 .  
+log(m)       1.06210    0.08123  13.076 0.000966 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1173 on 3 degrees of freedom
+Multiple R-squared:  0.9828,	Adjusted R-squared:  0.977 
+F-statistic:   171 on 1 and 3 DF,  p-value: 0.000966
+
+
+Kan-Zhou prediction: k*_endo/k*_exo = ((T-2)/(T-m-2))^{1/(alpha+1)}
+Observed kz_factor by m:
+    m kz_factor best_z_rmsfe best_z_L_bag
+1  20    1.1124            8           12
+2  30    1.1786            8           16
+3  50    1.3378           12           26
+4  80    1.6780           17           44
+5 120    2.5385           22           82

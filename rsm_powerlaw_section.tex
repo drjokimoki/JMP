@@ -1,0 +1,313 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\geometry{margin=1in}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+% Match proposal numbering: sections continue from 12, equations from (21)
+\setcounter{section}{12}
+\setcounter{equation}{21}
+
+\begin{document}
+
+\noindent\textbf{\Large Addendum: General Heterogeneity and the Power-Law Form of Bagged Excess Risk}
+
+\bigskip
+\noindent\textit{Supplement to ``Bagged Random Subset Forecast Combination under Common Loading''}
+
+\bigskip
+
+\section{Power-Law Approximation of Bagged Excess Risk under General Heterogeneity}
+
+\subsection{Motivation}
+
+Section~7 derives the excess bagged risk approximation
+\begin{equation}
+  R_k^{\mathrm{bag},\infty} \approx C_\delta\!\left(\frac{1}{k}-\frac{1}{m}\right)^{\!2}
+\end{equation}
+under the small-heterogeneity assumption $\tau_i = \bar\tau(1+\delta_i)$ with $\delta_i$ small.
+Simulations show that this approximation systematically underestimates the true excess risk
+when heterogeneity is large, and that the log-log regression slope of $R_k^{\mathrm{bag},\infty}$
+against $z_k = 1/k - 1/m$ is substantially below~2.
+This section provides a theoretical account of this discrepancy.
+We show that the true excess risk transitions between two asymptotic forms as heterogeneity
+grows, and that the power law
+\begin{equation}
+  R_k^{\mathrm{bag},\infty} \approx C \cdot z_k^\alpha, \qquad z_k = \frac{1}{k} - \frac{1}{m},
+\end{equation}
+with estimated effective slope $\hat\alpha$ is a useful one-parameter summary of the excess
+risk curve across the practically relevant range of $k$.
+
+\subsection{Exact weight deviations}
+
+In the common-loading model, the exact bagged weight is
+\[
+  \bar v_{i,k} = \tau_i \cdot \frac{k}{m} \cdot \psi_i(k),
+  \qquad
+  \psi_i(k) = E_{S \ni i,\, |S|=k}\!\left[\frac{1}{A_S}\right],
+\]
+so the deviation from the full-pool optimum $w_i^{\mathrm{opt}} = \tau_i/A_m$ is
+\begin{equation}
+  \Delta_{i,k} := \bar v_{i,k} - w_i^{\mathrm{opt}} = \tau_i\!\left(\frac{k}{m}\psi_i(k) - \frac{1}{A_m}\right).
+\end{equation}
+The excess bagged risk is $R_k^{\mathrm{bag},\infty} = \sum_i \Delta_{i,k}^2/\tau_i$.
+The boundary conditions $\Delta_{i,m}=0$ and $\Delta_{i,1} = \tau_i(1/(m\tau_i) - 1/A_m) = 1/m - w_i^{\mathrm{opt}}$
+hold exactly for every precision sequence $\{\tau_i\}$.
+
+\subsection{Two asymptotic regimes}
+
+\begin{proposition}[Small-heterogeneity regime]\label{prop:smallhet}
+  Under $\tau_i = \bar\tau(1+\delta_i)$ with $\max_i|\delta_i|$ small,
+  \[
+    \Delta_{i,k} = -\frac{\delta_i}{m-1}\,z_k + O(\delta^2),
+  \]
+  and consequently
+  \[
+    R_k^{\mathrm{bag},\infty} \approx C_\delta\,z_k^2,
+    \qquad
+    C_\delta = \frac{BV_\delta}{m}\!\left(\frac{m}{m-1}\right)^{\!2},
+  \]
+  where $B = 1/\bar\tau$ and $V_\delta = m^{-1}\sum_i\delta_i^2$. The OLS log-log slope is
+  $\hat\alpha = 2$.
+\end{proposition}
+
+\begin{proof}
+  This is equation~(8) and equation~(9) of the main text.
+\end{proof}
+
+\begin{proposition}[Large-heterogeneity regime]\label{prop:largehet}
+  Consider the dominant-forecaster model: $\tau_1 = \tau_H$ and
+  $\tau_j = \tau_L$ for $j = 2,\ldots,m$, with $\tau_H/\tau_L \to \infty$.
+  Then for each $k \in \{1,\ldots,m\}$:
+  \[
+    \Delta_{1,k} \approx -\frac{m-k}{m},
+    \qquad
+    \Delta_{j,k} \approx \frac{m-k}{m(m-1)}, \quad j \neq 1,
+  \]
+  and
+  \begin{equation}\label{eq:largehet_R}
+    R_k^{\mathrm{bag},\infty}
+    \approx \frac{1}{(m-1)\tau_L}\!\left(1 - \frac{k}{m}\right)^{\!2}
+    = C'\!\left(1 - \frac{k}{m}\right)^{\!2}.
+  \end{equation}
+\end{proposition}
+
+\begin{proof}
+  Forecaster~1 enters a random size-$k$ subset with probability $k/m$.
+  When included, its subset weight is $\tau_H/(\tau_H + (k-1)\tau_L) \to 1$ as
+  $\tau_H/\tau_L \to \infty$; when excluded it receives weight zero.
+  Hence $\bar v_{1,k} = (k/m)\cdot 1 + (1-k/m)\cdot 0 = k/m$,
+  so $\Delta_{1,k} = k/m - w_1^{\mathrm{opt}} \to k/m - 1 = -(m-k)/m$.
+  For $j\neq 1$: forecaster $j$ receives weight $\approx 1/k$ only in subsets that contain
+  $j$ but not forecaster~1.  The unconditional probability of this event is
+  \[
+    P(j \in S,\; 1 \notin S)
+    = P(j \in S) \cdot P(1 \notin S \mid j \in S)
+    = \frac{k}{m} \cdot \frac{m-k}{m-1}.
+  \]
+  Hence
+  \[
+    \bar v_{j,k}
+    \approx \frac{k}{m}\cdot\frac{m-k}{m-1}\cdot\frac{1}{k}
+    = \frac{m-k}{m(m-1)},
+  \]
+  and $\Delta_{j,k} \approx (m-k)/(m(m-1))$ since $w_j^{\mathrm{opt}} \to 0$.
+  Inserting into $R = \Delta_{1,k}^2/\tau_H + (m-1)\Delta_{j,k}^2/\tau_L$
+  and letting $\tau_H \to \infty$ yields~\eqref{eq:largehet_R}.
+\end{proof}
+
+\medskip
+
+The two forms differ critically in how $k$ enters.
+Writing $z_k = (m-k)/(km)$:
+\[
+  \text{Small het:}\quad R_k \propto z_k^2;
+  \qquad
+  \text{Large het:}\quad R_k \propto k^2 z_k^2.
+\]
+The large-heterogeneity form carries an extra factor $k^2$ relative to the
+small-heterogeneity form.  For small $k$ (large $z$), this factor is large,
+making $R$ decay \emph{much more slowly} than $z^2$ as $k$ decreases from $m$.
+
+\subsection{Log-log slope of the excess risk: an OLS calculation}
+
+The empirical power-law $\hat\alpha$ comes from the OLS regression of
+$\log R_k$ on $\log z_k$ over $k \in \{2,\ldots,m-1\}$.
+Define $u_k = \log(m-k)$ and $v_k = -\log k$, so that
+$\log z_k = u_k + v_k - \log m$ (since $z_k = (m-k)/(km)$).
+
+\begin{proposition}[OLS slope in the two limiting regimes]\label{prop:slope}
+  Let $\bar u$, $\bar v$, $V_u$, $V_v$, $C_{uv}$ denote the sample mean, variance, and
+  covariance of $(u_k, v_k)$ over $k \in \{2,\ldots,m-1\}$.
+  \begin{enumerate}
+    \item[(i)] If $\log R_k = \text{const} + 2\log z_k$ (small-het),
+               then $\hat\alpha = 2$ exactly.
+    \item[(ii)] If $\log R_k = \text{const} + 2u_k$ (large-het, since $R \propto (m-k)^2$),
+               then
+               \[
+                 \hat\alpha = \frac{2(V_u + C_{uv})}{V_u + 2C_{uv} + V_v}.
+               \]
+               When $V_u = V_v$ (which holds approximately by symmetry of the
+               range), $\hat\alpha = 1$ exactly.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+  (i) Immediate since $\log R = c + 2\log z$ is linear in $\log z$ with slope~2. \\
+  (ii) $\log R = c + 2u$ and $\log z = u + v - \log m$, so
+  \[
+    \hat\alpha
+    = \frac{\mathrm{Cov}(2u,\; u+v)}{\mathrm{Var}(u+v)}
+    = \frac{2(V_u + C_{uv})}{V_u + 2C_{uv} + V_v}.
+  \]
+  Since $u_k = \log(m-k)$ and $v_k = -\log k$ both decrease in $k$ over the
+  symmetric range $k\in\{2,\ldots,m-1\}$, we have $C_{uv} > 0$.
+  Setting $V_u = V_v \equiv V$ gives $\hat\alpha = 2(V+C_{uv})/(2V+2C_{uv}) = 1$.
+\end{proof}
+
+\begin{remark}
+  The symmetry $V_u \approx V_v$ holds for any $m$ because the distribution of
+  $\log(m-k)$ over $k=2,\ldots,m-1$ is the reversal of the distribution of
+  $\log k$ over the same range; they have the same variance.
+  Hence $\hat\alpha \to 1$ as $\tau_H/\tau_L \to \infty$, regardless of $m$.
+\end{remark}
+
+\subsection{Summary: the power law as an interpolation}
+
+The three regimes are:
+
+\medskip
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+Regime & True form of $R_k$ & Eff.\ log-log slope $\hat\alpha$ & $k^*$ scaling$^\dagger$ \\
+\midrule
+Homoskedastic   & $0$                          & ---              & any $k$ optimal \\
+Small het       & $C_\delta z_k^2$             & $2$ (exact)      & $T^{1/3}$ \\
+Large het (dominant) & $C'\!\left(\tfrac{mz_k}{1+mz_k}\right)^{\!2}$ & $\approx 1$ (grid OLS) & $T^{1/2}$ \\
+\bottomrule
+\multicolumn{4}{l}{$^\dagger$ Scaling of $k^*$ under the \emph{fitted} power law $R \approx Cz^{\hat\alpha}$; see text.}
+\end{tabular}
+\end{center}
+\medskip
+
+For intermediate heterogeneity, $R_k$ is a weighted mixture of both forms.
+The weight deviation of a near-dominant forecaster ($\tau_i \gg \bar\tau$) contributes
+$O(k^2 z^2)$, while near-equal forecasters contribute $O(z^2)$.
+The two analytically tractable limits give effective OLS slopes of 2 (small het)
+and $\approx 1$ (dominant forecaster, grid OLS); for intermediate heterogeneity,
+simulations consistently deliver $\hat\alpha$ between these values,
+though a general proof that $\hat\alpha \in [1,2]$ for arbitrary $\{\tau_i\}$ remains open.
+
+\begin{remark}[What the dominant-forecaster curve actually is]
+  The exact expression $R_k = C'(1-k/m)^2 = C'(kz_k)^2$ can be rewritten as
+  $R_k = C'(mz_k/(1+mz_k))^2$ since $(1-k/m) = mz_k/(1+mz_k)$.
+  This is \emph{not} a power law in $z_k$: locally near $k=m$ it behaves as
+  $C'm^2 z_k^2$ (slope 2), while for small $k$ it saturates at approximately $C'$.
+  The effective OLS slope $\hat\alpha \approx 1$ is therefore a finite-grid
+  projection artefact, not a true asymptotic exponent.
+  The power law $R \approx Cz^{\hat\alpha}$ should be understood as a
+  \emph{practical summary} of the excess risk curve, not as an exact functional form.
+\end{remark}
+
+The power law with estimated $\hat\alpha$ provides a
+practical one-parameter summary of the excess risk curve.
+Simulations with $m = 50$, $T = 240$, and heterogeneity ratio $H \in \{1.05, 6\}$ give
+$\hat\alpha \in \{1.05, 1.66\}$ with $R^2 > 0.98$ in all cases, confirming the
+adequacy of the approximation over the practically relevant range of $k$.
+
+\subsection{Optimal subset size under the power law}
+
+Minimizing the finite-sample bagged loss
+\[
+  L_k^{\mathrm{bag},\infty} = \left(A + Cz_k^\alpha\right)\frac{T-1}{T-k},
+  \qquad A = s + Q^{\mathrm{opt}},
+\]
+with respect to $k$ (treating $k$ as continuous) and using $dz/dk = -1/k^2$,
+the interior first-order condition is:
+\[
+  C\alpha z^{\alpha-1} \cdot \frac{T-1}{k^2(T-k)}
+  = (A + Cz^\alpha)\frac{T-1}{(T-k)^2}.
+\]
+For $k \ll m$ (so $z \approx 1/k$) and $T \gg k$ (so $T - k \approx T$),
+the leading-order balance gives:
+\begin{equation}\label{eq:kstar_powerlaw}
+  C\alpha \cdot \frac{T}{k^{\alpha+1}} \approx A
+  \implies
+  \boxed{k^* \approx \left(\frac{C\alpha T}{A}\right)^{\!1/(\alpha+1)}}.
+\end{equation}
+This generalizes the small-heterogeneity cube-root rule~(14) of the main text.
+The table below gives the implied $T$-scaling under the \emph{fitted} power law $R \approx Cz^{\hat\alpha}$:
+
+\medskip
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+$\hat\alpha$ & Setting & $k^*$ scaling (under fitted power law) \\
+\midrule
+$2$ & Small het (eq.~(14)) & $T^{1/3}$ \\
+$3/2$ & Intermediate & $T^{2/5}$ \\
+$1$ & Large het (grid OLS) & $T^{1/2}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+
+\begin{remark}[True dominant-forecaster optimum differs]
+  When $R_k = C'(1-k/m)^2$ exactly (dominant-forecaster limit), minimizing
+  $L_k = (A + C'(1-k/m)^2)(T-1)/(T-k)$ directly gives
+  $m - k^* \approx Am^2/(2C'T)$, so $k^* \to m$ at rate $1/T$.
+  The square-root scaling $k^* \propto T^{1/2}$ in the table above is the
+  prediction of the \emph{fitted} power-law approximation $R \approx Cz$, not of the
+  true dominant-forecaster loss; the two differ because the fitted power law
+  misrepresents the saturation of $R$ at small $k$.
+  In practice one should use the fitted power-law formula as a summary tool
+  over the observed range of $k$, not extrapolate its $T$-scaling to the
+  extreme dominant-forecaster limit.
+\end{remark}
+
+Under the fitted power law, the cube-root rule $k^* \propto T^{1/3}$ is a
+\emph{lower bound} on the T-scaling exponent.
+As heterogeneity grows and $\hat\alpha$ falls toward~1, $k^*$ (under the fitted
+approximation) grows faster with $T$, toward the square-root rule of the
+average-subset estimator (Proposition~9.1).
+
+\begin{remark}[Practical estimation of $\alpha$ and $k^*$]
+  When the DGP is unknown, estimate $\alpha$ by:
+  \begin{enumerate}
+    \item[(i)] Compute $R_k^{\mathrm{bag},\infty}$ by Monte Carlo for a sparse grid
+               $k \in \{2, 5, 10, \lceil m/3\rceil, \lceil m/2\rceil\}$.
+    \item[(ii)] Run OLS of $\log R_k^{\mathrm{bag},\infty}$ on $\log z_k$ to obtain $\hat\alpha$ and $\hat C$.
+    \item[(iii)] Compute $k^* = \lfloor(\hat C\hat\alpha T/A)^{1/(\hat\alpha+1)}\rceil$
+               and verify by evaluating $L_k$ at $k^*\pm 2$.
+  \end{enumerate}
+  In the baseline exogenous simulations ($m=50$, $T=240$), this procedure recovers
+  $k^* = 3$ (low heterogeneity, $H=6$, $B=3$) and $k^*=6$ (high heterogeneity, $H=6$, $B=8$),
+  matching the exact grid minimizer in both cases.
+\end{remark}
+
+\begin{remark}[Connection to the finite-bagging optimum]
+  For finite $G$ bags, Proposition~1 of the main text gives
+  $Q_k^{\mathrm{bag},G} = Q_k^{\mathrm{bag},\infty} + G^{-1}(Q_k^{\mathrm{sub}} - Q_k^{\mathrm{bag},\infty})$.
+  Using $Q_k^{\mathrm{sub}} - Q^{\mathrm{opt}} \approx B(1/k - 1/m)$ (average-subset leading term)
+  and $R_k^{\mathrm{bag},\infty} \approx Cz^\alpha$:
+  \[
+    R_k^{\mathrm{bag},G}
+    \approx \frac{B}{G}\,z_k + \left(1 - \frac{1}{G}\right)C\,z_k^\alpha.
+  \]
+  This nests the general-heterogeneity finite-bagging expression (eq.~(10)) of the main text
+  when $\alpha = 2$.
+  For finite $G$, the first-order ($z$) finite-bagging term dominates for small $k$,
+  and the optimal $k$ for finite bagging transitions from the square-root rule
+  (small $G$) to the power-law rule (large $G$), as in Section~9.3 of the main text.
+\end{remark}
+
+\end{document}

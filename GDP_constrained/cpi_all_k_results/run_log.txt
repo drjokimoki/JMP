@@ -1,0 +1,32 @@
+Warning messages:
+1: package 'glmnet' was built under R version 4.3.3 
+2: package 'ranger' was built under R version 4.3.3 
+CPI all-k analysis started.
+Output directory: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/GDP_constrained/cpi_all_k_results 
+Running 102 vintages for CPI (k_grid: 2 to 55 | B_allk = 200 )...
+Error in `map2()`:
+i In index: 1.
+Caused by error in `x_in[cc]`:
+! Can't subset columns with `cc`.
+x Logical subscript `cc` must be size 1 or 1, not 40.
+Backtrace:
+     x
+  1. +-purrr::map2(...)
+  2. | \-purrr:::map2_("list", .x, .y, .f, ..., .progress = .progress)
+  3. |   +-purrr:::with_indexed_errors(...)
+  4. |   | \-base::withCallingHandlers(...)
+  5. |   +-purrr:::call_with_cleanup(...)
+  6. |   \-global .f(.x[[i]], .y[[i]], ...)
+  7. |     \-global run_forecast_allk_cpi(...)
+  8. |       \-global univariate_forecasts_split(...)
+  9. |         +-x_in[cc]
+ 10. |         \-tibble:::`[.tbl_df`(x_in, cc)
+ 11. |           \-tibble:::vectbl_as_col_location(...)
+ 12. |             +-tibble:::subclass_col_index_errors(...)
+ 13. |             | \-base::withCallingHandlers(...)
+ 14. |             \-vctrs::vec_as_location(j, n, names, missing = "error", call = call)
+ 15. \-vctrs (local) `<fn>`()
+ 16.   \-vctrs:::stop_indicator_size(...)
+ 17.     \-rlang::cnd_signal(...)
+There were 50 or more warnings (use warnings() to see the first 50)
+Execution halted

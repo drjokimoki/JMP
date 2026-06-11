@@ -1,0 +1,236 @@
+Clean common-loading RSM script started.
+Output directory: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/RSM_exogenous_results
+Run profile: paper
+Experiments: baseline, scaling_T_m, joint_B_H_grid
+
+Running baseline common-loading experiment...
+  baseline combo 1 / 4: B=3, H=1.05
+    Actual B_scale = 3
+    Actual H       = 1.0355
+    Actual V_delta = 0.0346
+    baseline_m50_T240_B3_H1p05 replication 100 / 500
+    baseline_m50_T240_B3_H1p05 replication 200 / 500
+    baseline_m50_T240_B3_H1p05 replication 300 / 500
+    baseline_m50_T240_B3_H1p05 replication 400 / 500
+    baseline_m50_T240_B3_H1p05 replication 500 / 500
+  baseline combo 2 / 4: B=8, H=1.05
+    Actual B_scale = 8
+    Actual H       = 1.0407
+    Actual V_delta = 0.0412
+    baseline_m50_T240_B8_H1p05 replication 100 / 500
+    baseline_m50_T240_B8_H1p05 replication 200 / 500
+    baseline_m50_T240_B8_H1p05 replication 300 / 500
+    baseline_m50_T240_B8_H1p05 replication 400 / 500
+    baseline_m50_T240_B8_H1p05 replication 500 / 500
+  baseline combo 3 / 4: B=3, H=6
+    Actual B_scale = 3
+    Actual H       = 2.9514
+    Actual V_delta = 1.7027
+    baseline_m50_T240_B3_H6 replication 100 / 500
+    baseline_m50_T240_B3_H6 replication 200 / 500
+    baseline_m50_T240_B3_H6 replication 300 / 500
+    baseline_m50_T240_B3_H6 replication 400 / 500
+    baseline_m50_T240_B3_H6 replication 500 / 500
+  baseline combo 4 / 4: B=8, H=6
+    Actual B_scale = 8
+    Actual H       = 3.8179
+    Actual V_delta = 3.1367
+    baseline_m50_T240_B8_H6 replication 100 / 500
+    baseline_m50_T240_B8_H6 replication 200 / 500
+    baseline_m50_T240_B8_H6 replication 300 / 500
+    baseline_m50_T240_B8_H6 replication 400 / 500
+    baseline_m50_T240_B8_H6 replication 500 / 500
+                 scenario_id B_target H_target  m T_train s q B_scale        H
+1 baseline_m50_T240_B3_H1p05        3     1.05 50     240 1 1       3 1.035479
+2 baseline_m50_T240_B8_H1p05        8     1.05 50     240 1 1       8 1.040716
+3    baseline_m50_T240_B3_H6        3     6.00 50     240 1 1       3 2.951351
+4    baseline_m50_T240_B8_H6        8     6.00 50     240 1 1       8 3.817859
+     V_delta     C_delta    Q_ave Q_opt  L_equal L_oracle_optimal
+1 0.03456963 0.002159702 1.062129  1.06 2.062129             2.06
+2 0.04123697 0.006869966 1.166515  1.16 2.166515             2.16
+3 1.70267724 0.106373006 1.177081  1.06 2.177081             2.06
+4 3.13668722 0.522563468 1.610858  1.16 2.610858             2.16
+  L_full_estimated_theory kstar_subset_sqrt_cont kstar_subset_sqrt_int
+1                2.591263               17.53287                    18
+2                2.717053               27.24100                    27
+3                2.591263               17.53287                    18
+4                2.717053               27.24100                    27
+  kstar_bag_cube_local_cont kstar_bag_cube_local_int kstar_bag_inf_grid
+1                 0.7954068                        1                  1
+2                 1.1514560                        1                  1
+3                 2.9156484                        3                  3
+4                 4.8787531                        5                  5
+  kstar_bag_G_grid kstar_subset_grid n_rep G_bag N_subsets_pop
+1                1                18   500   800          2500
+2                2                27   500   800          2500
+3                3                18   500   800          2500
+4                5                27   500   800          2500
+  kstar_empirical_bagged kstar_empirical_subset_avg min_bagged_mspe
+1                      3                         17        2.070242
+2                      3                         28        2.132961
+3                      6                         19        2.047102
+4                      9                         30        2.196729
+  min_subset_avg_mspe equal_weight_mspe oracle_optimal_mspe full_estimated_mspe
+1            2.342276          2.070685            2.068293            2.610947
+2            2.541236          2.133954            2.128438            2.677113
+3            2.315784          2.150882            2.037915            2.550991
+4            2.597551          2.617638            2.164438            2.717411
+  bagged_gain_vs_equal bagged_gap_vs_oracle min_weight_R_mc
+1         0.0004432222          0.001948875    6.870661e-29
+2         0.0009925432          0.004522948    1.503184e-28
+3         0.1037790265          0.009187813    9.719684e-29
+4         0.4209094031          0.032290593    1.849733e-28
+  max_abs_weight_identity_gap mean_weight_R_ratio mean_smallhet_rel_error
+1                8.881784e-16          105.033961               0.9143325
+2                1.554312e-15           90.018551               0.9018058
+3                6.661338e-16            5.578659               0.7223757
+4                1.110223e-15            7.185657               0.7830693
+  median_weight_corr_with_approx
+1                      0.1560797
+2                      0.2461704
+3                      0.7989122
+4                      0.8438889
+
+Running scaling experiment over T and m...
+  combo 1 / 4: m=50, T=80
+    scaling m=50 T=80 replication 100 / 500
+    scaling m=50 T=80 replication 200 / 500
+    scaling m=50 T=80 replication 300 / 500
+    scaling m=50 T=80 replication 400 / 500
+    scaling m=50 T=80 replication 500 / 500
+  combo 2 / 4: m=50, T=240
+    scaling m=50 T=240 replication 100 / 500
+    scaling m=50 T=240 replication 200 / 500
+    scaling m=50 T=240 replication 300 / 500
+    scaling m=50 T=240 replication 400 / 500
+    scaling m=50 T=240 replication 500 / 500
+  combo 3 / 4: m=50, T=640
+    scaling m=50 T=640 replication 100 / 500
+    scaling m=50 T=640 replication 200 / 500
+    scaling m=50 T=640 replication 300 / 500
+    scaling m=50 T=640 replication 400 / 500
+    scaling m=50 T=640 replication 500 / 500
+  combo 4 / 4: m=50, T=1000
+    scaling m=50 T=1000 replication 100 / 500
+    scaling m=50 T=1000 replication 200 / 500
+    scaling m=50 T=1000 replication 300 / 500
+    scaling m=50 T=1000 replication 400 / 500
+    scaling m=50 T=1000 replication 500 / 500
+   m T_train s q B_scale        H    V_delta     C_delta    Q_ave Q_opt
+1 50      80 1 1       3 1.040944 0.03737788 0.002335145 1.062457  1.06
+2 50     240 1 1       3 1.040944 0.03737788 0.002335145 1.062457  1.06
+3 50     640 1 1       3 1.040944 0.03737788 0.002335145 1.062457  1.06
+4 50    1000 1 1       3 1.040944 0.03737788 0.002335145 1.062457  1.06
+   L_equal L_oracle_optimal L_full_estimated_theory kstar_subset_sqrt_cont
+1 2.062457             2.06                5.424667               9.556672
+2 2.062457             2.06                2.591263              17.532866
+3 2.062457             2.06                2.231085              29.520155
+4 2.062457             2.06                2.166253              37.258870
+  kstar_subset_sqrt_int kstar_bag_cube_local_cont kstar_bag_cube_local_int
+1                    10                 0.5660510                        1
+2                    18                 0.8163867                        1
+3                    30                 1.1321019                        1
+4                    37                 1.3136879                        1
+  kstar_bag_inf_grid kstar_bag_G_grid kstar_subset_grid n_rep G_bag
+1                  1                1                10   500   800
+2                  1                1                18   500   800
+3                  1                2                30   500   800
+4                  1                2                37   500   800
+  kstar_empirical_bagged kstar_empirical_subset_avg min_bagged_mspe
+1                      2                         10        2.058480
+2                      2                         17        2.047907
+3                      4                         29        2.064444
+4                      3                         36        2.059633
+  equal_weight_mspe oracle_optimal_mspe full_estimated_mspe
+1          2.057277            2.054873            5.400119
+2          2.046993            2.045653            2.570367
+3          2.064323            2.063198            2.245216
+4          2.060811            2.059033            2.170575
+
+Running joint B_scale x H grid experiment...
+  joint grid combo 1 / 4: B=3, H=1.05
+    joint B=3 H=1.05 replication 100 / 500
+    joint B=3 H=1.05 replication 200 / 500
+    joint B=3 H=1.05 replication 300 / 500
+    joint B=3 H=1.05 replication 400 / 500
+    joint B=3 H=1.05 replication 500 / 500
+  joint grid combo 2 / 4: B=8, H=1.05
+    joint B=8 H=1.05 replication 100 / 500
+    joint B=8 H=1.05 replication 200 / 500
+    joint B=8 H=1.05 replication 300 / 500
+    joint B=8 H=1.05 replication 400 / 500
+    joint B=8 H=1.05 replication 500 / 500
+  joint grid combo 3 / 4: B=3, H=6
+    joint B=3 H=6 replication 100 / 500
+    joint B=3 H=6 replication 200 / 500
+    joint B=3 H=6 replication 300 / 500
+    joint B=3 H=6 replication 400 / 500
+    joint B=3 H=6 replication 500 / 500
+  joint grid combo 4 / 4: B=8, H=6
+    joint B=8 H=6 replication 100 / 500
+    joint B=8 H=6 replication 200 / 500
+    joint B=8 H=6 replication 300 / 500
+    joint B=8 H=6 replication 400 / 500
+    joint B=8 H=6 replication 500 / 500
+  B_target H_target  m T_train s q B_scale        H    V_delta     C_delta
+1        3     1.05 50     240 1 1       3 1.046938 0.04652415 0.002906548
+2        8     1.05 50     240 1 1       8 1.041214 0.04475515 0.007456085
+3        3     6.00 50     240 1 1       3 6.224929 1.61084754 0.100636040
+4        8     6.00 50     240 1 1       8 3.509291 1.84784459 0.307845830
+     Q_ave Q_opt  L_equal L_oracle_optimal L_full_estimated_theory
+1 1.062816  1.06 2.062816             2.06                2.591263
+2 1.166594  1.16 2.166594             2.16                2.717053
+3 1.373496  1.06 2.373496             2.06                2.591263
+4 1.561487  1.16 2.561487             2.16                2.717053
+  kstar_subset_sqrt_cont kstar_subset_sqrt_int kstar_bag_cube_local_cont
+1               17.53287                    18                 0.8781806
+2               27.24100                    27                 1.1833125
+3               17.53287                    18                 2.8622607
+4               27.24100                    27                 4.0898457
+  kstar_bag_cube_local_int kstar_bag_inf_grid kstar_bag_G_grid
+1                        1                  1                1
+2                        1                  1                2
+3                        3                  3                3
+4                        4                  4                4
+  kstar_subset_grid n_rep G_bag N_subsets_pop_joint kstar_empirical_bagged
+1                18   500   800                2500                      3
+2                27   500   800                2500                      3
+3                18   500   800                2500                      6
+4                27   500   800                2500                      8
+  kstar_empirical_subset_avg min_bagged_mspe min_subset_avg_mspe
+1                         18        2.055171            2.323668
+2                         27        2.173420            2.585068
+3                         19        2.069728            2.340784
+4                         28        2.175190            2.582828
+  equal_weight_mspe oracle_optimal_mspe full_estimated_mspe
+1          2.056459            2.053398            2.578843
+2          2.174760            2.168945            2.726471
+3          2.371365            2.062509            2.582205
+4          2.555586            2.157005            2.712946
+  bagged_gain_vs_equal bagged_gap_vs_oracle R_weight_at_empirical_bagged_k
+1          0.001287583          0.001773550                   0.0008987583
+2          0.001339363          0.004475245                   0.0021314856
+3          0.301637348          0.007218801                   0.0051306155
+4          0.380395490          0.018185246                   0.0097373037
+  R_smallhet_at_empirical_bagged_k R_ratio_at_empirical_bagged_k
+1                     0.0002853584                      3.149577
+2                     0.0007320218                      2.911779
+3                     0.0021647930                      2.370026
+4                     0.0033940003                      2.868976
+  R_smallhet_rel_error_at_empirical_bagged_k max_abs_weight_identity_gap
+1                                  0.6824970                4.440892e-16
+2                                  0.6565673                1.110223e-15
+3                                  0.5780637                2.220446e-16
+4                                  0.6514435                3.330669e-15
+  mean_weight_R_ratio mean_smallhet_rel_error median_weight_corr_with_approx
+1           77.129176               0.8998124                      0.2801760
+2           84.608468               0.9001972                      0.3065415
+3            5.073356               0.7024063                      0.7510840
+4            5.155283               0.7315248                      0.7743157
+  max_weight_rmse_approx_error
+1                  0.002979396
+2                  0.003372358
+3                  0.008694103
+4                  0.009849584
+
+Done. CSV files and PNG figures saved in: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/RSM_exogenous_results

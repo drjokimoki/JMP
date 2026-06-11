@@ -1,0 +1,137 @@
+SPF RSM Analysis — 2026-06-04 06:39:47 
+
+SPF RGDP: rows = 9248   years: 1968 2026 
+SPF CPI:  rows = 9248   years: 1968 2026 
+
+Usable observations:
+  RGDP h=1: 8720 forecaster-rounds, 229 survey rounds
+  RGDP h=4: 8571 forecaster-rounds, 226 survey rounds
+  CPI  h=1: 6173 forecaster-rounds, 179 survey rounds
+  CPI  h=4: 6053 forecaster-rounds, 176 survey rounds
+
+
+=== RGDP_h1 ===
+  OOS rounds: 164  |  N range: 9-53  |  median N: 36
+  k_max at >=80% coverage: 30
+    round 20 / 164
+    round 40 / 164
+    round 60 / 164
+    round 80 / 164
+    round 100 / 164
+    round 120 / 164
+    round 140 / 164
+    round 160 / 164
+  Median N = 36  =>  k=sqrt(N) ~ 6
+  k*(RMSFE) full = 3  |  k*(RMSFE) ex-COVID = 14
+
+  === Full sample ===
+  Mean                    MAFE=2.4451  RMSFE=6.4048
+  RSM(k*)                 MAFE=2.4341  RMSFE=6.3922   (k*=3)
+  RSM(sqrt(N))            MAFE=2.4439  RMSFE=6.4115   (k=sqrt(N)~6)
+
+  === Excluding COVID-19 ===
+  Mean                    MAFE=1.8539  RMSFE=2.5725
+  RSM(k*_nc)              MAFE=1.8347  RMSFE=2.5554   (k*=14)
+
+  Saved figure: fig_rmsfe_by_k_RGDP_h1.png
+
+=== RGDP_h4 ===
+  OOS rounds: 161  |  N range: 9-53  |  median N: 36
+  k_max at >=80% coverage: 30
+    round 20 / 161
+    round 40 / 161
+    round 60 / 161
+    round 80 / 161
+    round 100 / 161
+    round 120 / 161
+    round 140 / 161
+    round 160 / 161
+  Median N = 36  =>  k=sqrt(N) ~ 6
+  k*(RMSFE) full = 13  |  k*(RMSFE) ex-COVID = 13
+
+  === Full sample ===
+  Mean                    MAFE=1.3908  RMSFE=2.2083
+  RSM(k*)                 MAFE=1.3810  RMSFE=2.2049   (k*=13)
+  RSM(sqrt(N))            MAFE=1.3912  RMSFE=2.2087   (k=sqrt(N)~6)
+
+  === Excluding COVID-19 ===
+  Mean                    MAFE=1.3280  RMSFE=2.0754
+  RSM(k*_nc)              MAFE=1.3189  RMSFE=2.0709   (k*=13)
+
+  Saved figure: fig_rmsfe_by_k_RGDP_h4.png
+
+=== CPI_h1 ===
+  OOS rounds: 165  |  N range: 9-53  |  median N: 35
+  k_max at >=80% coverage: 30
+    round 20 / 165
+    round 40 / 165
+    round 60 / 165
+    round 80 / 165
+    round 100 / 165
+    round 120 / 165
+    round 140 / 165
+    round 160 / 165
+  Median N = 35  =>  k=sqrt(N) ~ 6
+  k*(RMSFE) full = 10  |  k*(RMSFE) ex-COVID = 10
+
+  === Full sample ===
+  Mean                    MAFE=0.6819  RMSFE=0.9738
+  RSM(k*)                 MAFE=0.6763  RMSFE=0.9693   (k*=10)
+  RSM(sqrt(N))            MAFE=0.6809  RMSFE=0.9722   (k=sqrt(N)~6)
+
+  === Excluding COVID-19 ===
+  Mean                    MAFE=0.6589  RMSFE=0.9304
+  RSM(k*_nc)              MAFE=0.6530  RMSFE=0.9254   (k*=10)
+
+  Saved figure: fig_rmsfe_by_k_CPI_h1.png
+
+=== CPI_h4 ===
+  OOS rounds: 162  |  N range: 9-53  |  median N: 35
+  k_max at >=80% coverage: 29
+    round 20 / 162
+    round 40 / 162
+    round 60 / 162
+    round 80 / 162
+    round 100 / 162
+    round 120 / 162
+    round 140 / 162
+    round 160 / 162
+  Median N = 35  =>  k=sqrt(N) ~ 6
+  k*(RMSFE) full = 3  |  k*(RMSFE) ex-COVID = 3
+
+  === Full sample ===
+  Mean                    MAFE=0.9875  RMSFE=1.4711
+  RSM(k*)                 MAFE=0.9874  RMSFE=1.4701   (k*=3)
+  RSM(sqrt(N))            MAFE=0.9877  RMSFE=1.4708   (k=sqrt(N)~6)
+
+  === Excluding COVID-19 ===
+  Mean                    MAFE=0.9849  RMSFE=1.4733
+  RSM(k*_nc)              MAFE=0.9848  RMSFE=1.4722   (k*=3)
+
+  Saved figure: fig_rmsfe_by_k_CPI_h4.png
+null device 
+          1 
+
+Saved: fig_spf_combined.png
+
+
+=== MASTER TABLE (SPF RSM vs Mean) ===
+Series                          MAFE_f   RMSFE_f   MAFE_nc  RMSFE_nc
+Mean                            2.4451    6.4048    1.8539    2.5725
+RSM(k*=3)                       2.4341    6.3922    1.8347    2.5554
+RSM(k=sqrt(N)~6)                2.4439    6.4115                    
+
+Mean                            1.3908    2.2083    1.3280    2.0754
+RSM(k*=13)                      1.3810    2.2049    1.3189    2.0709
+RSM(k=sqrt(N)~6)                1.3912    2.2087                    
+
+Mean                            0.6819    0.9738    0.6589    0.9304
+RSM(k*=10)                      0.6763    0.9693    0.6530    0.9254
+RSM(k=sqrt(N)~6)                0.6809    0.9722                    
+
+Mean                            0.9875    1.4711    0.9849    1.4733
+RSM(k*=3)                       0.9874    1.4701    0.9848    1.4722
+RSM(k=sqrt(N)~6)                0.9877    1.4708                    
+
+
+Done: 2026-06-04 06:42:28 

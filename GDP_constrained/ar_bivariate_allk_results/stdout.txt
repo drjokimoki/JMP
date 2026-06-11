@@ -1,0 +1,159 @@
+Warning messages:
+1: package 'glmnet' was built under R version 4.3.3 
+2: package 'ranger' was built under R version 4.3.3 
+GDP AR-bivariate all-k analysis started.
+  Individual forecasts: AR(P)+X bivariate, P chosen by AIC (p_max = 4 )
+  Output directory: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/GDP_constrained/ar_bivariate_allk_results 
+
+Running 102 vintages (AR+X individual forecasts)...
+k_grid: 2 to 55 | B_allk = 200 
+
+GDP AR-bivariate all-k | started: 2026-06-04 14:49:48.605261 
+p_max = 4 | B_main = 1000 | B_allk = 200 
+
+  Vintage 1999-09 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 83 | RS_AR = 1.074 
+  Vintage 1999-12 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 84 | RS_AR = 1.046 
+  Vintage 2000-03 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 85 | RS_AR = 1.236 
+  Vintage 2000-06 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 86 | RS_AR = 0.725 
+  Vintage 2000-09 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 87 | RS_AR = 0.489 
+  Vintage 2000-12 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 88 | RS_AR = 0.459 
+  Vintage 2001-03 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 89 | RS_AR = 0.425 
+  Vintage 2001-06 | p*_mode ~ AIC-sel | k_main = 6 | T_est = 34 | RS_AR = 0.451 
+  Vintage 2001-09 | p*_mode ~ AIC-sel | k_main = 6 | T_est = 35 | RS_AR = 0.583 
+  Vintage 2001-12 | p*_mode ~ AIC-sel | k_main = 6 | T_est = 36 | RS_AR = 0.237 
+  Vintage 2002-03 | p*_mode ~ AIC-sel | k_main = 6 | T_est = 37 | RS_AR = 0.761 
+  Vintage 2002-06 | p*_mode ~ AIC-sel | k_main = 6 | T_est = 38 | RS_AR = 0.718 
+  Vintage 2002-09 | p*_mode ~ AIC-sel | k_main = 6 | T_est = 39 | RS_AR = 0.765 
+  Vintage 2002-12 | p*_mode ~ AIC-sel | k_main = 6 | T_est = 40 | RS_AR = 0.548 
+  Vintage 2003-03 | p*_mode ~ AIC-sel | k_main = 6 | T_est = 41 | RS_AR = 0.78 
+  Vintage 2003-06 | p*_mode ~ AIC-sel | k_main = 6 | T_est = 42 | RS_AR = 0.459 
+  Vintage 2003-09 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 43 | RS_AR = 0.943 
+  Vintage 2004-03 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 45 | RS_AR = 1.004 
+  Vintage 2004-06 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 46 | RS_AR = 1.136 
+  Vintage 2004-09 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 47 | RS_AR = 0.926 
+  Vintage 2004-12 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 48 | RS_AR = 0.965 
+  Vintage 2005-03 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 49 | RS_AR = 0.923 
+  Vintage 2005-06 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 50 | RS_AR = 0.88 
+  Vintage 2005-09 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 51 | RS_AR = 0.859 
+  Vintage 2005-12 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 52 | RS_AR = 1.109 
+  Vintage 2006-03 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 53 | RS_AR = 0.808 
+  Vintage 2006-06 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 54 | RS_AR = 0.968 
+  Vintage 2006-09 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 55 | RS_AR = 0.636 
+  Vintage 2006-12 | p*_mode ~ AIC-sel | k_main = 7 | T_est = 56 | RS_AR = 0.722 
+  Vintage 2007-03 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 57 | RS_AR = 0.7 
+  Vintage 2007-06 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 58 | RS_AR = 0.69 
+  Vintage 2007-09 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 59 | RS_AR = 0.555 
+  Vintage 2007-12 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 60 | RS_AR = 0.742 
+  Vintage 2008-03 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 61 | RS_AR = 0.234 
+  Vintage 2008-06 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 62 | RS_AR = 0.41 
+  Vintage 2008-09 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 63 | RS_AR = 0.005 
+  Vintage 2008-12 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 64 | RS_AR = -0.496 
+  Vintage 2009-03 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 62 | RS_AR = -0.588 
+  Vintage 2009-06 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 63 | RS_AR = -0.381 
+  Vintage 2009-09 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 64 | RS_AR = 0.567 
+  Vintage 2009-12 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 65 | RS_AR = 0.489 
+  Vintage 2010-03 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 66 | RS_AR = 0.718 
+  Vintage 2010-06 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 67 | RS_AR = 0.782 
+  Vintage 2010-09 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 68 | RS_AR = 0.623 
+  Vintage 2010-12 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 69 | RS_AR = 0.631 
+  Vintage 2011-03 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 70 | RS_AR = 0.815 
+  Vintage 2011-06 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 71 | RS_AR = 0.321 
+  Vintage 2011-09 | p*_mode ~ AIC-sel | k_main = 8 | T_est = 72 | RS_AR = 0.7 
+  Vintage 2011-12 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 73 | RS_AR = 0.58 
+  Vintage 2012-03 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 74 | RS_AR = 0.849 
+  Vintage 2012-06 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 75 | RS_AR = 0.674 
+  Vintage 2012-09 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 76 | RS_AR = 0.525 
+  Vintage 2012-12 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 77 | RS_AR = 0.531 
+  Vintage 2013-03 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 78 | RS_AR = 0.744 
+  Vintage 2013-06 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 79 | RS_AR = 0.652 
+  Vintage 2013-09 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 80 | RS_AR = 0.62 
+  Vintage 2013-12 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 81 | RS_AR = 0.885 
+  Vintage 2014-03 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 82 | RS_AR = 0.588 
+  Vintage 2014-06 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 83 | RS_AR = 0.525 
+  Vintage 2014-09 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 84 | RS_AR = 0.713 
+  Vintage 2014-12 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 85 | RS_AR = 0.96 
+  Vintage 2015-03 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 86 | RS_AR = 0.565 
+  Vintage 2015-06 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 87 | RS_AR = 0.652 
+  Vintage 2015-09 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 88 | RS_AR = 0.713 
+  Vintage 2015-12 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 89 | RS_AR = 0.588 
+  Vintage 2016-03 | p*_mode ~ AIC-sel | k_main = 9 | T_est = 90 | RS_AR = 0.614 
+  Vintage 2016-06 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 91 | RS_AR = 0.673 
+  Vintage 2016-09 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 92 | RS_AR = 0.582 
+  Vintage 2016-12 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 93 | RS_AR = 0.655 
+  Vintage 2017-03 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 94 | RS_AR = 0.583 
+  Vintage 2017-06 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 95 | RS_AR = 0.728 
+  Vintage 2017-09 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 96 | RS_AR = 0.507 
+  Vintage 2017-12 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 97 | RS_AR = 0.838 
+  Vintage 2018-03 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 98 | RS_AR = 0.91 
+  Vintage 2018-06 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 99 | RS_AR = 0.747 
+  Vintage 2018-09 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 100 | RS_AR = 0.8 
+  Vintage 2018-12 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 101 | RS_AR = 0.654 
+  Vintage 2019-03 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 102 | RS_AR = 0.526 
+  Vintage 2019-06 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 103 | RS_AR = 0.54 
+  Vintage 2019-09 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 104 | RS_AR = 0.64 
+  Vintage 2019-12 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 105 | RS_AR = 0.726 
+  Vintage 2020-03 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 106 | RS_AR = 0.637 
+  Vintage 2020-06 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 107 | RS_AR = -5.881 
+  Vintage 2020-09 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 108 | RS_AR = 2.649 
+  Vintage 2020-12 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 109 | RS_AR = 1.868 
+  Vintage 2021-03 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 108 | RS_AR = 1.279 
+  Vintage 2021-06 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 109 | RS_AR = 0.901 
+  Vintage 2021-09 | p*_mode ~ AIC-sel | k_main = 10 | T_est = 110 | RS_AR = 1.214 
+  Vintage 2021-12 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 111 | RS_AR = 1.27 
+  Vintage 2022-03 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 112 | RS_AR = 1.364 
+  Vintage 2022-06 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 113 | RS_AR = 0.917 
+  Vintage 2022-09 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 114 | RS_AR = 0.777 
+  Vintage 2022-12 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 115 | RS_AR = 0.54 
+  Vintage 2023-03 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 116 | RS_AR = 0.794 
+  Vintage 2023-06 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 117 | RS_AR = 0.818 
+  Vintage 2023-09 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 118 | RS_AR = 0.76 
+  Vintage 2023-12 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 119 | RS_AR = 0.478 
+  Vintage 2024-03 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 120 | RS_AR = 0.587 
+  Vintage 2024-06 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 121 | RS_AR = 0.568 
+  Vintage 2024-09 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 122 | RS_AR = 0.557 
+  Vintage 2024-12 | p*_mode ~ AIC-sel | k_main = 13 | T_est = 179 | RS_AR = 0.541 
+  Vintage 2025-03 | p*_mode ~ AIC-sel | k_main = 11 | T_est = 124 | RS_AR = 0.684 
+There were 50 or more warnings (use warnings() to see the first 50)
+
+res_list saved.
+Loading actuals from: FRED-QD_2025m03.csv 
+Main results and all-k matrix saved.
+
+--- Evaluation set: Full sample (AR) | n = 101 ---
+
+--- Evaluation set: COVID-excl (AR) | n = 99 ---
+
+Table 1 — AR+X: Full Sample
+# A tibble: 5 x 5
+  Model          MAFE MAFE_sig RMSFE RMSFE_sig
+  <chr>         <dbl> <chr>    <dbl> <chr>    
+1 Mean           0.56 ""        1.27 ""       
+2 RSM_AR         0.45 "**"      0.76 "*"      
+3 Lasso          0.52 ""        0.77 ""       
+4 Ridge          0.5  "**"      1.02 "*"      
+5 Random Forest  0.57 ""        1.4  ""       
+
+Table 2 — AR+X: COVID-excluded
+# A tibble: 5 x 5
+  Model          MAFE MAFE_sig RMSFE RMSFE_sig
+  <chr>         <dbl> <chr>    <dbl> <chr>    
+1 Mean           0.41 ""        0.57 ""       
+2 RSM_AR         0.39 "*"       0.52 "*"      
+3 Lasso          0.47 ""        0.63 ""       
+4 Ridge          0.39 "**"      0.54 "**"     
+5 Random Forest  0.4  ""        0.57 ""       
+
+AR+X Full:     k* = 19, RMSFE = 0.617 | k=sqrt(T)=9, RMSFE=0.775
+AR+X No-COVID: k* = 16, RMSFE = 0.506 | k=sqrt(T)=9, RMSFE=0.522
+Saved: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/GDP_constrained/ar_bivariate_allk_results/fig_rmsfe_ar_full.png 
+Saved: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/GDP_constrained/ar_bivariate_allk_results/fig_rmsfe_ar_nocovid.png 
+Saved: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/GDP_constrained/ar_bivariate_allk_results/fig_comparison_full.png 
+Saved: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/GDP_constrained/ar_bivariate_allk_results/fig_comparison_nocovid.png 
+Saved: fig_comparison_4panel.png
+
+=== Summary comparison ===
+Full sample:   Bivariate k*=19 (RMSFE=0.662) | AR+X k*=19 (RMSFE=0.617)
+No-COVID:      Bivariate k*=21 (RMSFE=0.499) | AR+X k*=16 (RMSFE=0.506)
+
+All outputs saved to: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/GDP_constrained/ar_bivariate_allk_results 
+Done.

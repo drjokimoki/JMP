@@ -1,7 +1,33 @@
 {
   "permissions": {
     "allow": [
-      "Bash(gh auth *)"
+      "Bash(gh auth *)",
+      "Bash(Rscript --vanilla -e ' *)",
+      "Bash(awk '{print \"CPU:\",$3\"% | elapsed:\",$10}')",
+      "Bash(awk '{print \"PID:\",$2,\"CPU:\",$3\"% elapsed:\",$10}')",
+      "Bash(ps -p 66691 -o etime=)",
+      "Bash(awk '{print \"PID:\",$2,\" CPU:\",$3\"%  elapsed:\",$10}')",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(awk '{print \"PID:\",$2,\" elapsed:\",$10,\" cmd:\",substr\\($11,1,40\\)}')",
+      "Bash(awk '{print \"PID:\",$2,\" elapsed:\",$10}')",
+      "Bash(awk '{print $5,$9}')",
+      "Bash(awk '{print \"PID:\",$2,\" CPU:\",$3\"% elapsed:\",$10}')",
+      "Bash(awk '{print \"PID:\",$2,\" elapsed:\",$10,\" cmd:\",$11}')",
+      "Bash(Rscript -e ' *)",
+      "Bash(awk '{print \"GDP elapsed:\",$10}')",
+      "Bash(awk '{print \"GDP PID:\",$2,\"elapsed:\",$10}')",
+      "Bash(awk -F'RS = ' '{print $2}')",
+      "Bash(awk '{if \\($1+0 < 1\\) lt++; total++} END {print \"RS < 1:\", lt, \"of\", total, sprintf\\(\"\\(%.1f%%\\)\", lt/total*100\\)}')",
+      "Read(//Users/boris/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/0dcecf95-8594-44b5-985a-2a644624709d/d4c4de94-a1a7-4d12-bf87-e446f9d3047f/skills/pdf/**)",
+      "Bash(python3 -)",
+      "Bash(cat > *)",
+      "Bash(awk '{print \"PID:\",$2,\" elapsed:\",$10,\" cmd:\",substr\\($0,index\\($0,$11\\)\\)}')",
+      "Bash(Rscript endogenous_scaling_rerun.R)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(awk '{print \"PID:\",$2,\" elapsed:\",$10,\" cmd:\", $11}')",
+      "Bash(ps aux *)",
+      "Bash(/Library/TeX/texbin/pdflatex -interaction=nonstopmode RSM_paper_v2.tex)",
+      "Bash(Rscript fit_powerlaw_rmsfe.R)"
     ]
   }
 }

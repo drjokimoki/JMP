@@ -62,11 +62,11 @@ make_scenario_id <- function(prefix, m, T_train, B_scale, H_target) {
   )
 }
 
-RUN_EXPERIMENTS <- c(
-  "baseline",
-  "scaling_T_m",
-  "joint_B_H_grid"
-)
+RUN_EXPERIMENTS <- {
+  env_exp <- Sys.getenv("RSM_RUN_EXPERIMENTS", unset = "")
+  if (nzchar(env_exp)) strsplit(env_exp, ",")[[1]]
+  else c("baseline", "scaling_T_m", "joint_B_H_grid")
+}
 
 SAVE_PLOTS <- TRUE
 SAVE_CSV <- TRUE
@@ -86,7 +86,7 @@ if (RUN_PROFILE == "fast") {
   N_REP_SCALING   <- 500
   N_REP_GRID      <- 500
   G_BAG_MC        <- 800
-  N_SUBSETS_POP   <- 3000
+  N_SUBSETS_POP   <- 2500
   T_TEST          <- 100
   K_BY            <- 1
 } else {
@@ -128,13 +128,13 @@ BASELINE <- list(
 
 # Selected k values for the per-forecast weight comparison
 # between w_opt and the averaged bagged weights \bar v_k.
-WEIGHT_DIAG_K <- parse_int_vec("RSM_WEIGHT_DIAG_K", c(1, 3, 5, 9, 21, 41, 79))
+WEIGHT_DIAG_K <- parse_int_vec("RSM_WEIGHT_DIAG_K", c(1, 3, 5, 9, 21, 31, 49))
 
 # Scaling design. Keep B_scale and H fixed if you want the clean proposal check:
 # k*_bag,inf should be close to T^(1/3) m^(-1/3), up to constants.
 GRID_SCALING <- list(
   m = c(50),
-  T_train = c(80, 240, 640, 1000),
+  T_train = parse_num_vec("RSM_SCALING_T_GRID", c(80, 240, 640, 1000)),
   s = 1.0,
   q = 1.0,
   B_scale = parse_num_vec("RSM_SCALING_B", c(3.0))[1],
@@ -1188,6 +1188,29 @@ run_scaling_T_m <- function() {
     k_by <- as.integer(combo$k_by)
 
     cat("  combo ", cc, " / ", nrow(combos), ": m=", m, ", T=", T_train, "\n", sep = "")
+
+    csv_path <- file.path(OUTDIR, paste0("scaling_finite_sample_m", m, "_T", T_train, ".csv"))
+    if (file.exists(csv_path)) {
+      cat("    [skipping — CSV already exists]\n")
+      existing <- read.csv(csv_path)
+      tau_tmp  <- make_tau_lognormal(m, B_scale = B_scale, H_target = H_target,
+                                     seed = GLOBAL_SEED + 2000 + m +
+                                              round(100 * B_scale) + round(1000 * H_target))$tau
+      one_tmp  <- cbind(
+        theory_summary_one(tau_tmp, q, s, T_train, existing$k, G_BAG_MC),
+        data.frame(
+          n_rep = N_REP_SCALING, G_bag = G_BAG_MC,
+          kstar_empirical_bagged     = find_kstar_grid(existing, "rsm_bagged"),
+          kstar_empirical_subset_avg = find_kstar_grid(existing, "rsm_subset_avg"),
+          min_bagged_mspe            = min(existing$rsm_bagged, na.rm = TRUE),
+          equal_weight_mspe          = mean(existing$equal_weight, na.rm = TRUE),
+          oracle_optimal_mspe        = mean(existing$oracle_optimal, na.rm = TRUE),
+          full_estimated_mspe        = mean(existing$full_estimated, na.rm = TRUE)
+        )
+      )
+      all_summary <- rbind(all_summary, one_tmp)
+      next
+    }
 
     # The same cross-sectional design is used for all T for a given m, B, H.
     seed_design <- GLOBAL_SEED + 2000 + m + round(100 * B_scale) + round(1000 * H_target)

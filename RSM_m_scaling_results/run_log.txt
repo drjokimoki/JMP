@@ -1,0 +1,77 @@
+[2026-06-04 17:38:26] m-scaling experiment started. 
+[2026-06-04 17:38:26] T_FIXED=200 N_REP=500 K_RS=500 OOS_LEN=50 
+[2026-06-04 17:38:26] M_GRID=20,30,50,80,120 
+[2026-06-04 17:38:26] === Sigma type: toeplitz === 
+[2026-06-04 17:38:26]   m=20 T=200 starting... 
+[2026-06-04 17:44:47]     m=20 stype=toeplitz rep 100/500 
+[2026-06-04 17:51:40]     m=20 stype=toeplitz rep 200/500 
+[2026-06-04 17:58:09]     m=20 stype=toeplitz rep 300/500 
+[2026-06-04 18:04:40]     m=20 stype=toeplitz rep 400/500 
+[2026-06-04 18:11:17]     m=20 stype=toeplitz rep 500/500 
+[2026-06-04 18:11:21]   m=20 stype=toeplitz k*(RMSFE)=8 k*(L)=12 gain=5.9% KZ_factor=1.112 
+[2026-06-04 18:11:21]   m=30 T=200 starting... 
+[2026-06-04 18:25:02]     m=30 stype=toeplitz rep 100/500 
+[2026-06-04 18:38:18]     m=30 stype=toeplitz rep 200/500 
+[2026-06-04 18:50:19]     m=30 stype=toeplitz rep 300/500 
+[2026-06-04 19:02:56]     m=30 stype=toeplitz rep 400/500 
+[2026-06-04 19:34:22]     m=30 stype=toeplitz rep 500/500 
+[2026-06-04 19:34:29]   m=30 stype=toeplitz k*(RMSFE)=8 k*(L)=16 gain=8.3% KZ_factor=1.179 
+[2026-06-04 19:34:29]   m=50 T=200 starting... 
+[2026-06-04 20:08:01]     m=50 stype=toeplitz rep 100/500 
+[2026-06-04 20:52:27]     m=50 stype=toeplitz rep 200/500 
+[2026-06-04 21:26:36]     m=50 stype=toeplitz rep 300/500 
+[2026-06-04 22:02:09]     m=50 stype=toeplitz rep 400/500 
+[2026-06-04 22:46:06]     m=50 stype=toeplitz rep 500/500 
+[2026-06-04 22:46:27]   m=50 stype=toeplitz k*(RMSFE)=12 k*(L)=26 gain=10.3% KZ_factor=1.338 
+[2026-06-04 22:46:27]   m=80 T=200 starting... 
+[2026-06-05 00:12:06]     m=80 stype=toeplitz rep 100/500 
+[2026-06-05 01:33:58]     m=80 stype=toeplitz rep 200/500 
+[2026-06-05 02:55:31]     m=80 stype=toeplitz rep 300/500 
+[2026-06-05 04:17:22]     m=80 stype=toeplitz rep 400/500 
+[2026-06-05 05:38:50]     m=80 stype=toeplitz rep 500/500 
+[2026-06-05 05:39:39]   m=80 stype=toeplitz k*(RMSFE)=17 k*(L)=44 gain=10.4% KZ_factor=1.678 
+[2026-06-05 05:39:39]   m=120 T=200 starting... 
+[2026-06-05 09:12:27]     m=120 stype=toeplitz rep 100/500 
+[2026-06-05 13:10:15]     m=120 stype=toeplitz rep 200/500 
+[2026-06-05 16:13:22]     m=120 stype=toeplitz rep 300/500 
+[2026-06-05 19:27:04]     m=120 stype=toeplitz rep 400/500 
+[2026-06-05 23:04:13]     m=120 stype=toeplitz rep 500/500 
+[2026-06-05 23:05:52]   m=120 stype=toeplitz k*(RMSFE)=22 k*(L)=82 gain=11% KZ_factor=2.538 
+[2026-06-05 23:05:52] === Sigma type: factor === 
+[2026-06-05 23:05:52]   m=20 T=200 starting... 
+[2026-06-05 23:11:51]     m=20 stype=factor rep 100/500 
+[2026-06-05 23:17:48]     m=20 stype=factor rep 200/500 
+[2026-06-05 23:23:45]     m=20 stype=factor rep 300/500 
+[2026-06-05 23:29:41]     m=20 stype=factor rep 400/500 
+[2026-06-05 23:35:38]     m=20 stype=factor rep 500/500 
+[2026-06-05 23:35:42]   m=20 stype=factor k*(RMSFE)=8 k*(L)=14 gain=3.8% KZ_factor=1.112 
+[2026-06-05 23:35:42]   m=30 T=200 starting... 
+[2026-06-05 23:46:53]     m=30 stype=factor rep 100/500 
+[2026-06-05 23:58:08]     m=30 stype=factor rep 200/500 
+[2026-06-06 00:09:28]     m=30 stype=factor rep 300/500 
+[2026-06-06 00:20:48]     m=30 stype=factor rep 400/500 
+[2026-06-06 00:32:16]     m=30 stype=factor rep 500/500 
+[2026-06-06 00:32:23]   m=30 stype=factor k*(RMSFE)=10 k*(L)=20 gain=4% KZ_factor=1.179 
+[2026-06-06 00:32:23]   m=50 T=200 starting... 
+[2026-06-06 01:02:27]     m=50 stype=factor rep 100/500 
+[2026-06-06 01:32:35]     m=50 stype=factor rep 200/500 
+[2026-06-06 02:02:43]     m=50 stype=factor rep 300/500 
+[2026-06-06 02:32:55]     m=50 stype=factor rep 400/500 
+[2026-06-06 03:03:05]     m=50 stype=factor rep 500/500 
+[2026-06-06 03:03:23]   m=50 stype=factor k*(RMSFE)=14 k*(L)=28 gain=6.7% KZ_factor=1.338 
+[2026-06-06 03:03:23]   m=80 T=200 starting... 
+[2026-06-06 04:07:02]     m=80 stype=factor rep 100/500 
+[2026-06-06 05:11:35]     m=80 stype=factor rep 200/500 
+[2026-06-06 06:15:53]     m=80 stype=factor rep 300/500 
+[2026-06-06 07:20:23]     m=80 stype=factor rep 400/500 
+[2026-06-06 08:24:54]     m=80 stype=factor rep 500/500 
+[2026-06-06 08:25:33]   m=80 stype=factor k*(RMSFE)=20 k*(L)=47 gain=5.9% KZ_factor=1.678 
+[2026-06-06 08:25:33]   m=120 T=200 starting... 
+[2026-06-06 11:12:05]     m=120 stype=factor rep 100/500 
+[2026-06-06 14:49:09]     m=120 stype=factor rep 200/500 
+[2026-06-06 20:27:45]     m=120 stype=factor rep 300/500 
+[2026-06-06 23:53:34]     m=120 stype=factor rep 400/500 
+[2026-06-07 02:42:17]     m=120 stype=factor rep 500/500 
+[2026-06-07 02:43:59]   m=120 stype=factor k*(RMSFE)=18 k*(L)=82 gain=6.5% KZ_factor=2.538 
+[2026-06-07 02:43:59] Generating plots and log-log regressions... 
+[2026-06-07 02:43:59] m-scaling experiment complete. Results in: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/RSM_m_scaling_results 

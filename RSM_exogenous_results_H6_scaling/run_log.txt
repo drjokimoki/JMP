@@ -1,0 +1,17 @@
+Clean common-loading RSM script started.
+Output directory: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/RSM_exogenous_results_H6_scaling
+Run profile: paper
+Experiments: scaling_T_m
+
+Running scaling experiment over T and m...
+  combo 1 / 4: m=50, T=80
+    scaling m=50 T=80 replication 100 / 500
+    scaling m=50 T=80 replication 200 / 500
+    scaling m=50 T=80 replication 300 / 500
+    scaling m=50 T=80 replication 400 / 500
+    scaling m=50 T=80 replication 500 / 500
+  combo 2 / 4: m=50, T=240
+    scaling m=50 T=240 replication 100 / 500
+    scaling m=50 T=240 replication 200 / 500
+    scaling m=50 T=240 replication 300 / 500
+    scaling m=50 T=240 replication 400 / 500

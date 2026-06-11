@@ -1,0 +1,47 @@
+Theory-grid regression: log k*_bag,inf ~ log T + log m
+
+Call:
+lm(formula = log(kstar_bag_inf_grid) ~ log(T_train) + log(m), 
+    data = all_summary)
+
+Residuals:
+        1         2         3         4 
+-0.002379  0.016826 -0.040340  0.025894 
+
+Coefficients: (1 not defined because of singularities)
+             Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   -0.8451     0.1090  -7.756  0.01622 * 
+log(T_train)   0.3516     0.0185  19.000  0.00276 **
+log(m)             NA         NA      NA       NA   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.03596 on 2 degrees of freedom
+Multiple R-squared:  0.9945,	Adjusted R-squared:  0.9917 
+F-statistic:   361 on 1 and 2 DF,  p-value: 0.002759
+
+
+Target from proposal under stable B, V_delta, s, q: beta_T = 1/3, beta_m = -1/3
+
+Empirical bagged regression: log k*_empirical ~ log T + log m
+
+Call:
+lm(formula = log(kstar_empirical_bagged) ~ log(T_train) + log(m), 
+    data = all_summary)
+
+Residuals:
+        1         2         3         4 
+-0.002379  0.016826 -0.040340  0.025894 
+
+Coefficients: (1 not defined because of singularities)
+             Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   -0.1520     0.1090  -1.395  0.29777   
+log(T_train)   0.3516     0.0185  19.000  0.00276 **
+log(m)             NA         NA      NA       NA   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.03596 on 2 degrees of freedom
+Multiple R-squared:  0.9945,	Adjusted R-squared:  0.9917 
+F-statistic:   361 on 1 and 2 DF,  p-value: 0.002759
+

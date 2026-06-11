@@ -1,0 +1,6 @@
+"Model","MAFE","MAFE_sig","RMSFE","RMSFE_sig"
+"Mean",0.56,"",1.27,""
+"RSM_AR",0.45,"**",0.76,"*"
+"Lasso",0.52,"",0.77,""
+"Ridge",0.5,"**",1.02,"*"
+"Random Forest",0.57,"",1.4,""

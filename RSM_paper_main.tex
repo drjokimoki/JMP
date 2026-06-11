@@ -1,0 +1,1518 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{enumitem}
+
+\onehalfspacing
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}[proposition]
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\title{\textbf{Bagged Random Subset Methods for Forecast Combination
+       under Common Loading}\\[0.4em]
+       \large Theory, Optimal Subset Size, Dominance Regions,
+               and Empirical Applications}
+\author{Boris Kozyrev}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study Random Subset Methods (RSM) for forecast combination in the
+common-loading heteroskedastic forecast-error model. The paper makes four
+contributions. First, we derive an exact representation of the infinite-bagged
+population risk $Q_k^{\mathrm{bag},\infty}$: it equals the oracle optimum plus
+a weighted squared distance between the average RSM weight and the oracle weight.
+Under small precision heterogeneity this distance admits a closed-form
+small-heterogeneity approximation $C_\delta(1/k-1/m)^2$, which under a
+standard finite-sample inflation approximation yields a cube-root optimal subset
+size $k^*\propto T^{1/3}$---a lower scaling exponent than the square-root rule
+of the average-subset estimator. Under general heterogeneity the excess risk
+follows a power law $R_k\approx Cz_k^\alpha$ with $\alpha\in[1,2]$, giving
+$k^*\propto T^{1/(\alpha+1)}$. Second, we derive exact and approximate
+dominance conditions under which RSM strictly beats the equal-weighted mean and
+full estimated optimal weights. Third, Monte Carlo experiments in both the
+exogenous (known $\Sigma_e$) and endogenous (estimated $\Sigma_e$) settings
+confirm these predictions. The endogenous $k^*$ is substantially higher than
+the exogenous prediction, consistent with the extended estimation-noise
+interpretation. Fourth, applying RSM to FRED-MD GDP forecasts yields
+statistically significant gains over the equal-weighted mean (RMSFE reduction
+of 10--30\%), while the Survey of Professional Forecasters---a near-homogeneous
+panel with negligible precision heterogeneity ($C_\delta\approx0$)---confirms
+that RSM offers little advantage over the simple mean when forecasters are
+nearly identical in quality.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%===========================================================================
+\section{Scope and Main Message}
+%===========================================================================
+
+The central question is: in a large panel of $m$ individual forecasters, how
+many should a practitioner randomly subsample, and how should subsample
+forecasts be combined, to minimise out-of-sample loss?
+
+Two distinct RSM objects have been studied in the literature. The
+\emph{average-subset estimator} picks a random size-$k$ subset, fits
+constrained OLS within it, and reports that single forecast. The
+\emph{bagged estimator} averages $G$ such draws. Since $w\mapsto w'\Sigma_e w$
+is convex, Jensen's inequality gives
+\begin{equation}
+Q_k^{\mathrm{bag},\infty} \;\leq\; Q_k^{\mathrm{sub}},
+\end{equation}
+so bagging always weakly reduces population risk. Yet prior work has largely
+analysed $Q_k^{\mathrm{sub}}$ and assumed a functional form
+$Q_k^{\mathrm{bag},\infty}-Q^{\mathrm{opt}}\approx C/k^2$. We replace
+this assumption with a derivation.
+
+\paragraph{Main message.}
+Under small precision heterogeneity, the endpoint-corrected approximation
+\begin{equation}
+Q_k^{\mathrm{bag},\infty} - Q^{\mathrm{opt}}
+\;\approx\; C_\delta\!\left(\frac{1}{k}-\frac{1}{m}\right)^{\!2}, \qquad
+C_\delta = \frac{BV_\delta}{m}\!\left(\frac{m}{m-1}\right)^2,
+\quad B = \frac{1}{\bar\tau},
+\end{equation}
+follows from the bagged weight expansion, respects the exact boundary
+condition $Q_m^{\mathrm{bag},\infty}=Q^{\mathrm{opt}}$, and implies a
+cube-root optimal subset size $k^*\propto T^{1/3}$. Under general
+heterogeneity, a power-law slope $\hat\alpha\in[1,2]$ governs the decay
+of excess risk and determines the $T$-scaling exponent $1/(\alpha+1)$.
+
+%===========================================================================
+\section{Forecast-Combination Setup}
+%===========================================================================
+
+\begin{assumption}[Forecast model]\label{ass:fc}
+There are $m$ individual forecasts $f_t=(f_{1t},\ldots,f_{mt})'$ of a
+scalar target $y_t=\mu_t+\varepsilon_t$. Forecast errors relative to the
+predictable component are $u_t=f_t-\mu_t\iota_m$. Assume
+\begin{align*}
+E(\varepsilon_t)=0,\quad \mathrm{Var}(\varepsilon_t)=s>0,\quad
+E(\varepsilon_t u_{it})=0,\quad
+E(u_t)=0,\quad \mathrm{Var}(u_t)=\Sigma_e\succ 0.
+\end{align*}
+\end{assumption}
+
+For any weight vector $w$ with $w'\iota_m=1$,
+\begin{equation}
+w'f_t - y_t = w'u_t - \varepsilon_t, \qquad
+E\bigl[(w'f_t-y_t)^2\bigr] = s + w'\Sigma_e w.
+\end{equation}
+The common innovation variance $s$ is shared by all combinations, so population
+differences are governed by
+\begin{equation}\label{eq:Q}
+Q(w) = w'\Sigma_e w.
+\end{equation}
+The total population loss is $L(w)=s+Q(w)$.
+
+%===========================================================================
+\section{Benchmarks}
+%===========================================================================
+
+\subsection{Equal-Weighted Mean}
+
+The equal-weighted (EW) combination uses
+\begin{equation}
+w^{\mathrm{ave}} = \frac{1}{m}\iota_m, \qquad
+Q^{\mathrm{ave}} = \frac{1}{m^2}\iota_m'\Sigma_e\iota_m.
+\end{equation}
+Since no weights are estimated, there is no finite-sample inflation and the
+loss is simply $L^{\mathrm{ave}}=s+Q^{\mathrm{ave}}$.
+
+\subsection{Full Optimal Weights}
+
+The infeasible minimum-variance combination solves
+$\min_w w'\Sigma_e w$ subject to $w'\iota_m=1$. Its solution and
+population risk are
+\begin{equation}\label{eq:wopt}
+w^{\mathrm{opt}} = \frac{\Sigma_e^{-1}\iota_m}{\iota_m'\Sigma_e^{-1}\iota_m},
+\qquad
+Q^{\mathrm{opt}} = \bigl(\iota_m'\Sigma_e^{-1}\iota_m\bigr)^{-1}.
+\end{equation}
+When $\Sigma_e$ is estimated from $T$ observations, the degrees-of-freedom
+approximation gives the feasible optimal loss
+\begin{equation}\label{eq:Lopt}
+L^{\mathrm{opt}} \approx (s+Q^{\mathrm{opt}})\frac{T-1}{T-m}, \qquad T>m.
+\end{equation}
+This loss diverges as $m\to T$, reflecting the curse of dimensionality when
+the number of parameters approaches the sample size.
+
+\subsection{EW and Full Optimal as Limiting Cases of RSM}
+
+Under the common-loading model (Section~\ref{sec:cl}), the RSM estimator
+unifies both benchmarks:
+\begin{itemize}[nosep]
+\item \emph{Homogeneous case} ($\tau_i=\bar\tau$ for all $i$): weights within
+  any subset are equal, so $\bar v_{k,i}=1/m$ for all $k$, and
+  $Q_k^{\mathrm{bag},\infty}=Q^{\mathrm{opt}}=Q^{\mathrm{ave}}$. RSM
+  and EW coincide in population.
+\item \emph{Full pool} ($k=m$): the only subset is $\{1,\ldots,m\}$, so
+  $w_S=w^{\mathrm{opt}}$ and $Q_m^{\mathrm{bag},\infty}=Q^{\mathrm{opt}}$.
+  RSM recovers the full optimal at $k=m$.
+\end{itemize}
+For $1\leq k<m$ and $V_\delta>0$, RSM interpolates between these limits with
+strictly positive excess risk $R_k^{\mathrm{bag},\infty}>0$.
+
+%===========================================================================
+\section{RSM for Forecast Combination}
+%===========================================================================
+\label{sec:rsm}
+
+\begin{definition}[RSM]\label{def:rsm}
+Let $S\subset\{1,\ldots,m\}$ be a random subset of size $k$, drawn
+uniformly without replacement. Let $\Sigma_{e,S}$ be the $k\times k$
+principal submatrix of $\Sigma_e$ indexed by $S$. The \emph{optimal
+subset weight vector} is
+\begin{equation}
+w_S = \frac{\Sigma_{e,S}^{-1}\iota_S}{\iota_S'\Sigma_{e,S}^{-1}\iota_S},
+\end{equation}
+embedded into $\mathbb{R}^m$ as $v_S=P_Sw_S$ where $P_S$ places the $k$
+selected weights in their original coordinates and sets remaining
+coordinates to zero.
+\end{definition}
+
+\subsection{Average-Subset RSM}
+
+The average-subset estimator draws a single subset $S$ and reports the
+corresponding forecast. Its population risk is
+\begin{equation}\label{eq:Qsub}
+Q_k^{\mathrm{sub}} = E_S[v_S'\Sigma_e v_S] = E_S[Q(S)],
+\qquad Q(S)=\bigl(\iota_S'\Sigma_{e,S}^{-1}\iota_S\bigr)^{-1}.
+\end{equation}
+
+\subsection{Infinite-Bagged RSM}
+
+Let $G$ independent subsets $S_1,\ldots,S_G$ be drawn and define
+$\hat v_{k,G}=G^{-1}\sum_{g=1}^G v_{S_g}$. The population risk of
+this bagged forecast is $Q_k^{\mathrm{bag},G}=E[\hat v_{k,G}'\Sigma_e\hat v_{k,G}]$.
+
+The \emph{infinite-bagged weight vector} is
+\begin{equation}
+\bar v_k = E_S[v_S],
+\end{equation}
+and the \emph{infinite-bagged population risk} is
+\begin{equation}\label{eq:Qbag}
+Q_k^{\mathrm{bag},\infty} = \bar v_k'\Sigma_e\bar v_k.
+\end{equation}
+
+\subsection{Finite-Bagging Bridge}
+
+\begin{proposition}[Finite-bagging bridge]\label{prop:bridge}
+For $G$ independent subset draws,
+\begin{equation}\label{eq:bridge}
+Q_k^{\mathrm{bag},G}
+= Q_k^{\mathrm{bag},\infty}
++ \frac{1}{G}\bigl(Q_k^{\mathrm{sub}}-Q_k^{\mathrm{bag},\infty}\bigr).
+\end{equation}
+Consequently, $Q_k^{\mathrm{bag},\infty}\leq Q_k^{\mathrm{bag},G}\leq Q_k^{\mathrm{sub}}$
+for all $G\geq 1$.
+\end{proposition}
+
+\begin{proof}
+Let $V=v_S$ and $\bar v=E[V]$. For $G$ independent draws,
+$\hat v_{k,G}=G^{-1}\sum_g V_g$. Then
+\begin{align*}
+E[\hat v_{k,G}'\Sigma_e\hat v_{k,G}]
+&= \bar v'\Sigma_e\bar v + E[(\hat v_{k,G}-\bar v)'\Sigma_e(\hat v_{k,G}-\bar v)]\\
+&= Q_k^{\mathrm{bag},\infty} + \frac{1}{G}E[(V-\bar v)'\Sigma_e(V-\bar v)]
+= Q_k^{\mathrm{bag},\infty} + \frac{1}{G}(Q_k^{\mathrm{sub}}-Q_k^{\mathrm{bag},\infty}).
+\end{align*}
+The inequalities follow from $\Sigma_e\succ 0$.
+\end{proof}
+
+This identity is exact, with no approximation. It shows that infinite bagging
+removes the within-subset variance; finite bagging reintroduces a fraction
+$1/G$ of it.
+
+%===========================================================================
+\section{Finite-Sample Inflation}
+%===========================================================================
+\label{sec:inflation}
+
+For a single subset of size $k$, sum-to-one constrained OLS estimates $k-1$
+free parameters from $T$ observations. Under the Gaussian random-design
+approximation, the out-of-sample inflation factor is
+\begin{equation}\label{eq:I}
+I(T,k) = \frac{T-1}{T-k}.
+\end{equation}
+The average-subset and bagged losses are therefore approximated by
+\begin{equation}\label{eq:Lsub}
+L_k^{\mathrm{sub}} \approx (s+Q_k^{\mathrm{sub}})\frac{T-1}{T-k},
+\qquad
+L_k^{\mathrm{bag}} \approx (s+Q_k^{\mathrm{bag}})\frac{T-1}{T-k}.
+\end{equation}
+For bagged RSM the true effective degrees of freedom are smaller than $k$
+because averaging overlapping estimators reduces variance; the formula
+$I(T,k)$ is therefore a conservative upper bound for the bagged inflation.
+We use this conservative convention throughout. All results on optimal
+subset-size scaling (Section~\ref{sec:kstar}) are derived under this
+\emph{maintained inflation approximation}; the cube-root rule should be
+read as a theoretical guide, not a precise empirical formula.
+
+\begin{remark}[Inflation and heterogeneity]
+The inflation factor $I(T,k)=(T-1)/(T-k)$ is increasing in $k$. It
+penalises large subsets, so the optimal $k$ balances the approximation
+error (decreasing in $k$, since larger subsets approach the full optimum)
+against the estimation noise (increasing in $k$). This trade-off is the
+source of the interior optimum.
+\end{remark}
+
+%===========================================================================
+\section{Common-Loading Model: Exact Derivations}
+%===========================================================================
+\label{sec:cl}
+
+\subsection{Model and Notation}
+
+\begin{assumption}[Common-loading structure]\label{ass:cl}
+The forecast-error covariance matrix takes the form
+\begin{equation}\label{eq:Sigma}
+\Sigma_e = q\iota_m\iota_m' + D, \qquad
+D = \mathrm{diag}(\sigma_1^2,\ldots,\sigma_m^2),
+\end{equation}
+where $q\geq 0$ is the common-loading variance and $\sigma_i^2>0$ are
+idiosyncratic variances. Define precision weights
+\begin{equation}
+\tau_i = \sigma_i^{-2},\quad D_{ii}=\sigma_i^2=\tau_i^{-1},\quad
+A_S=\sum_{i\in S}\tau_i,\quad A_m=\sum_{i=1}^m\tau_i.
+\end{equation}
+\end{assumption}
+
+Under this model, for any $w$ with $w'\iota_m=1$,
+\begin{equation}
+Q(w) = w'\Sigma_e w = q + \sum_{i=1}^m\frac{w_i^2}{\tau_i},
+\end{equation}
+since $w'\iota_m=1$ implies $q(w'\iota_m)^2=q$. The common component $q$
+cannot be diversified away.
+
+\subsection{Exact Subset Risk}
+
+For subset $S$, $\Sigma_{e,S}=q\iota_S\iota_S'+D_S$. By the
+Sherman--Morrison formula,
+\begin{equation}
+\iota_S'\Sigma_{e,S}^{-1}\iota_S
+= A_S - \frac{qA_S^2}{1+qA_S} = \frac{A_S}{1+qA_S}.
+\end{equation}
+Therefore
+\begin{equation}\label{eq:QS}
+Q(S) = \bigl(\iota_S'\Sigma_{e,S}^{-1}\iota_S\bigr)^{-1}
+= q + \frac{1}{A_S},
+\end{equation}
+and the optimal subset weights are $w_{i,S}=\tau_i/A_S$ for $i\in S$.
+Hence
+\begin{equation}\label{eq:Qsub_exact}
+Q_k^{\mathrm{sub}} = q + E_S\!\left[\frac{1}{A_S}\right].
+\end{equation}
+
+\subsection{Full Optimal Risk and Weights}
+
+For the full pool, $A_m=\sum_{i=1}^m\tau_i$. From \eqref{eq:QS} with $S=\{1,\ldots,m\}$:
+\begin{equation}\label{eq:Qopt_cl}
+Q^{\mathrm{opt}} = q + \frac{1}{A_m}, \qquad
+w_i^{\mathrm{opt}} = \frac{\tau_i}{A_m}.
+\end{equation}
+
+\subsection{Exact Infinite-Bagged Expression}
+
+For any fixed subset $S$, the embedded weight is $v_{S,i}=\mathbf{1}(i\in S)\,\tau_i/A_S$.
+Hence the infinite-bagged weight on forecaster $i$ is
+\begin{equation}\label{eq:vbar_exact}
+\bar v_{i,k} = E_S[v_{S,i}] = \tau_i\,E_R\!\left[\frac{k/m}{\tau_i+\sum_{j\in R}\tau_j}\right],
+\end{equation}
+where $R$ is drawn uniformly from all $(k-1)$-element subsets of
+$\{1,\ldots,m\}\setminus\{i\}$. Since $\sum_i\bar v_{i,k}=1$,
+\begin{equation}\label{eq:Qbag_exact}
+Q_k^{\mathrm{bag},\infty} = q + \sum_{i=1}^m\frac{\bar v_{i,k}^2}{\tau_i}.
+\end{equation}
+
+\subsection{Excess Bagged Risk as a Weighted Squared Distance}
+
+\begin{proposition}[Weight-deviation representation]\label{prop:wdev}
+Let $\Delta_{i,k}=\bar v_{i,k}-w_i^{\mathrm{opt}}$.
+Since both $\bar v_k$ and $w^{\mathrm{opt}}$ satisfy the adding-up constraint
+$\sum_i\Delta_{i,k}=0$, the cross-term $\sum_i\Delta_{i,k}/\tau_i
+= A_m^{-1}\sum_i\Delta_{i,k}=0$. Therefore
+\begin{equation}\label{eq:Rbag_exact}
+R_k^{\mathrm{bag},\infty} := Q_k^{\mathrm{bag},\infty} - Q^{\mathrm{opt}}
+= \sum_{i=1}^m \frac{(\bar v_{i,k}-w_i^{\mathrm{opt}})^2}{\tau_i} \;\geq\; 0.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Expand $Q_k^{\mathrm{bag},\infty}=q+\sum_i(w_i^{\mathrm{opt}}+\Delta_{i,k})^2/\tau_i$.
+The linear term is $2\sum_i w_i^{\mathrm{opt}}\Delta_{i,k}/\tau_i
+= (2/A_m)\sum_i\Delta_{i,k}=0$.
+\end{proof}
+
+\begin{remark}
+The excess risk is a second-order (quadratic) quantity in the weight error.
+The vanishing of the linear term is not an approximation; it follows from
+$w^{\mathrm{opt}}$ satisfying the first-order condition of the constrained
+minimisation.
+\end{remark}
+
+Boundary conditions: $R_m^{\mathrm{bag},\infty}=0$ (at $k=m$, RSM recovers
+the full optimum) and $R_k^{\mathrm{bag},\infty}\geq 0$ for all $k$, since
+$\tau_i>0$.
+
+%===========================================================================
+\section{Small-Heterogeneity Derivation}
+%===========================================================================
+\label{sec:smallhet}
+
+\subsection{Assumption and Setup}
+
+\begin{assumption}[Small heterogeneity]\label{ass:sh}
+Write $\tau_i=\bar\tau(1+\delta_i)$ with $m^{-1}\sum_i\delta_i=0$ and
+$\max_i|\delta_i|$ small. Define
+\begin{equation}
+B = \frac{1}{\bar\tau}, \qquad
+V_\delta = \frac{1}{m}\sum_{i=1}^m\delta_i^2.
+\end{equation}
+Under Assumption~\ref{ass:cl},
+$A_m=m\bar\tau$, $w_i^{\mathrm{opt}}=(1+\delta_i)/m$, $Q^{\mathrm{opt}}=q+B/m$.
+\end{assumption}
+
+\subsection{Expansion of Average-Subset Risk}
+
+Write $A_S=\bar\tau(k+\Delta_S)$ where $\Delta_S=\sum_{i\in S}\delta_i$.
+Under simple random sampling without replacement,
+\begin{equation}
+E[\Delta_S]=0, \qquad
+\mathrm{Var}(\Delta_S)=\frac{k(m-k)}{m-1}V_\delta.
+\end{equation}
+A second-order Taylor expansion of $1/(k+\Delta_S)$ yields
+\begin{equation}\label{eq:Qsub_approx}
+Q_k^{\mathrm{sub}} \approx q + \frac{B}{k} + B\frac{m-k}{k^2(m-1)}V_\delta.
+\end{equation}
+The leading term $B/k$ decays as $1/k$; the heterogeneity correction is
+smaller order. Defining $z_k=1/k-1/m$,
+\begin{equation}\label{eq:Qsub_leading}
+Q_k^{\mathrm{sub}} - Q^{\mathrm{opt}} \approx B\,z_k
++ B\frac{m-k}{k^2(m-1)}V_\delta.
+\end{equation}
+
+\subsection{Expansion of Bagged Weights}
+
+From \eqref{eq:vbar_exact}, using $\tau_i=\bar\tau(1+\delta_i)$ and
+$\Delta_R=\sum_{j\in R}\delta_j$:
+\begin{equation}
+\bar v_{i,k} = \frac{1+\delta_i}{m}E_R\!\left[\frac{k}{k+\delta_i+\Delta_R}\right].
+\end{equation}
+Since $\sum_{j\neq i}\delta_j=-\delta_i$ (by $\sum_j\delta_j=0$),
+\begin{equation}
+E_R[\Delta_R] = \frac{k-1}{m-1}(-\delta_i).
+\end{equation}
+Expanding to first order in $\delta$:
+\begin{equation}\label{eq:bagged_weight_expansion}
+\bar v_{i,k} - w_i^{\mathrm{opt}}
+= -\frac{\delta_i}{m}\cdot\frac{m-k}{k(m-1)} + O(\delta^2).
+\end{equation}
+Since $(m-k)/(k(m-1))=m/(m-1)\cdot z_k$, this can be written as
+\begin{equation}\label{eq:Delta_approx}
+\Delta_{i,k} := \bar v_{i,k} - w_i^{\mathrm{opt}}
+\approx -\frac{\delta_i}{m-1}\cdot z_k.
+\end{equation}
+The weight deviation is \emph{proportional to $z_k=1/k-1/m$}: it vanishes
+at $k=m$ (full pool) and grows as $k$ decreases.
+
+\subsection{Endpoint-Corrected Approximation of Bagged Excess Risk}
+
+Inserting \eqref{eq:Delta_approx} into \eqref{eq:Rbag_exact}:
+\begin{equation}
+R_k^{\mathrm{bag},\infty}
+= \sum_i\frac{\Delta_{i,k}^2}{\tau_i}
+\approx \frac{z_k^2}{(m-1)^2}\sum_i\frac{\delta_i^2}{\tau_i}
+= \frac{z_k^2}{(m-1)^2}\cdot B\sum_i\delta_i^2(1+O(\delta_i))
+\approx \frac{BV_\delta m}{(m-1)^2}\,z_k^2.
+\end{equation}
+
+\begin{proposition}[Endpoint-corrected squared approximation]\label{prop:smallhet}
+Under Assumptions \ref{ass:fc}--\ref{ass:sh},
+\begin{equation}\label{eq:Rapprox}
+R_k^{\mathrm{bag},\infty} \approx C_\delta\!\left(\frac{1}{k}-\frac{1}{m}\right)^{\!2},
+\qquad C_\delta = \frac{BV_\delta}{m}\!\left(\frac{m}{m-1}\right)^{\!2},
+\end{equation}
+and the infinite-bagged risk is
+\begin{equation}\label{eq:Qbag_approx}
+Q_k^{\mathrm{bag},\infty} \approx q + \frac{B}{m} + C_\delta\!\left(\frac{1}{k}-\frac{1}{m}\right)^{\!2}.
+\end{equation}
+This approximation satisfies the exact endpoint $R_m^{\mathrm{bag},\infty}=0$.
+\end{proposition}
+
+\begin{remark}[Comparison to $C/k^2$]
+For $k\ll m$, $(1/k-1/m)^2\approx 1/k^2$, so \eqref{eq:Rapprox} reduces
+to the local form $C_\delta/k^2$. But \eqref{eq:Rapprox} is derived from the
+bagged weight expansion (valid for small $k$) rather than assumed, and
+it correctly sets $R_m=0$. This makes it more reliable when the empirical
+optimal $k$ is small relative to $m$.
+\end{remark}
+
+\begin{remark}[Homoskedastic special case]
+If $\delta_i=0$ for all $i$, then $V_\delta=C_\delta=0$ and
+$Q_k^{\mathrm{bag},\infty}=Q^{\mathrm{opt}}$ for every $k$. Bagging
+fully removes the population dependence on $k$ when all forecasters have
+equal precision.
+\end{remark}
+
+%===========================================================================
+\section{Finite Bagging under Small Heterogeneity}
+%===========================================================================
+\label{sec:finiteG}
+
+Combining Proposition~\ref{prop:bridge} with the leading-order
+approximations $Q_k^{\mathrm{sub}}-Q^{\mathrm{opt}}\approx Bz_k$ and
+$R_k^{\mathrm{bag},\infty}\approx C_\delta z_k^2$:
+\begin{equation}\label{eq:Rbag_G}
+R_k^{\mathrm{bag},G} = R_k^{\mathrm{bag},\infty} + \frac{1}{G}(Q_k^{\mathrm{sub}}-Q_k^{\mathrm{bag},\infty})
+\approx \frac{B}{G}\,z_k + \left(1-\frac{1}{G}\right)C_\delta\,z_k^2.
+\end{equation}
+For compact notation set $a_G=B/G$ and $c_G=(1-1/G)C_\delta$. Then
+\begin{equation}
+Q_k^{\mathrm{bag},G} \approx Q^{\mathrm{opt}} + a_G\,z_k + c_G\,z_k^2.
+\end{equation}
+Two limiting regimes:
+\begin{itemize}[nosep]
+\item $G\to\infty$: the linear term vanishes ($a_G\to 0$), and only the
+  squared term $C_\delta z_k^2$ remains. This is the infinite-bagged result.
+\item $G$ small: the linear term $a_G z_k$ dominates for small $k$,
+  pushing the optimal $k$ toward a square-root rule.
+\end{itemize}
+The number of bags $G$ therefore interpolates between the cube-root rule
+(large $G$) and the square-root rule (small $G$).
+
+%===========================================================================
+\section{Optimal Subset Size}
+%===========================================================================
+\label{sec:kstar}
+
+\subsection{Average-Subset Optimum}
+
+Using the leading approximation $Q_k^{\mathrm{sub}}\approx q+B/k$ and
+$A_0=s+q$, the average-subset loss is
+$L_k^{\mathrm{sub}}\approx(A_0+B/k)(T-1)/(T-k)$.
+The first-order condition $\partial L_k^{\mathrm{sub}}/\partial k=0$ gives
+\begin{equation}
+A_0k^2 + 2Bk - BT = 0,
+\end{equation}
+with positive root
+\begin{equation}\label{eq:kstar_sub}
+k^*_{\mathrm{sub}} = \frac{-B+\sqrt{B^2+A_0BT}}{A_0}
+\;\sim\; \left(\frac{BT}{A_0}\right)^{1/2}
+\;\propto\; T^{1/2}.
+\end{equation}
+The average-subset estimator has a \emph{square-root optimal subset size}.
+
+\subsection{Infinite-Bagged Optimum}
+
+Using $L_k^{\mathrm{bag},\infty}\approx(A+C_\delta z_k^2)(T-1)/(T-k)$
+with $A=s+Q^{\mathrm{opt}}=s+q+B/m$, the first-order condition is
+\begin{equation}\label{eq:foc_bag}
+Am^2k^3 + C_\delta k(m-k)^2 - 2C_\delta m(m-k)(T-k) = 0.
+\end{equation}
+For $k\ll m$ this reduces to $Ak^3+3C_\delta k-2C_\delta T\approx 0$,
+giving the \emph{cube-root optimal subset size}:
+\begin{equation}\label{eq:kstar_bag}
+k^*_{\mathrm{bag},\infty} \approx \left(\frac{2C_\delta T}{A}\right)^{1/3}
+\propto \left(\frac{T}{m}\right)^{1/3}.
+\end{equation}
+Substituting the full expression for $C_\delta$:
+\begin{equation}
+k^*_{\mathrm{bag},\infty} \sim \left[\frac{2BV_\delta T}{m(s+q+B/m)}\!\left(\frac{m}{m-1}\right)^{\!2}\right]^{1/3}.
+\end{equation}
+Under stable heterogeneity and loss components, $k^*\propto(T/m)^{1/3}$.
+
+\subsection{Finite-Bagged Optimum}
+
+The finite-bagged loss $L_k^{\mathrm{bag},G}\approx(A+a_Gz_k+c_Gz_k^2)(T-1)/(T-k)$
+has first-order condition (for $k\ll m$):
+\begin{equation}
+Ak^3 + 2a_Gk^2 + (3c_G-a_GT)k - 2c_GT = 0.
+\end{equation}
+Two limiting regimes:
+\begin{enumerate}[nosep]
+\item $G$ large ($a_G\approx 0$): $k^*_{\mathrm{bag},G}\approx(2c_GT/A)^{1/3}$,
+  approaching the cube-root rule.
+\item $G$ small (first-order term dominates): $k^*_{\mathrm{bag},G}\approx(a_GT/A)^{1/2}
+  =(BT/(GA))^{1/2}$, approaching the square-root rule.
+\end{enumerate}
+
+%===========================================================================
+\section{General Heterogeneity and the Power-Law Extension}
+%===========================================================================
+\label{sec:powerlaw}
+
+\subsection{Two Asymptotic Regimes}
+
+\begin{proposition}[Small-heterogeneity regime]\label{prop:smallhet2}
+Under Assumption~\ref{ass:sh} with $\max_i|\delta_i|$ small,
+$\Delta_{i,k}=-(\delta_i/(m-1))z_k+O(\delta^2)$
+and $R_k^{\mathrm{bag},\infty}\approx C_\delta z_k^2$.
+The OLS log-log slope is $\hat\alpha=2$ exactly in the limit $V_\delta\to 0$.
+\end{proposition}
+
+\begin{proposition}[Large-heterogeneity regime]\label{prop:largehet}
+Consider the dominant-forecaster model: $\tau_1=\tau_H$,
+$\tau_j=\tau_L$ for $j=2,\ldots,m$, with $\tau_H/\tau_L\to\infty$.
+Then for each $k\in\{1,\ldots,m\}$:
+\begin{equation}
+\Delta_{1,k} \approx -\frac{m-k}{m}, \qquad
+\Delta_{j,k} \approx \frac{m-k}{m(m-1)},\quad j\neq 1,
+\end{equation}
+and
+\begin{equation}\label{eq:Rbag_large}
+R_k^{\mathrm{bag},\infty} \approx C'\!\left(1-\frac{k}{m}\right)^{\!2}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+When $\tau_1\to\infty$: forecaster 1 enters a random size-$k$ subset with
+probability $k/m$; when included its weight $\to 1$.
+Hence $\bar v_{1,k}=k/m$ and $\Delta_{1,k}=k/m-1=-(m-k)/m$.
+For $j\neq 1$: forecaster $j$ enters subsets not containing 1 with probability
+$k/m\cdot(m-k)/(m-1)$, receiving weight $\approx 1/k$ in those subsets.
+Thus $\bar v_{j,k}\approx(m-k)/(m(m-1))$ and $\Delta_{j,k}=(m-k)/(m(m-1))$ since
+$w_j^{\mathrm{opt}}\to 0$. Inserting into \eqref{eq:Rbag_exact}
+and letting $\tau_1\to\infty$ gives \eqref{eq:Rbag_large}.
+\end{proof}
+
+\subsection{Log-Log Slope and Practical Interpolation}
+
+Writing $z_k=(m-k)/(km)$ and $u_k=\log(m-k)$, $v_k=-\log k$:
+
+\begin{proposition}[OLS slope in the two regimes]\label{prop:alpha}
+Let $\hat u,\hat v,V_u,V_v,C_{uv}$ denote sample mean, variance, and
+covariance of $(u_k,v_k)$ over $k\in\{2,\ldots,m-1\}$.
+\begin{enumerate}[label=(\roman*)]
+\item Small het: $\log R_k=\mathrm{const}+2\log z_k$, so $\hat\alpha=2$ exactly.
+\item Large het: $\log R_k\approx\mathrm{const}+2u_k$, and
+  $\hat\alpha=2(V_u+C_{uv})/(V_u+2C_{uv}+V_v)$.
+  When $V_u=V_v$ (symmetric range), $\hat\alpha=1$ exactly.
+\end{enumerate}
+\end{proposition}
+
+The key insight is that $V_u=V_v$ holds by symmetry of the range
+$k\in\{2,\ldots,m-1\}$ regardless of $m$, so $\hat\alpha\to 1$ as
+$\tau_H/\tau_L\to\infty$. For intermediate heterogeneity,
+$\hat\alpha\in(1,2)$.
+
+\begin{remark}[Identification of $\hat\alpha$]
+The log-log slope $\hat\alpha$ is meaningfully identified only when
+$C_\delta$ is non-negligible, i.e.\ when the excess-risk curve
+$R_k^{\mathrm{bag},\infty}$ has detectable curvature. When forecasters
+are near-homogeneous ($H\approx1$), $C_\delta\approx0$ and the curve
+is almost flat; in that regime $\hat\alpha$ is weakly identified and
+should not be interpreted as a structural heterogeneity parameter.
+Near-homogeneity is therefore characterised by $C_\delta\approx0$, not
+by $\hat\alpha\approx1$. Conditional on a non-negligible excess-risk
+curve, the small-heterogeneity expansion predicts $\hat\alpha=2$
+(Proposition~\ref{prop:smallhet2}), while the dominant-forecaster limit
+yields $\hat\alpha\approx1$.
+\end{remark}
+
+\subsection{Unified Power-Law and General $k^*$}
+
+Approximating $R_k^{\mathrm{bag},\infty}\approx Cz_k^\alpha$ for
+$\hat\alpha\in[1,2]$, the total loss is
+\begin{equation}
+L_k^{\mathrm{bag},\infty}\approx(A+Cz_k^\alpha)\frac{T-1}{T-k}.
+\end{equation}
+Using $dz/dk=-1/k^2$ and $k\ll m$, the interior first-order condition gives:
+\begin{equation}\label{eq:kstar_gen}
+k^* \approx \left(\frac{C\alpha T}{A}\right)^{1/(\alpha+1)}.
+\end{equation}
+The $T$-scaling exponent $1/(\alpha+1)$ ranges from $1/3$ (small het,
+$\alpha=2$) to $1/2$ (dominant forecaster, $\alpha=1$). The cube-root rule
+is the \emph{lower bound} on the scaling exponent.
+
+The three regimes are summarised in Table~\ref{tab:regimes}.
+
+\begin{table}[ht]
+\centering
+\caption{Excess risk form and implied $T$-scaling under the fitted power law.}
+\label{tab:regimes}
+\begin{tabular}{lcccc}
+\toprule
+Regime & True form of $R_k$ & $C_\delta$ & Effective $\hat\alpha$ & $k^*$ scaling \\
+\midrule
+Near-homogeneous & $\approx 0$ & $\approx 0$ & weakly identified & any $k$ near-optimal \\
+Small het (identifiable) & $C_\delta z_k^2$ & non-negligible & $\approx 2$ & $T^{1/3}$ \\
+Intermediate & mixture & large & $\in(1,2)$ & $T^{1/(\alpha+1)}$ \\
+Dominant forecaster & $C'(1-k/m)^2$ & $\to\infty$ & $\approx 1$ & $T^{1/2}$ \\
+\bottomrule
+\end{tabular}
+\medskip
+\footnotesize{$\hat\alpha$ is interpretable only when $C_\delta$ is non-negligible (rows 2--4).
+Near-homogeneity means $C_\delta\approx0$, not $\hat\alpha\approx1$.}
+\end{table}
+
+%===========================================================================
+\section{Dominance Regions}
+%===========================================================================
+\label{sec:dom}
+
+This section derives conditions under which RSM strictly beats the benchmarks
+of Section~3. Results are presented both exactly (using the common-loading
+identities) and under the small-heterogeneity approximation.
+
+\subsection{Setup}
+
+Define $A=s+Q^{\mathrm{opt}}$ and $M_{\mathrm{ave}}=s+Q^{\mathrm{ave}}$,
+so $A\leq M_{\mathrm{ave}}$ by optimality of $w^{\mathrm{opt}}$.
+The comparisons require $T>m$ for the full optimal to be feasible, and
+$T>k$ for RSM.
+
+\subsection{Average-Subset RSM versus Full Estimated Optimal Weights}
+
+\begin{proposition}[Exact average-subset dominance over $L^{\mathrm{opt}}$]
+\label{prop:dom_sub_opt}
+Assume $T>m$. Average-subset RSM beats full estimated optimal weights at
+subset size $k$ if and only if
+\begin{equation}\label{eq:dom_sub_opt}
+\bigl(Q_k^{\mathrm{sub}} - Q^{\mathrm{opt}}\bigr)(T-m) < A(m-k).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The average-subset loss is $L_k^{\mathrm{sub}}=(s+Q_k^{\mathrm{sub}})(T-1)/(T-k)$
+and $L^{\mathrm{opt}}=(s+Q^{\mathrm{opt}})(T-1)/(T-m)$. Cancel $T-1>0$,
+cross-multiply by $(T-k)(T-m)>0$, write $s+Q_k^{\mathrm{sub}}=A+(Q_k^{\mathrm{sub}}-Q^{\mathrm{opt}})$,
+and rearrange.
+\end{proof}
+
+\begin{corollary}[Small-het approximation]
+Under Assumption~\ref{ass:sh} using $Q_k^{\mathrm{sub}}-Q^{\mathrm{opt}}\approx Bz_k=B/k-B/m$,
+condition \eqref{eq:dom_sub_opt} reduces to $k>B(T-m)/(mA)$.
+\end{corollary}
+
+\subsection{Average-Subset RSM versus Equal Weights}
+
+\begin{proposition}[Exact average-subset dominance over $L^{\mathrm{ave}}$]
+Average-subset RSM beats equal weights at subset size $k$ if and only if
+\begin{equation}\label{eq:dom_sub_ave}
+\bigl(s+Q_k^{\mathrm{sub}}\bigr)(T-1) < M_{\mathrm{ave}}(T-k).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+From $L_k^{\mathrm{sub}}<L^{\mathrm{ave}}$ with $L^{\mathrm{ave}}=M_{\mathrm{ave}}$.
+\end{proof}
+
+Under the small-het approximation this gives a quadratic condition in $k$.
+
+\subsection{Infinite-Bagged RSM versus Full Estimated Optimal Weights}
+
+\begin{proposition}[Exact infinite-bagged dominance over $L^{\mathrm{opt}}$]
+\label{prop:dom_bag_opt}
+Infinite-bagged RSM beats full estimated optimal weights at subset size $k$ iff
+\begin{equation}\label{eq:dom_bag_opt}
+R_k^{\mathrm{bag},\infty}(T-m) < A(m-k),
+\end{equation}
+where $R_k^{\mathrm{bag},\infty}$ is the exact excess risk from \eqref{eq:Rbag_exact}.
+\end{proposition}
+
+\begin{corollary}[Small-het threshold]
+Under Assumption~\ref{ass:sh}, \eqref{eq:dom_bag_opt} reduces to
+$Am^2k^2>C_\delta(T-m)(m-k)$. The dominance threshold is
+\begin{equation}\label{eq:kappa_opt}
+\kappa^{\mathrm{opt},\infty}=\frac{-C_\delta(T-m)+\sqrt{C_\delta^2(T-m)^2+4AC_\delta m^3(T-m)}}{2Am^2}.
+\end{equation}
+Infinite-bagged RSM dominates full OLS for all $k\in(\kappa^{\mathrm{opt},\infty},m)$.
+\end{corollary}
+
+\begin{remark}[Geometric interpretation]
+The right side $A(m-k)$ of \eqref{eq:dom_bag_opt} is the ``estimation budget'':
+it is large when $T\gg m$ (many data per parameter) or when $m-k$ is large
+(the subset uses far fewer forecasters than the full pool). As $k\to m$,
+both sides approach zero and the condition holds trivially (RSM equals full
+optimum in population at $k=m$).
+\end{remark}
+
+\subsection{Finite-Bagged RSM versus Full Estimated Optimal Weights}
+
+\begin{proposition}[Exact finite-bagged dominance over $L^{\mathrm{opt}}$]
+For $G$ independent draws, finite-bagged RSM beats full estimated optimal
+weights at subset size $k$ iff
+\begin{equation}\label{eq:dom_bag_G_opt}
+\left(R_k^{\mathrm{bag},\infty} + \frac{Q_k^{\mathrm{sub}}-Q_k^{\mathrm{bag},\infty}}{G}\right)(T-m) < A(m-k).
+\end{equation}
+\end{proposition}
+
+Under small heterogeneity, this reduces to $Am^2k^2>(T-m)[a_Gmk+c_G(m-k)^2/m^2\cdot m^2]$,
+i.e.\ $Am^2k^2>(T-m)[a_Gmk+c_G(m-k)^2]$.
+
+\subsection{Infinite-Bagged RSM versus Equal Weights}
+
+\begin{proposition}[Exact infinite-bagged dominance over $L^{\mathrm{ave}}$]
+Infinite-bagged RSM beats equal weights at subset size $k$ iff
+\begin{equation}\label{eq:dom_bag_ave}
+(A+R_k^{\mathrm{bag},\infty})(T-1) < M_{\mathrm{ave}}(T-k).
+\end{equation}
+\end{proposition}
+
+\begin{remark}[Sufficient conditions]
+Condition \eqref{eq:dom_bag_ave} is satisfied when:
+(i) $R_k^{\mathrm{bag},\infty}$ is small (bagged weights close to oracle); and
+(ii) $M_{\mathrm{ave}}-A=Q^{\mathrm{ave}}-Q^{\mathrm{opt}}$ is large (equal
+weights substantially worse than oracle).
+For large $T$, the leading constraint simplifies to
+$Q_k^{\mathrm{bag},\infty}<Q^{\mathrm{ave}}$.
+\end{remark}
+
+%===========================================================================
+\section{Exogenous Monte Carlo}
+%===========================================================================
+\label{sec:exomc}
+
+\subsection{Design}
+
+The exogenous simulation takes the true $\Sigma_e$ as given and evaluates
+RSM under the common-loading model with known parameters.
+
+\paragraph{Data-generating process.}
+Forecast errors follow $u_{it}=B_{\mathrm{scale}}F_t+H_{\mathrm{scale}}\varepsilon_{it}$
+where $F_t\sim N(0,1)$ (common factor) and $\varepsilon_{it}\sim N(0,1)$
+(idiosyncratic). The parameter $B\in\{3,8\}$ controls $q$ (common loading)
+and $H\in\{1.05,6\}$ controls the spread of idiosyncratic variances
+$\sigma_i^2$ (heterogeneity). Baseline: $m=50$, $T=240$.
+
+\paragraph{Population objects.}
+All theoretical quantities are computed analytically from $\Sigma_e$:
+$Q^{\mathrm{opt}}$, $C_\delta$, $k^*$ from \eqref{eq:kstar_bag},
+$\hat\alpha$ from log-log OLS of $R_k^{\mathrm{bag},\infty}$ on $z_k$,
+and exact dominance thresholds from \eqref{eq:kappa_opt}.
+$Q_k^{\mathrm{bag},\infty}$ is computed via \eqref{eq:Qbag_exact} using
+$N_{\mathrm{subsets}}=2500$ Monte Carlo subset draws.
+
+\paragraph{Simulation parameters.}
+$N_{\mathrm{rep}}=500$, $G=800$ bags, $N_{\mathrm{subsets,pop}}=2500$.
+
+\paragraph{Objects reported.}
+For each DGP we report: (i)~the population $k^*$ from grid search over
+$Q_k^{\mathrm{bag},\infty}$; (ii)~the empirical $k^*$ minimising MSPE;
+(iii)~the MSPE gain of RSM over EW; (iv)~$\hat\alpha$ from log-log OLS
+on the population curve; (v)~the mean relative error of the small-het
+approximation \eqref{eq:Rapprox} versus the exact $R_k^{\mathrm{bag},\infty}$.
+
+\subsection{Main Results ($m=50$, $T=240$)}
+
+Table~\ref{tab:exo_main} reports the four DGP combinations. The column
+``$k^*$(grid)'' is the minimiser of $Q_k^{\mathrm{bag},\infty}$ on the
+integer grid; ``$k^*$(emp)'' minimises the finite-sample MSPE over 500
+replications.
+
+\begin{table}[ht]
+\centering
+\caption{Exogenous MC: $m=50$, $T=240$, 500 replications, 800 bags.}
+\label{tab:exo_main}
+\begin{tabular}{llcccccc}
+\toprule
+$B$ & $H$ & $k^*$(grid) & $k^*$(emp) & Gain vs EW
+    & $\hat\alpha$ & $R^2$ & Approx.\ err \\
+\midrule
+3 & 1.05 & 1 & 3 & $0.1\%$ & 1.12 & 0.98 & 90\% \\
+8 & 1.05 & 1 & 3 & $0.1\%$ & 1.10 & 0.98 & 90\% \\
+3 & 6    & 3 & 6 & $12.7\%$ & 1.72 & 0.98 & 75\% \\
+8 & $3.5^*$ & 4 & 8 & $14.9\%$ & 1.70 & 0.99 & 77\% \\
+\bottomrule
+\end{tabular}
+\footnotesize{$^*$ Target $H=6$; parameterisation yielded $H_{\mathrm{actual}}=3.51$.
+``Approx.\ err'': mean $|R_k-C_\delta z_k^2|/R_k$ over all $k$.
+$\hat\alpha$: OLS slope from $\log R_k^{\mathrm{bag},\infty}\sim\hat\alpha\log z_k$.
+At $H=1.05$, $C_\delta\approx0$ and the excess-risk curve is nearly flat;
+$\hat\alpha$ is weakly identified and should not be interpreted as a
+structural parameter in this row (see Remark on identification above).}
+\end{table}
+
+\paragraph{Verification of theoretical predictions.}
+\begin{enumerate}
+\item \textbf{Finite-bagging bridge}: Proposition~\ref{prop:bridge} holds
+  to machine precision ($<9\times10^{-15}$) for all $k$ and DGPs.
+\item \textbf{Cube-root formula}: The formula \eqref{eq:kstar_bag} gives
+  $k^*(\mathrm{formula})=k^*(\mathrm{grid})$ exactly in all four DGPs.
+  Despite approximation errors of 75--90\%, the minimiser is correctly
+  located because the error is approximately constant in $k$.
+\item \textbf{Power-law shape}: $R^2>0.97$ for all DGP-power-law fits.
+  At high heterogeneity ($H=6$), $\hat\alpha\approx1.7$, consistent with
+  the intermediate-regime bounds in Proposition~\ref{prop:alpha}. At
+  $H=1.05$, $C_\delta\approx0$ and the excess-risk curve is nearly flat;
+  the fitted $\hat\alpha\approx1.1$ is weakly identified and should not be
+  read as a structural exponent (see identification remark in
+  Section~\ref{sec:powerlaw}).
+\item \textbf{$\hat\alpha$ driven by $H$, not $B$}: Both $B=3$ and $B=8$
+  give similar $\hat\alpha$ at the same $H$, confirming that
+  $\hat\alpha$ reflects idiosyncratic precision heterogeneity, not
+  the common-loading scale.
+\item \textbf{Gains grow with $H$}: 0.1\% at $H=1.05$ vs 12--15\% at
+  $H=3.5$--6. RSM provides most value when forecasters differ substantially.
+\item \textbf{Dominance}: Applying \eqref{eq:kappa_opt}, $\kappa^{\mathrm{opt},\infty}<1$
+  for all DGPs, meaning bagged RSM dominates full estimated OLS at $k=1$.
+  Empirically this is confirmed: $\mathrm{min\,MSPE}(\mathrm{RSM})<\mathrm{MSPE}(\mathrm{full\,OLS})$.
+\end{enumerate}
+
+\subsection{$T$-Scaling: Cube-Root Law}
+
+Table~\ref{tab:exo_scaling} varies $T\in\{80,240,640,1000\}$ at $B=3$,
+$H\approx1.05$. The continuous cube-root formula value \eqref{eq:kstar_bag},
+the integer grid minimiser of $Q_k^{\mathrm{bag},\infty}$, and the empirical
+optimum are reported.
+
+\begin{table}[ht]
+\centering
+\caption{Exogenous $T$-scaling: $B=3$, $H\approx1.05$, $m=50$.}
+\label{tab:exo_scaling}
+\begin{tabular}{lcccc}
+\toprule
+$T$ & $k^*$(formula, cont.) & $k^*$(grid, bag$^\infty$) & $k^*$(emp) & Gain \\
+\midrule
+80   & 0.57 & 1 & 2 & $0.02\%$ \\
+240  & 0.82 & 1 & 2 & $0.02\%$ \\
+640  & 1.13 & 1 & 4 & $0.06\%$ \\
+1000 & 1.31 & 1 & 3 & $0.03\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At $H=1.05$, the excess risk is essentially zero at every $k$, so the loss
+surface is flat and the population optimum is $k^*=1$ for all $T$ studied.
+The cube-root formula correctly predicts this: the continuous value grows
+from 0.57 to 1.31 (confirming $k^*=1$ as the rounded optimum). Gains are
+$<0.1\%$ regardless of $T$, making the scaling law empirically invisible.
+
+\paragraph{Interpretation.}
+The cube-root law is detectable only when heterogeneity is large enough to
+create meaningful excess risk. The $H=6$ baseline confirms this: the formula
+gives $k^*=3$ and $k^*=4$ for $B=3$ and $B=8$ respectively, matching the grid
+search exactly. The $T$-scaling experiment at $H=1.05$ documents the flat
+regime, which is relevant to the SPF application (Section~\ref{sec:spf}).
+
+%===========================================================================
+\section{Motivation for the Endogenous Case}
+%===========================================================================
+\label{sec:endo_motivation}
+
+The exogenous theory treats $\Sigma_e$ as known. In practice, forecast-error
+covariances must be estimated from data. This introduces an additional source
+of noise that the exogenous analysis does not capture.
+
+Two additional challenges arise:
+\begin{enumerate}
+\item \textbf{Covariance estimation error}: estimating $\Sigma_e$ from $m$
+  series of length $T$ requires $m(m+1)/2$ parameters. When $m/T$ is not
+  negligible, the sample covariance is a poor estimate of $\Sigma_e$, and
+  combination weights computed from it can be far from the true optimal.
+\item \textbf{Non-common-loading structure}: real forecast-error covariances
+  are not exactly common-loading. We study two alternatives---Toeplitz
+  (exponential decay) and factor-structured $\Sigma_e$---to assess
+  robustness.
+\end{enumerate}
+
+The endogenous experiment asks whether the qualitative predictions of the
+exogenous theory (interior optimal $k$, RSM dominance over EW and full OLS,
+$T^{1/3}$ scaling) survive in a realistic setting where $\Sigma_e$ is
+estimated and may not follow the common-loading structure.
+
+%===========================================================================
+\section{Endogenous Monte Carlo}
+%===========================================================================
+\label{sec:endomc}
+
+\subsection{Design}
+
+\paragraph{Covariance structures.}
+Two $\Sigma_e$ designs are used:
+\begin{itemize}
+\item \textbf{Toeplitz}: $(\Sigma_e)_{ij}=0.8^{|i-j|}$ (exponential decay
+  with $\rho=0.8$).
+\item \textbf{Factor}: $\Sigma_e=\Lambda\Lambda'+\Psi$ with $r=2$ random
+  factors, factor strength 0.5, idiosyncratic variance 0.25.
+\end{itemize}
+
+\paragraph{Coefficient designs.}
+\begin{itemize}
+\item \textbf{B2} (dense): $\beta_j=1/m$ for all $j$ (equal signal per
+  forecaster).
+\item \textbf{B4} (sparse): non-zero on a small subset, larger values;
+  concentrates predictive power.
+\end{itemize}
+
+\paragraph{Simulation parameters.}
+Baseline: $m=50$, $T=200$, $N_{\mathrm{rep}}=200$, $K_{\mathrm{RS}}=200$
+bags, OOS length 30. $T$-scaling: $T\in\{100,150,200,300,500,800\}$,
+$N_{\mathrm{rep}}=120$, $K_{\mathrm{RS}}=150$.
+
+\paragraph{RSM implementation.}
+At each OOS period, the subset minimum-variance weights are computed as
+\begin{equation}
+\hat w_{i,S} = \frac{(\hat\Sigma_{e,S}^{-1}\iota_S)_i}{\iota_S'\hat\Sigma_{e,S}^{-1}\iota_S},
+\end{equation}
+where $\hat\Sigma_{e,S}$ is the $k\times k$ principal submatrix of the
+rolling training-window sample covariance matrix $\hat\Sigma_e$. This matches
+Definition~\ref{def:rsm} with $\Sigma_e$ replaced by its estimate; under
+the common-loading structure these weights reduce to $\hat\tau_i/\hat A_S$,
+but for general Toeplitz or factor $\Sigma_e$ the full inverse-covariance
+formula is used. Population objects
+$Q_k^{\mathrm{bag},\infty}$ and $R_k^{\mathrm{bag},\infty}$ are estimated
+by Monte Carlo using the true $\Sigma_e$ (for population benchmarking)
+and the full empirical procedure (for the general $\hat\Sigma_e$).
+
+\subsection{Main Results ($m=50$, $T=200$)}
+
+\begin{table}[ht]
+\centering
+\caption{Endogenous MC: $m=50$, $T=200$, 200 replications, 200 bags.}
+\label{tab:endo_main}
+\begin{tabular}{llccccc}
+\toprule
+$\Sigma_e$ & $\beta$ & $k^*$(RMSFE) & $k^*(L_{\mathrm{bag}})$
+           & RMSFE gain & $\kappa_{\mathrm{exact}}$ & $Q^{\mathrm{opt}}$ \\
+\midrule
+Toeplitz & B2 & 11 & 32 & $3.5\%$ & 2 & 0.155 \\
+Toeplitz & B4 & 11 & 26 & $9.8\%$ & 2 & 0.155 \\
+Factor   & B2 & 14 & 29 & $5.0\%$ & 2 & 0.005 \\
+Factor   & B4 & 14 & 29 & $6.1\%$ & 2 & 0.004 \\
+\bottomrule
+\end{tabular}
+
+\medskip
+\footnotesize{``RMSFE gain'': $(L^{\mathrm{EW}}-L^{\mathrm{RSM},k^*})/L^{\mathrm{EW}}$.
+$\kappa_{\mathrm{exact}}$: smallest $k$ at which RSM beats full estimated OLS
+(evaluated on the empirical RMSFE curve). $k^*(L_{\mathrm{bag}})$: minimiser of the
+estimated bagged loss including inflation.}
+\end{table}
+
+\paragraph{Key findings.}
+\begin{enumerate}
+\item \textbf{Interior optimum in all scenarios.} The RMSFE-optimal $k^*$
+  is 11--14, confirming a genuine interior trade-off between approximation
+  bias and estimation noise.
+\item \textbf{Dominance.} $\kappa_{\mathrm{exact}}=2$ in all four scenarios:
+  bagged RSM beats full estimated OLS at every $k\geq 2$.
+\item \textbf{Sparsity amplifies gains.} B4 (sparse) yields larger RMSFE
+  gains than B2 (dense) for both Toeplitz and Factor designs (9.8\% vs 3.5\%
+  for Toeplitz; 6.1\% vs 5.0\% for Factor). Sparse signal concentrates
+  predictive power, increasing effective heterogeneity.
+\item \textbf{Factor structure shifts $k^*$ rightward.} $k^*=14$ for Factor
+  vs $k^*=11$ for Toeplitz. The Factor DGP has lower $Q^{\mathrm{opt}}$
+  (0.004--0.005 vs 0.155), meaning higher signal-to-noise ratio and a larger
+  optimal subset to average out idiosyncratic noise.
+\item \textbf{Gap between $k^*(L_{\mathrm{bag}})$ and $k^*(\mathrm{RMSFE})$.}
+  The inflation-based criterion $k^*(L_{\mathrm{bag}})=26$--32 substantially
+  exceeds the OOS RMSFE optimum $k^*=11$--14. This gap illustrates the limits
+  of the maintained inflation approximation $I(T,k)=(T-1)/(T-k)$: it was
+  derived for a single constrained OLS estimator with $k-1$ free parameters,
+  whereas bagging over many overlapping subsets reduces the effective
+  degrees of freedom below $k-1$. Additionally, the formula does not account
+  for the estimation of $\Sigma_e$ from $m=50$ series. The cube-root rule
+  should therefore be read as a theoretical guide under the maintained
+  approximation, not as a precise predictor of the RMSFE-optimal $k$.
+\end{enumerate}
+
+\subsection{$T$-Scaling in the Endogenous Case}
+
+\begin{table}[ht]
+\centering
+\caption{Endogenous $T$-scaling: $m=50$, B4, 120 replications.}
+\label{tab:endo_scaling}
+\begin{tabular}{lcccccc}
+\toprule
+$\Sigma_e$ & $T=100$ & $T=150$ & $T=200$ & $T=300$ & $T=500$ & $T=800$ \\
+\midrule
+Toeplitz & 10 & 10 & 14 & 14 & 18 & 22 \\
+Factor   & 14 & 14 & 14 & 18 & 26 & 26 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Log-log OLS regressions of $k^*$ on $T$ give slopes of 0.394 (Toeplitz,
+$p=0.001$, $R^2=0.94$) and 0.367 (Factor, $p=0.006$, $R^2=0.88$). Both
+are consistent with the theoretical $T^{1/3}$ prediction and reject $T^{1/2}$
+at the 10\% level.
+
+\subsection{Why the Endogenous $k^*$ Differs from the Exogenous Prediction}
+
+\begin{table}[ht]
+\centering
+\caption{Comparison of $k^*(\text{RMSFE})$ across settings.}
+\label{tab:kstar_compare}
+\begin{tabular}{lcc}
+\toprule
+Setting & $T$ & $k^*$ \\
+\midrule
+Exog.\ MC, $H=1.05$ (population, any $B$) & 240 & 1 \\
+Exog.\ MC, $H=6$, $B=3$ & 240 & 3--6 \\
+Endo.\ MC, Toeplitz, B4 & 200 & 11 \\
+Endo.\ MC, Factor, B4   & 200 & 14 \\
+GDP bivariate (full sample)  & $\approx 100$ & 19 \\
+GDP bivariate (no-COVID)     & $\approx 100$ & 21 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The endogenous $k^*$ is substantially higher than the exogenous population
+prediction for two structural reasons:
+\begin{enumerate}
+\item \textbf{Covariance estimation noise}: in the endogenous case,
+  $\hat\Sigma_e$ is estimated from $m=50$ series of length $T=200$.
+  The Kan--Zhou (2007) penalty for covariance estimation is
+  $(T-2)/(T-m-2)=198/148\approx1.34$, implying a 34\% upward shift in
+  the inflation-adjusted optimal $k$. This explains much of the gap between
+  the exogenous population optimum ($k^*=2$) and the endogenous RMSFE optimum ($k^*=11$--14).
+\item \textbf{Non-common-loading $\Sigma_e$}: neither Toeplitz nor Factor
+  satisfies the common-loading assumption. The bagged weight formula
+  $w_{i,S}=\hat\tau_i/\hat A_S$ is suboptimal for these structures,
+  introducing additional approximation error not captured by the theory.
+\end{enumerate}
+
+%===========================================================================
+\section{Empirical Application: SPF (Near-Optimal Case)}
+%===========================================================================
+\label{sec:spf}
+
+\subsection{Motivation}
+
+The exogenous theory predicts that gains are negligible when forecasters are
+near-homogeneous ($V_\delta\approx0$, $H\approx 1$): the excess risk curve
+$R_k^{\mathrm{bag},\infty}\approx C_\delta z_k^2$ is flat, and the equal-weighted
+mean is near-optimal. The Survey of Professional Forecasters (SPF) provides a
+natural test: professional economists with similar information sets and training
+constitute a near-homogeneous panel.
+
+\subsection{Data and Setup}
+
+\begin{itemize}[nosep]
+\item \textbf{Source}: Philadelphia Fed SPF, Q1 1985--Q4 2024.
+\item \textbf{Panel}: $N_t\approx30$--53 respondents per round (median 36 for
+  real GDP, 35 for CPI).
+\item \textbf{Individual forecasts}: each respondent's own submission
+  (no additional regression estimation step).
+\item \textbf{RSM}: at each round, draw $k$ forecasters without replacement
+  and take the simple average of their forecasts. $G=1000$ draws. Sweep
+  $k\in\{1,\ldots,k_{\max}\}$ where $k_{\max}$ is the largest $k$ at which
+  $\geq80\%$ of rounds have $N_t\geq k$.
+  Since no estimated precision weights are used, infinite bagging mechanically
+  recovers the full equal-weighted mean:
+  $E_S\!\left[\tfrac{1}{k}\sum_{i\in S}f_i\right]=\tfrac{1}{N}\sum_{i=1}^N f_i$.
+  The SPF section therefore functions as a sanity check---confirming that when
+  the method collapses toward equal averaging and forecaster heterogeneity is
+  limited, it is hard to beat the mean---rather than as evidence for the
+  weighted-RSM theory.
+\item \textbf{Target variables}: RGDP growth ($h=1$ and $h=4$); CPI inflation
+  ($h=1$ and $h=4$). Actual values from FRED.
+\end{itemize}
+
+\subsection{Results: Hard to Beat the Mean}
+
+\begin{table}[ht]
+\centering
+\caption{SPF RSM vs equal-weighted mean; OOS Q1 1985--Q4 2024.}
+\label{tab:spf}
+\begin{tabular}{llcccccc}
+\toprule
+Series & $h$ & Med.\ $N$ & $k^*$ & $k=\!\sqrt{N}$ & RMSFE (Mean) & RMSFE (RSM) & Gain \\
+\midrule
+RGDP & 1 & 36 & 3  & 6 & 6.405 & 6.392 & $+0.2\%$ \\
+RGDP & 4 & 36 & 13 & 6 & 2.208 & 2.205 & $+0.1\%$ \\
+CPI  & 1 & 35 & 10 & 6 & 0.974 & 0.969 & $+0.5\%$ \\
+CPI  & 4 & 35 &  3 & 6 & 1.471 & 1.470 & $+0.1\%$ \\
+\bottomrule
+\end{tabular}
+\footnotesize{No DM test significant at 10\% level. Gain $=(L^{\mathrm{EW}}-L^{\mathrm{RSM}})/L^{\mathrm{EW}}$;
+positive means RSM is better. Gains are economically negligible, consistent with the
+sanity-check interpretation (see text).}
+\end{table}
+
+Gains are uniformly below 0.5\% and statistically insignificant. Three
+compounding mechanisms explain why:
+\begin{enumerate}
+\item \textbf{Near-homogeneous precision.} Professional economists use
+  similar models and information sets, placing this application in the
+  $H\approx1.05$ regime. The MC confirms that gains are $<0.1\%$ there.
+\item \textbf{No additional estimation noise.} SPF submissions carry no
+  OLS estimation error, removing the channel through which RSM gains arise
+  in the GDP application.
+\item \textbf{Small panel.} At $N\approx36$, the combinatorial diversity of
+  RSM is limited. The gains from heterogeneous precision grow with $m$
+  (Proposition~\ref{prop:smallhet}).
+\end{enumerate}
+
+\paragraph{Interpretation.}
+The SPF results confirm the sanity check: when RSM uses equal within-subset
+averaging and the infinite-bagged limit mechanically recovers the
+equal-weighted mean, a finite-$G$ approximation offers no reliable advantage.
+Gains are below 0.5\% and statistically indistinguishable from zero in all
+cases. This is consistent with the theory's prediction: near-homogeneous
+forecasters ($C_\delta\approx0$) imply a flat excess-risk curve, and RSM
+reduces to equal weighting. The SPF does not constitute evidence for or
+against the weighted-RSM theory; it confirms the expected limiting behaviour.
+
+%===========================================================================
+\section{Empirical Application: FRED-MD GDP Nowcasting}
+%===========================================================================
+\label{sec:gdp}
+
+\subsection{Data and Setup}
+
+\begin{itemize}[nosep]
+\item \textbf{Source}: 102 real-time quarterly vintages of FRED-MD
+  (September 1999 -- March 2025; Q4 2003 excluded for missing data).
+\item \textbf{Sample}: estimation from approximately 1970Q1 to the
+  forecast origin, giving $T_{\mathrm{eff}}\approx79$--183 quarters
+  (median $\approx100$). Predictor pool: $m\approx126$ monthly FRED-MD
+  series aggregated to quarterly frequency.
+\item \textbf{Target}: log-differenced real GDP growth at one quarter ahead.
+\end{itemize}
+
+\paragraph{Individual forecasts (bivariate).}
+For predictor $j$ and time $t$:
+\begin{equation}
+y_t = \alpha_j + \beta_j x_{j,t} + \varepsilon_t.
+\end{equation}
+Each of the $m\approx126$ predictors yields one individual forecast per period.
+
+\paragraph{Individual forecasts (AR+X).}
+Following \citet{ElliottEtAl2015}:
+\begin{equation}
+y_t = \alpha_j + \sum_{p=1}^P\varphi_p y_{t-p} + \beta_j x_{j,t} + \varepsilon_t,
+\end{equation}
+where $P\in\{0,1,2,3,4\}$ is chosen by AIC at each vintage.
+
+\paragraph{RSM combination.}
+At each period, RSM samples $k$ individual forecasts and computes
+sum-to-one constrained OLS combination weights. $G=1000$ draws for
+the main estimate. Robustness: sweep $k\in\{2,\ldots,55\}$ with $G=200$.
+Default $k=\lfloor\sqrt{T}\rfloor\approx9$--14.
+
+\paragraph{Benchmarks.} Equal-weighted mean, Lasso, Ridge, Random Forest.
+
+\subsection{Bivariate Results}
+
+\begin{table}[ht]
+\centering
+\caption{FRED-MD GDP bivariate RSM: full sample (102 quarters).}
+\label{tab:gdp_biv_full}
+\begin{tabular}{lcccc}
+\toprule
+Model & MAFE & Sig. & RMSFE & Sig. \\
+\midrule
+Mean           & 0.54 &     & 1.10 &    \\
+RSM            & 0.45 & **  & 0.76 & *  \\
+Lasso          & 0.51 &     & 0.73 & *  \\
+Ridge          & 0.49 & *   & 0.98 &    \\
+Random Forest  & 0.55 &     & 1.24 &    \\
+\bottomrule
+\end{tabular}
+\footnotesize{$k=\lfloor\sqrt{T}\rfloor\approx9$. *$p<0.10$; **$p<0.05$ (one-sided DM test vs Mean).}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{FRED-MD GDP bivariate RSM: excluding COVID-19 (Q2--Q3 2020).}
+\label{tab:gdp_biv_nocov}
+\begin{tabular}{lcccc}
+\toprule
+Model & MAFE & Sig. & RMSFE & Sig. \\
+\midrule
+Mean           & 0.42 &     & 0.60 &     \\
+RSM            & 0.38 & **  & 0.53 & **  \\
+Lasso          & 0.45 &     & 0.58 &     \\
+Ridge          & 0.39 & **  & 0.54 & **  \\
+Random Forest  & 0.41 &     & 0.57 & *   \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{RMSFE by $k$: fixed-rule performance and oracle diagnostic.}
+The primary out-of-sample evidence uses the fixed rule $k=\lfloor\sqrt{T}\rfloor\approx9$,
+chosen before observing the evaluation-sample outcomes. Tables~\ref{tab:gdp_biv_full}
+and~\ref{tab:gdp_biv_nocov} report this fixed-$k$ performance.
+
+As a descriptive diagnostic, we also sweep $k\in\{2,\ldots,55\}$ and
+examine the shape of the RMSFE$(k)$ curve \emph{ex post}. The curve is
+U-shaped in both samples, confirming the interior optimum predicted by the
+theory. The ex-post minimisers $k^*=19$ (full) and $k^*=21$ (no-COVID)
+are \emph{oracle values} selected on the evaluation sample and should not
+be interpreted as genuine out-of-sample evidence:
+\begin{itemize}[nosep]
+\item Full sample: oracle $k^*=19$, $\min\mathrm{RMSFE}=0.662$;
+  fixed rule $k=9$: RMSFE $=0.762$.
+\item No-COVID: oracle $k^*=21$, $\min\mathrm{RMSFE}=0.499$;
+  fixed rule $k=9$: RMSFE $=0.529$.
+\end{itemize}
+The gap between the fixed-rule and oracle RMSFE indicates that a
+data-driven $k$ selection rule (e.g.\ rolling validation) could
+deliver further gains, but establishing this is left for future work.
+
+\subsection{AR+X Results}
+
+\begin{table}[ht]
+\centering
+\caption{FRED-MD GDP AR+X RSM: full sample.}
+\label{tab:gdp_arx_full}
+\begin{tabular}{lcccc}
+\toprule
+Model & MAFE & Sig. & RMSFE & Sig. \\
+\midrule
+Mean          & 0.56 &    & 1.27 &   \\
+RSM (AR+X)    & 0.45 & ** & 0.76 & * \\
+Lasso         & 0.52 &    & 0.77 &   \\
+Ridge         & 0.50 & ** & 1.02 & * \\
+Random Forest & 0.57 &    & 1.40 &   \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{FRED-MD GDP AR+X RSM: excluding COVID-19.}
+\label{tab:gdp_arx_nocov}
+\begin{tabular}{lcccc}
+\toprule
+Model & MAFE & Sig. & RMSFE & Sig. \\
+\midrule
+Mean          & 0.41 &    & 0.57 &    \\
+RSM (AR+X)    & 0.39 & *  & 0.52 & *  \\
+Lasso         & 0.47 &    & 0.63 &    \\
+Ridge         & 0.39 & ** & 0.54 & ** \\
+Random Forest & 0.40 &    & 0.57 &    \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Bivariate vs AR+X.}
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{Bivariate} & \multicolumn{2}{c}{AR+X} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Sample & $k^*$ & $\min$RMSFE & $k^*$ & $\min$RMSFE \\
+\midrule
+Full     & 19 & 0.662 & 19 & \textbf{0.617} \\
+No-COVID & 21 & \textbf{0.499} & 16 & 0.506 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Adding AR lags reduces the full-sample RMSFE by 6.8\%. The no-COVID AR+X
+$k^*=16$ is closer to the endogenous MC range 11--14 than the bivariate
+$k^*=21$.
+
+\subsection{Connection to Theory}
+
+The empirical $k^*=16$--21 at $T\approx100$ substantially exceeds the
+exogenous population prediction ($k^*\approx1$--5) for two reasons:
+\begin{enumerate}
+\item \textbf{Underpowered covariance estimation}: $m\approx126>T\approx100$
+  places the application in the $m/T>1$ regime where the Kan--Zhou correction
+  diverges. The standard inflation formula \eqref{eq:I} accounts for estimating
+  $k$ combination weights but not for estimating $\Sigma_e$ from $m>T$ series.
+  This creates substantially more noise at small $k$, pushing $k^*$ rightward.
+\item \textbf{Individual forecast quality}: each predictor's individual forecast
+  is an estimated OLS regression with its own estimation error. This adds a
+  layer of noise absent in the endogenous MC (where individual signals are
+  drawn from a clean DGP), further pushing $k^*$ upward.
+\end{enumerate}
+The AR+X specification partially resolves the second issue: it improves
+individual forecast quality, bringing the no-COVID $k^*$ from 21 to 16
+(closer to the endogenous MC range). The gap that remains is
+attributable to the $m/T>1$ regime.
+
+%===========================================================================
+\section{Summary and Conclusion}
+%===========================================================================
+
+\subsection{Summary of Theoretical Results}
+
+Under the common-loading model (Assumption~\ref{ass:cl}):
+\begin{enumerate}
+\item \textbf{Exact weight-deviation formula} (Proposition~\ref{prop:wdev}):
+  $R_k^{\mathrm{bag},\infty}=\sum_i(\bar v_{i,k}-w_i^{\mathrm{opt}})^2/\tau_i$
+  is the fundamental object governing the trade-off in $k$.
+\item \textbf{Endpoint-corrected approximation} (Proposition~\ref{prop:smallhet}):
+  under small heterogeneity, $R_k^{\mathrm{bag},\infty}\approx C_\delta(1/k-1/m)^2$,
+  derived from the bagged weight expansion, not assumed.
+\item \textbf{Cube-root law}: under the maintained inflation approximation,
+  minimising the inflation-adjusted loss \eqref{eq:Lsub} yields
+  $k^*\propto T^{1/3}$, a lower scaling exponent than the square-root rule
+  of the average-subset estimator.
+\item \textbf{Finite bagging} (Proposition~\ref{prop:bridge}): with $G$ draws,
+  the excess risk is $R_k^{\mathrm{bag},G}\approx(B/G)z_k+(1-1/G)C_\delta z_k^2$.
+  A large number of bags is needed to recover the cube-root law; for small $G$
+  the rule transitions toward the square-root.
+\item \textbf{General heterogeneity} (Propositions \ref{prop:smallhet2}--\ref{prop:alpha}):
+  the excess risk follows a power law $R_k\approx Cz_k^\alpha$ with $\alpha\in[1,2]$,
+  implying $k^*\propto T^{1/(\alpha+1)}\in[T^{1/3},T^{1/2}]$.
+\item \textbf{Exact dominance} (Propositions \ref{prop:dom_bag_opt}--\ref{prop:dom_bag_ave}):
+  closed-form conditions determine when RSM beats full estimated OLS and
+  equal weights. Under small heterogeneity these yield explicit
+  lower-bound thresholds on $k$.
+\end{enumerate}
+
+\subsection{Summary of Monte Carlo Results}
+
+\paragraph{Exogenous MC.}
+All six theoretical predictions are verified. The finite-bagging bridge holds
+to machine precision. The cube-root formula locates $k^*$ exactly in all
+DGPs despite 75--90\% approximation error in $R_k$ levels. The power-law
+slope $\hat\alpha\in[1.1,1.7]$ increases with heterogeneity. Dominance over
+full estimated OLS holds at $k=1$ for all DGPs.
+
+\paragraph{Endogenous MC.}
+The qualitative structure survives under estimated covariance and
+non-common-loading structures: an interior optimum exists, RSM dominates
+full estimated OLS at $k=2$, sparsity amplifies gains (up to 9.8\%), and
+$T$-scaling exponents of 0.39 (Toeplitz) and 0.37 (Factor) are consistent
+with $T^{1/3}$ under the extended estimation-noise interpretation. The
+maintained inflation approximation overpredicts the RMSFE-optimal $k$
+(26--32 vs 11--14), reflecting that bagged RSM has lower effective degrees
+of freedom than a single size-$k$ constrained OLS.
+
+\subsection{Summary of Empirical Results}
+
+\paragraph{SPF.}
+Gains are $<0.5\%$ and statistically insignificant across all four
+variable/horizon combinations. This confirms the theory's prediction for
+the near-homogeneous regime: when forecasters have similar precision
+($H\approx1$), the equal-weighted mean is nearly optimal and hard to beat.
+
+\paragraph{FRED-MD GDP.}
+RSM yields statistically significant RMSFE reductions of 18--30\% over the
+equal-weighted mean (full sample), confirming that large heterogeneous
+predictor panels ($m\approx126$, $\alpha\approx1.7$) are precisely the
+environment where RSM is most valuable. The U-shaped RMSFE$(k)$ curve and
+interior optimum $k^*=16$--21 match the endogenous MC qualitatively. The
+AR+X specification improves individual forecast quality and brings $k^*$
+closer to the MC benchmark.
+
+\subsection{Conclusion}
+
+This paper establishes RSM as a theoretically grounded and empirically effective
+method for forecast combination. Its main advantage over equal weighting is
+largest when forecasters are heterogeneous in precision. Near-homogeneity is
+characterised by $C_\delta\approx0$ (a flat excess-risk curve), not by a
+specific value of the power-law slope $\hat\alpha$, which is weakly identified
+when the curve is flat. When $C_\delta$ is non-negligible and heterogeneity is
+high (as in FRED-MD GDP), RSM delivers 10--30\% RMSFE reductions; when
+$C_\delta\approx0$ (as in the SPF), RSM collapses toward equal weighting and
+gains are negligible. A practitioner can estimate $\hat\alpha$
+by log-log regression of $R_k^{\mathrm{bag},\infty}$ on $z_k$ over a sparse
+grid (Remark~4 of the addendum), then set $k^*=\lfloor(\hat C\hat\alpha T/A)^{1/(\hat\alpha+1)}\rfloor$
+and verify by evaluating $L_k$ at $k^*\pm2$.
+
+\appendix
+
+\section{Exact Dominance Table}
+\label{app:dom}
+
+Table~\ref{tab:dom} collects exact and small-het dominance conditions. Let
+$\mathcal{E}_k=Q_k^{\mathrm{sub}}-Q^{\mathrm{opt}}$, $z_k=1/k-1/m$,
+$\Delta_k=Q_k^{\mathrm{sub}}-Q_k^{\mathrm{bag},\infty}\geq0$.
+
+\begin{table}[ht]
+\centering
+\caption{Exact dominance conditions and small-het approximations.}
+\label{tab:dom}
+\footnotesize
+\begin{tabular}{p{3.2cm}p{4.5cm}p{5cm}}
+\toprule
+Comparison & Exact condition & Small-het approximation \\
+\midrule
+Avg-sub vs $L^{\mathrm{opt}}$
+  & $\mathcal{E}_k(T-m)<A(m-k)$
+  & $k>B(T-m)/(mA)$ \\
+Avg-sub vs $L^{\mathrm{ave}}$
+  & $(s+Q_k^{\mathrm{sub}})(T-1)<M_{\mathrm{ave}}(T-k)$
+  & quadratic in $k$ \\
+$\infty$-bag vs $L^{\mathrm{opt}}$
+  & $R_k^{\mathrm{bag},\infty}(T-m)<A(m-k)$
+  & $Am^2k^2>C_\delta(T-m)(m-k)$ \\
+Finite-bag vs $L^{\mathrm{opt}}$
+  & $(R_k^{\mathrm{bag},\infty}+\Delta_k/G)(T-m)<A(m-k)$
+  & $Am^2k^2>(T-m)[a_Gmk+c_G(m-k)^2]$ \\
+$\infty$-bag vs $L^{\mathrm{ave}}$
+  & $(A+R_k^{\mathrm{bag},\infty})(T-1)<M_{\mathrm{ave}}(T-k)$
+  & cubic in $k$ \\
+\bottomrule
+\multicolumn{3}{l}{$A=s+Q^{\mathrm{opt}}$; $M_{\mathrm{ave}}=s+Q^{\mathrm{ave}}$;
+  $a_G=B/G$; $c_G=(1-1/G)C_\delta$.}
+\end{tabular}
+\end{table}
+
+\section{Data Sources}
+\begin{itemize}[nosep]
+\item \textbf{FRED-MD}: Real-time monthly vintages, September 1999--March
+  2025. 103 vintages; Q4 2003 excluded. \citet{McCrackenNg2016}.
+\item \textbf{FRED-QD}: Quarterly vintages matched to monthly by vintage date.
+\item \textbf{SPF}: Philadelphia Fed Survey of Professional Forecasters.
+  RGDP (columns RGDP1--RGDP5) and CPI (columns CPI1--CPI5).
+  Actuals: GDPC1 and CPIAUCSL from FRED (downloaded June 2026).
+\end{itemize}
+
+\section{Software}
+All simulations in R ($\geq4.2$). Key packages: \texttt{dplyr}, \texttt{glmnet},
+\texttt{ranger}, \texttt{forecast}, \texttt{readxl}. All random seeds fixed.
+Scripts:
+\begin{itemize}[nosep]
+\item Exogenous MC: \texttt{rsm\_common\_loading\_grid\_weights\ldots\_final.R}
+\item Endogenous MC: \texttt{endogenous\_rsm\_toeplitz\_factor.R}
+\item GDP: \texttt{GDP\_constrained/GDP\_all\_k\_results.R} and
+  \texttt{GDP\_ar\_bivariate\_allk.R}
+\item SPF: \texttt{GDP\_constrained/SPF\_RSM\_analysis.R}
+\end{itemize}
+
+\begin{thebibliography}{99}
+
+\bibitem[Bates and Granger(1969)]{BatesGranger1969}
+Bates, J.\,M.\ and Granger, C.\,W.\,J.\ (1969).
+The combination of forecasts.
+\textit{Operational Research Quarterly}, 20(4), 451--468.
+
+\bibitem[Boot and Nibbering(2019)]{BootNibbering2019}
+Boot, T.\ and Nibbering, D.\ (2019).
+Forecasting using random subspace methods.
+\textit{Journal of Econometrics}, 209(2), 391--406.
+
+\bibitem[Elliott et al.(2013)]{ElliottEtAl2015}
+Elliott, G., Gargano, A., and Timmermann, A.\ (2013).
+Complete subset regressions.
+\textit{Journal of Econometrics}, 177(2), 357--373.
+
+\bibitem[Kan and Zhou(2007)]{KanZhou2007}
+Kan, R.\ and Zhou, G.\ (2007).
+Optimal portfolio choice with parameter uncertainty.
+\textit{Journal of Financial and Quantitative Analysis}, 42(3), 621--656.
+
+\bibitem[McCracken and Ng(2016)]{McCrackenNg2016}
+McCracken, M.\,W.\ and Ng, S.\ (2016).
+FRED-MD: A monthly database for macroeconomic research.
+\textit{Journal of Business \& Economic Statistics}, 34(4), 574--589.
+
+\bibitem[Samuels and Sekkel(2017)]{SamuelsSekel2017}
+Samuels, J.\,D.\ and Sekkel, R.\,M.\ (2017).
+Model confidence sets and forecast combination.
+\textit{International Journal of Forecasting}, 33(1), 48--60.
+
+\bibitem[Timmermann(2006)]{Timmermann2006}
+Timmermann, A.\ (2006).
+Forecast combinations.
+In \textit{Handbook of Economic Forecasting}, Vol.\ 1, 135--196.
+
+\end{thebibliography}
+
+\end{document}

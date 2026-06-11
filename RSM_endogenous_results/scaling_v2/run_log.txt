@@ -1,0 +1,51 @@
+Started: 2026-06-04 05:57:38 
+
+
+=== T-scaling experiment (fixed Sigma_e, varying T) ===
+
+  Sigma type: toeplitz 
+    T = 100 : 500 reps done
+    T = 150 : 500 reps done
+    T = 200 : 500 reps done
+    T = 300 : 500 reps done
+    T = 500 : 500 reps done
+    T = 800 : 500 reps done
+
+  Sigma type: factor 
+    T = 100 : 500 reps done
+    T = 150 : 500 reps done
+    T = 200 : 500 reps done
+    T = 300 : 500 reps done
+    T = 500 : 500 reps done
+    T = 800 : 500 reps done
+
+--- T-scaling summary table ---
+   sigma_type T_len best_z_rmsfe best_z_L_bag rel_rmsfe_best min_rmsfe_rs
+1    toeplitz   100           10           31      0.9060735     1.024881
+2    toeplitz   150           11           27      0.8919768     1.017195
+3    toeplitz   200           14           25      0.8920513     1.018773
+4    toeplitz   300           13           25      0.8872390     1.007002
+5    toeplitz   500           16           28      0.8905655     1.020492
+6    toeplitz   800           19           31      0.8810429     1.004971
+7      factor   100           10           30      0.9493619     1.036890
+8      factor   150           14           29      0.9417150     1.039571
+9      factor   200           18           29      0.9436620     1.044117
+10     factor   300           17           32      0.9505800     1.038207
+11     factor   500           22           36      0.9604730     1.060904
+12     factor   800           27           39      0.9543523     1.047294
+   rmsfe_base
+1    1.131123
+2    1.140382
+3    1.142056
+4    1.134984
+5    1.145892
+6    1.140661
+7    1.092197
+8    1.103912
+9    1.106452
+10   1.092183
+11   1.104565
+12   1.097387
+
+
+Finished: 2026-06-05 14:31:50 

@@ -1,0 +1,554 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+\usepackage{microtype}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+% ── Colours ──────────────────────────────────────────────────────────────────
+\definecolor{myblue}{HTML}{1a4f8a}
+\definecolor{lblue}{HTML}{e8eef6}
+\definecolor{mgrey}{HTML}{dce3ec}
+\definecolor{dgrey}{HTML}{6c757d}
+\definecolor{mygreen}{HTML}{2e7d32}
+\definecolor{myred}{HTML}{c62828}
+\definecolor{myamber}{HTML}{e65100}
+
+% ── Section formatting ────────────────────────────────────────────────────────
+\titleformat{\section}{\large\bfseries\color{myblue}}{}{0em}{}[\vspace{-2pt}\color{myblue}\hrule\vspace{4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{myblue}}{}{0em}{}
+\titlespacing{\section}{0pt}{14pt}{4pt}
+\titlespacing{\subsection}{0pt}{8pt}{2pt}
+
+% ── Header / footer ───────────────────────────────────────────────────────────
+\pagestyle{fancy}\fancyhf{}
+\lhead{\small\color{dgrey}RSM Forecast Combination — Alignment Report}
+\rhead{\small\color{dgrey}4 June 2026}
+\cfoot{\small\color{dgrey}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ── Table helpers ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\newcommand{\hdrrow}{\rowcolor{myblue}\color{white}\bfseries}
+\newcommand{\ck}[1]{\textcolor{mygreen}{\textbf{#1}}}
+\newcommand{\pa}[1]{\textcolor{myamber}{\textbf{#1}}}
+\newcommand{\no}[1]{\textcolor{myred}{\textbf{#1}}}
+\newcommand{\na}{\textcolor{dgrey}{--- N/A}}
+
+\setlength{\arrayrulewidth}{0.4pt}
+\arrayrulecolor{mgrey}
+\renewcommand{\arraystretch}{1.25}
+
+% ── Convenience math ─────────────────────────────────────────────────────────
+\newcommand{\kstar}{k^*}
+\newcommand{\Qbaginf}{Q_k^{\mathrm{bag},\infty}}
+\newcommand{\Qbag}{Q_k^{\mathrm{bag},G}}
+\newcommand{\Qsub}{Q_k^{\mathrm{sub}}}
+\newcommand{\Rbag}{R_k^{\mathrm{bag},\infty}}
+\newcommand{\Cdelta}{C_{\delta}}
+\newcommand{\zk}{z_k}
+\newcommand{\ahat}{\hat{\alpha}}
+\newcommand{\Sige}{\Sigma_e}
+\newcommand{\taubar}{\bar{\tau}}
+
+\hypersetup{colorlinks=true,linkcolor=myblue,urlcolor=myblue,citecolor=myblue}
+
+% ── Status boxes ─────────────────────────────────────────────────────────────
+\newmdenv[linecolor=mygreen,linewidth=1pt,backgroundcolor=mygreen!8,
+  innerleftmargin=6pt,innerrightmargin=6pt,innertopmargin=4pt,innerbottommargin=4pt,
+  skipabove=4pt,skipbelow=4pt]{greenbox}
+\newmdenv[linecolor=myred,linewidth=1pt,backgroundcolor=myred!8,
+  innerleftmargin=6pt,innerrightmargin=6pt,innertopmargin=4pt,innerbottommargin=4pt,
+  skipabove=4pt,skipbelow=4pt]{redbox}
+
+% =============================================================================
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries\color{myblue} Random Subset Methods for Forecast Combination}\\[6pt]
+  {\large\color{dgrey} Theory \(\cdot\) Monte Carlo Simulations \(\cdot\) Empirical Results — Alignment Report}\\[4pt]
+  {\normalsize\color{dgrey} 4 June 2026}
+\end{center}
+\vspace{-4pt}
+{\color{myblue}\hrule height 1.5pt}
+\vspace{8pt}
+
+\noindent
+This document summarises the current state of the RSM project across three components:
+(i)~theoretical results derived in the proposal and addendum,
+(ii)~exogenous and endogenous Monte Carlo simulations, and
+(iii)~the GDP empirical application using FRED-MD/FRED-QD real-time vintages.
+Each theoretical prediction is evaluated against its simulation and empirical counterpart.
+
+% =============================================================================
+\section{Theory}
+
+\subsection{Model}
+
+The common-loading model specifies the joint error covariance as
+\(\Sige = q\iota_m\iota_m' + D\),
+\(D = \mathrm{diag}(\sigma_1^2,\ldots,\sigma_m^2)\),
+precision weights \(\tau_i = \sigma_i^{-2}\).
+Two population risk objects are central:
+
+\smallskip
+\begin{tabular}{L{3.2cm} L{5.4cm} L{6.8cm}}
+\rowcolor{myblue}\color{white}\bfseries Object &
+\color{white}\bfseries Formula &
+\color{white}\bfseries Interpretation \\
+\rowcolor{lblue}
+\(\Qsub\) & \(q + \mathbb{E}_S[1/A_S]\) & Average-subset risk (\(B\) subsets averaged) \\
+\(\Qbaginf\) & \(\bar{v}_k'\Sige\bar{v}_k\) & Infinite-bagging risk (\(G\to\infty\)) \\
+\rowcolor{lblue}
+\(\Qbag\) & \(\Qbaginf + G^{-1}\!\left(\Qsub - \Qbaginf\right)\) & Finite-bagging bridge — \textbf{exact identity} \\
+\end{tabular}
+
+\subsection{Key Theoretical Results}
+
+\smallskip
+\begin{tabular}{L{3.8cm} L{5.2cm} L{5.4cm}}
+\rowcolor{myblue}\color{white}\bfseries Result &
+\color{white}\bfseries Formula &
+\color{white}\bfseries Assumption \\
+\rowcolor{lblue}
+Small-het excess risk & \(\Rbag \approx \Cdelta\,\zk^2\) & \(\tau_i \approx \taubar(1+\delta_i)\), \(\delta_i\) small \\
+Cube-root optimal \(\kstar\) (bagged) & \(\kstar \approx (2\Cdelta T/A)^{1/3}\) & Small-het \(+\) \(T\gg k\) \(+\) \(\zk\approx 1/k\) \\
+\rowcolor{lblue}
+Square-root optimal \(\kstar\) (subset) & \(\kstar \approx (A_0 T/B)^{1/2}\) & Leading-order average-subset loss \\
+Finite-bagging bridge & \(\Qbag = \Qbaginf + G^{-1}(\Qsub - \Qbaginf)\) & Exact algebraic identity \\
+\rowcolor{lblue}
+RSM dominance (\(\kappa\)) & \(\Qbaginf < L^{\mathrm{full\,OLS}}\) for \(k\ge\kappa\) & \(\kappa=2\) in all simulated DGPs \\
+\end{tabular}
+
+\subsection{Power-Law Generalisation (Addendum, Section 13)}
+
+The small-het formula underestimates the true excess risk.
+The addendum proposes \(\Rbag \approx C\cdot\zk^{\alpha}\) and establishes two limit cases:
+
+\smallskip
+\begin{tabular}{L{3.8cm} L{4.2cm} C{2.4cm} C{2.4cm}}
+\rowcolor{myblue}\color{white}\bfseries Regime &
+\color{white}\bfseries True form of \(R_k\) &
+\color{white}\bfseries Slope \(\ahat\) &
+\color{white}\bfseries \(\kstar\) scaling \\
+\rowcolor{lblue}
+Homoskedastic & \(0\) & --- & any \(k\) optimal \\
+Small heterogeneity & \(\Cdelta\,\zk^2\) & \(2\) (exact) & \(T^{1/3}\) \\
+\rowcolor{lblue}
+Intermediate & Mixture & \(\alpha\in(1,2)\) & \(T^{1/(\alpha+1)}\) \\
+Large het (dominant forecaster) & \(C'(k\zk)^2\) & \(\approx 1\) (grid OLS) & \(T^{1/2}\) \\
+\end{tabular}
+
+\smallskip\noindent
+Generalised optimal \(\kstar = (C\alpha T/A)^{1/(\alpha+1)}\).
+A general proof that \(\ahat\in[1,2]\) for arbitrary \(\{\tau_i\}\) \textbf{remains open}
+(noted explicitly in the addendum).
+
+% =============================================================================
+\section{Exogenous Monte Carlo}
+
+\noindent\textbf{Design:} \(m=50\), \(T=240\), \(\Sige\) \textbf{known} (exogenous weights).
+\(N_{\mathrm{rep}}=500\), \(G=800\), \(N_{\mathrm{sub}}=2500\).
+Four DGPs: \(B\in\{3,8\}\times H\in\{1.05,6\}\)
+(\(H\)=heterogeneity ratio \(\max/\min\,\sigma_i^2\)).
+\textbf{Status: baseline complete; scaling\_T\_m complete; joint\_B\_H\_grid running.}
+
+\subsection{Baseline Results (\(m=50\), \(T=240\))}
+
+\smallskip
+\begin{tabular}{L{2.2cm} C{1.1cm} C{1.0cm} C{1.2cm} C{1.3cm} C{1.3cm} C{0.9cm} C{0.9cm}}
+\rowcolor{myblue}\color{white}\bfseries DGP &
+\color{white}\bfseries \(\kstar\) form. &
+\color{white}\bfseries \(\kstar\) grid &
+\color{white}\bfseries \(\kstar\) emp. &
+\color{white}\bfseries Gain vs eq. &
+\color{white}\bfseries Gap vs ora. &
+\color{white}\bfseries \(\ahat\) &
+\color{white}\bfseries \(R^2\) \\
+\rowcolor{lblue}
+\(B{=}3,\,H{=}1.05\) & 1 & 1 & \textcolor{myamber}{3} & 0.04\% & 0.19\% & 1.05 & 0.982 \\
+\(B{=}8,\,H{=}1.05\) & 1 & 1 & \textcolor{myamber}{3} & 0.09\% & 0.45\% & 1.05 & 0.976 \\
+\rowcolor{lblue}
+\(B{=}3,\,H{=}6\)   & \ck{3} & \ck{3} & \ck{6} & \ck{10.4\%} & 0.92\% & 1.66 & 0.986 \\
+\(B{=}8,\,H{=}6\)   & \ck{5} & \ck{5} & \ck{9} & \ck{42.1\%} & 3.23\% & 1.68 & 0.983 \\
+\end{tabular}
+
+\smallskip\noindent
+{\small\color{dgrey}
+Cube-root formula matches population grid \(\kstar\) exactly in all four DGPs.
+Empirical \(\kstar\approx 2\times\) population \(\kstar\) (\(\Sige\) estimation noise penalty).
+Gains only meaningful when \(H\) is large.}
+
+\subsection{Small-Het Approximation Quality}
+
+The ratio \(R_k^{\mathrm{mc}}/R_k^{\mathrm{small\text{-}het}}\) grows with \(k\) and blows up near \(k=m\).
+Counterintuitively, the approximation is \textbf{worst for \(H=1.05\)}:
+the true curve follows \(C'(k\zk)^2\) while the formula gives \(\Cdelta\zk^2\), diverging at rate \(k^2\).
+
+\smallskip
+\begin{tabular}{L{2.8cm} C{2.0cm} C{2.0cm} C{2.5cm}}
+\rowcolor{myblue}\color{white}\bfseries DGP &
+\color{white}\bfseries Ratio at \(k=5\) &
+\color{white}\bfseries Ratio at \(k=20\) &
+\color{white}\bfseries Mean rel.\ error \\
+\rowcolor{lblue}
+\(B{=}3,\,H{=}1.05\) & \no{3.9\(\times\)} & \no{21\(\times\)} & \no{91\%} \\
+\(B{=}8,\,H{=}1.05\) & \no{3.3\(\times\)} & \no{16\(\times\)} & \no{90\%} \\
+\rowcolor{lblue}
+\(B{=}3,\,H{=}6\) & \pa{2.6\(\times\)} & \pa{3.8\(\times\)} & \pa{72\%} \\
+\(B{=}8,\,H{=}6\) & \pa{2.3\(\times\)} & \pa{9.3\(\times\)} & \pa{78\%} \\
+\end{tabular}
+
+\subsection{Scaling Experiment (\(T\in\{80,240,640,1000\}\), \(H=1.05\))}
+
+The H=1.05 DGP has near-zero excess risk relative to \(Q_{\mathrm{opt}}\approx1.06\),
+so population \(\kstar(\text{grid})=1\) for all \(T\) — the cube-root rule is not operational.
+The \textbf{H=6 scaling run} (500 reps, paper profile) is currently running.
+
+\smallskip
+\begin{tabular}{C{1.2cm} C{2.0cm} C{2.5cm} C{2.2cm}}
+\rowcolor{myblue}\color{white}\bfseries \(T\) &
+\color{white}\bfseries \(\kstar\) pop.\ grid &
+\color{white}\bfseries \(\kstar\) cube-root cont. &
+\color{white}\bfseries \(\kstar\) empirical \\
+\rowcolor{lblue} 80   & 1 & 0.57 & 2 \\
+240  & 1 & 0.82 & 2 \\
+\rowcolor{lblue} 640  & 1 & 1.13 & 4 \\
+1000 & 1 & 1.31 & 3 \\
+\end{tabular}
+
+\smallskip\noindent
+{\small\color{dgrey}Empirical log-log slope: 0.238 (p=0.21, not significant; \(\kstar\) pinned near floor).
+H=6 run pending — expected to show clear cube-root exponent.}
+
+% =============================================================================
+\section{Endogenous Monte Carlo}
+
+\noindent\textbf{Design:} \(m=50\), \(T=200\), \(\Sige\) \textbf{estimated from data} (endogenous weights).
+Two error structures (Toeplitz \(\rho=0.8\), Factor \(r=2\)) \(\times\) two \(\beta\) designs (B2 dense, B4 sparse).
+\(N_{\mathrm{rep}}=200\), \(K_{\mathrm{RS}}=200\), OOS\(=30\).
+\textbf{Status: complete.}
+
+\subsection{Four-Scenario Summary}
+
+\smallskip
+\begin{tabular}{L{4.0cm} C{1.3cm} C{1.3cm} C{1.1cm} C{1.5cm} C{0.7cm}}
+\rowcolor{myblue}\color{white}\bfseries Scenario &
+\color{white}\bfseries \(\kstar\) RMSFE &
+\color{white}\bfseries Rel.\ RMSFE &
+\color{white}\bfseries Gain &
+\color{white}\bfseries \(\kstar(L_{\mathrm{emp}})\) &
+\color{white}\bfseries \(\kappa\) \\
+\rowcolor{lblue}
+Toeplitz \(\rho=0.8\), B2 (dense)  & 11 & 0.965 & \(-3.5\%\) & 32 & 2 \\
+Toeplitz \(\rho=0.8\), B4 (sparse) & 11 & \ck{0.902} & \ck{\(-9.8\%\)} & 26 & 2 \\
+\rowcolor{lblue}
+Factor \(r=2\), B2 (dense)  & 14 & 0.950 & \(-5.0\%\) & 29 & 2 \\
+Factor \(r=2\), B4 (sparse) & 14 & \ck{0.939} & \ck{\(-6.1\%\)} & 29 & 2 \\
+\end{tabular}
+
+\smallskip\noindent
+{\small\color{dgrey}\(\kappa=2\) universally: bagged RSM beats full estimated OLS for any \(k\ge2\).
+Sparsity (B4) amplifies gains. Factor structure shifts \(\kstar\): \(11\to14\).}
+
+\subsection{T-Scaling of Empirical \(\kstar\) (B4, 120 reps, \(T\in\{100,\ldots,800\}\))}
+
+\smallskip
+\begin{tabular}{L{1.8cm} C{0.7cm} C{0.7cm} C{0.7cm} C{0.7cm} C{0.7cm} C{1.6cm} C{1.5cm} C{1.7cm}}
+\rowcolor{myblue}\color{white}\bfseries \(\Sige\) type &
+\color{white}\bfseries 100 &
+\color{white}\bfseries 200 &
+\color{white}\bfseries 300 &
+\color{white}\bfseries 500 &
+\color{white}\bfseries 800 &
+\color{white}\bfseries Log-log slope &
+\color{white}\bfseries Slope\,\(=\tfrac{1}{3}\)? &
+\color{white}\bfseries Slope\,\(=\tfrac{1}{2}\)? \\
+\rowcolor{lblue}
+Toeplitz & 10 & 14 & 14 & 18 & 22 & \ck{0.394**} & Cannot reject & Rejected (\(t=-2.1\)) \\
+Factor   & 14 & 14 & 18 & 26 & 26 & \ck{0.367**} & Cannot reject & Rejected (\(t=-1.9\)) \\
+\end{tabular}
+
+\smallskip\noindent
+The log-log slope (0.37--0.39) is statistically indistinguishable from \(\tfrac{1}{3}\) but
+significantly below \(\tfrac{1}{2}\).
+The appearance that \(\kstar\approx\sqrt{T}\) at \(T=100\text{--}200\) is a \emph{coincidence}:
+\(c\cdot T^{1/3}=\sqrt{T}\) exactly when \(T=c^6\approx113\) (with \(c\approx2.2\)).
+At \(T=800\): cube-root gives \(\approx20\) (matches data=22); \(\sqrt{T}=28.3\) (does not).
+
+\subsection{Population vs Empirical \(\kstar\) Gap}
+
+\smallskip
+\begin{tabular}{L{5.0cm} C{3.5cm} C{2.0cm}}
+\rowcolor{myblue}\color{white}\bfseries Criterion &
+\color{white}\bfseries Loss surface &
+\color{white}\bfseries \(\kstar\) (Toeplitz B2) \\
+\rowcolor{lblue}
+\(L_{\mathrm{pop}}\) (known \(\Sige\)) & \pa{Range 0.009 — nearly flat} & \pa{2} \\
+RMSFE (OOS, empirical) & --- & \textbf{11} \\
+\rowcolor{lblue}
+\(L_{\mathrm{emp}}\) (estimated \(\hat\Sigma_e\)) & \no{Range 0.39 — steep} & \no{32} \\
+\end{tabular}
+
+\smallskip\noindent
+The inflation formula \((T-1)/(T-k)\) accounts for estimating \(k\) combination weights given fixed \(\Sige\).
+It does \textbf{not} account for estimating \(\Sige\) from \(m=50\) series —
+this additional noise pushes empirical \(\kstar\) from 2 to 11.
+
+% =============================================================================
+\section{GDP Empirical Application (FRED-MD/FRED-QD)}
+
+\noindent
+102 real-time vintages (1999Q3--2025Q1, vintage 18 excluded).
+Predictor pool: \(m\approx126\) monthly FRED-MD series, each transformed to a predicted
+quarterly growth rate by a rolling univariate AR (\(n_{\mathrm{start}}=40\) burn-in quarters).
+\(k\)-grid: 2--55. RSM draws: \(B_{\mathrm{main}}=1000\), \(B_{\mathrm{allk}}=200\).
+\textbf{Status: complete} (minor legend bug in combined figure; all data saved).
+
+\subsection{Sample Design: Why \(T\approx81\) and \(m\le55\)}
+
+\smallskip
+\begin{tabular}{L{2.4cm} L{3.8cm} L{8.0cm}}
+\rowcolor{myblue}\color{white}\bfseries Parameter &
+\color{white}\bfseries Value &
+\color{white}\bfseries Source / explanation \\
+\rowcolor{lblue}
+Training obs \(T\) & 79--180 (median 81) &
+  FRED-QD starts \(\approx\)1970Q1; after \(n_{\mathrm{start}}=40\) burn-in: \(T\approx T_{\mathrm{QD}}-40\) \\
+Rule for \(k_{\mathrm{main}}\) & \(\mathrm{round}(\sqrt{T})=9\) (median) &
+  Hard-coded heuristic; cube-root formula \textbf{not used} \\
+\rowcolor{lblue}
+Predictor pool \(m\) & \(\approx\)126 FRED-MD series &
+  Monthly-to-quarterly aggregation; each column is a univariate AR forecast of that series \\
+\(k\) search range & 2 to 55 &
+  Hard-coded cap; at \(k=55\), \(T=81\): \(k/T\approx0.68\), inflation factor \((T-1)/(T-k)\approx3.1\) \\
+\rowcolor{lblue}
+\(C_\delta\) estimated? & No &
+  \(m>T\) makes \(\Sige\) estimation infeasible; \(C_\delta\), \(\alpha\), \(A\) all unobservable \\
+\end{tabular}
+
+\subsection{Forecast Accuracy Tables}
+
+\textbf{Table 1 — Full Sample}
+
+\smallskip
+\begin{tabular}{L{2.4cm} C{1.0cm} C{0.8cm} C{1.0cm} C{0.8cm} C{1.5cm} C{1.7cm}}
+\rowcolor{myblue}\color{white}\bfseries Model &
+\color{white}\bfseries MAFE &
+\color{white}\bfseries Sig. &
+\color{white}\bfseries RMSFE &
+\color{white}\bfseries Sig. &
+\color{white}\bfseries Target MAFE &
+\color{white}\bfseries Target RMSFE \\
+\rowcolor{lblue}
+Mean          & 0.54 &    & 1.10 &   & 0.54 & 1.10 \\
+RSM           & 0.45 & ** & 0.76 & * & 0.45 & 0.74 \\
+\rowcolor{lblue}
+Lasso         & 0.51 &    & 0.73 & * & 0.51 & 0.76 \\
+Ridge         & 0.49 & *  & 0.98 &   & 0.50 & 1.00 \\
+\rowcolor{lblue}
+Random Forest & 0.55 &    & 1.24 &   & 0.55 & 1.24 \\
+\end{tabular}
+
+\medskip\textbf{Table 2 — COVID-19 Excluded}
+
+\smallskip
+\begin{tabular}{L{2.4cm} C{1.0cm} C{0.8cm} C{1.0cm} C{0.8cm} C{1.5cm} C{1.7cm}}
+\rowcolor{myblue}\color{white}\bfseries Model &
+\color{white}\bfseries MAFE &
+\color{white}\bfseries Sig. &
+\color{white}\bfseries RMSFE &
+\color{white}\bfseries Sig. &
+\color{white}\bfseries Target MAFE &
+\color{white}\bfseries Target RMSFE \\
+\rowcolor{lblue}
+Mean          & 0.42 &    & 0.60 &    & 0.42 & 0.60 \\
+RSM           & 0.38 & ** & 0.53 & ** & 0.39 & 0.53 \\
+\rowcolor{lblue}
+Lasso         & 0.45 &    & 0.58 &    & 0.45 & 0.60 \\
+Ridge         & 0.39 & ** & 0.54 & ** & 0.39 & 0.55 \\
+\rowcolor{lblue}
+Random Forest & 0.41 &    & 0.57 & *  & 0.41 & 0.58 \\
+\end{tabular}
+
+\smallskip\noindent
+{\small\color{dgrey}RSM matches paper targets within \(\pm0.02\) RMSFE.
+Minor discrepancies reflect vintage coverage differences and random seeds.}
+
+\subsection{Optimal \(k\) vs Theory Benchmarks (\(T\approx81\))}
+
+\smallskip
+\begin{tabular}{L{7.0cm} C{1.8cm} C{1.8cm}}
+\rowcolor{myblue}\color{white}\bfseries Benchmark &
+\color{white}\bfseries Full sample &
+\color{white}\bfseries No-COVID \\
+\rowcolor{lblue}
+\(\kstar\) (RMSFE, actual) & \no{19} & \no{21} \\
+\(\sqrt{T}\) with \(T=81\) & 9.0 & 9.0 \\
+\rowcolor{lblue}
+\(T^{1/3}\) with \(T=81\) & 4.3 & 4.3 \\
+\(2.2\times T^{1/3}\) (endo.\ Toeplitz constant) & 9.5 & 9.5 \\
+\rowcolor{lblue}
+\(2.8\times T^{1/3}\) (endo.\ Factor constant) & 12.1 & 12.1 \\
+Power-law slope \(\ahat\) (\(k=2\ldots30\)) & \pa{0.10} & \pa{0.04} \\
+\end{tabular}
+
+\smallskip\noindent
+Empirical \(\kstar=19\text{--}21\) is \(\approx2\times\) larger than the endogenous simulation predicts at the same \(T\).
+The RMSFE curve is nearly flat (\(\ahat\approx0.04\text{--}0.10\), far below the theoretical range \([1,2]\));
+with only 102 OOS predictions the curve is estimated with high sampling variance.
+The \(\sqrt{T}\) heuristic (\(k=9\)) costs only 0.09 RMSFE relative to the empirical optimum in the full sample.
+
+% =============================================================================
+\section{Theory--Simulation--Empirical Alignment}
+
+Each row is a theoretical prediction; columns show whether it is
+\ck{confirmed} (green), \pa{partial} (amber), \no{not confirmed} (red),
+or \na{} in each component.
+
+\smallskip
+\begin{tabular}{L{4.2cm} L{3.1cm} L{3.1cm} L{3.5cm}}
+\rowcolor{myblue}\color{white}\bfseries Theoretical Prediction &
+\color{white}\bfseries Exogenous MC &
+\color{white}\bfseries Endogenous MC &
+\color{white}\bfseries GDP Empirical \\
+
+\rowcolor{lblue}
+Finite-bagging bridge identity &
+\ck{\checkmark\ Confirmed} \newline {\footnotesize max$|$err$|<9\times10^{-15}$} &
+\na &
+\na \\
+
+Cube-root formula \(=\) population \(\kstar\) &
+\ck{\checkmark\ Exact (all DGPs)} &
+\pa{\(\sim\) Partial} \newline {\footnotesize Pop.\ \(\kstar=2\); emp.\ \(\kstar=11\)} &
+\no{\(\times\) Not applicable} \newline {\footnotesize \(C\) not estimable (\(m>T\))} \\
+
+\rowcolor{lblue}
+Square-root subset formula \(=\) grid \(\kstar\) &
+\ck{\checkmark\ Exact (all DGPs)} &
+\na &
+\na \\
+
+Empirical \(\kstar\) scales as \(T^{1/3}\) &
+\pa{\(\sim\) Partial} \newline {\footnotesize \(H=1.05\): \(\kstar\) at floor; H=6 run pending} &
+\ck{\checkmark\ Confirmed} \newline {\footnotesize Slope 0.37--0.39 (\(p<0.01\))} &
+\pa{\(\sim\) Partial} \newline {\footnotesize \(\kstar\) grows; curve too flat} \\
+
+Power-law \(\ahat\in[1,2]\), \(R^2>0.97\) &
+\ck{\checkmark\ Confirmed} \newline {\footnotesize \(\ahat\in\{1.05,1.68\}\)} &
+\na &
+\no{\(\times\) \(\ahat\approx0.04\text{--}0.10\)} \newline {\footnotesize Sampling noise dominates} \\
+
+\rowcolor{lblue}
+\(\ahat\) depends on \(H\), not \(B\) &
+\ck{\checkmark\ Confirmed} \newline {\footnotesize B=3 and B=8 identical} &
+\na &
+\na \\
+
+RSM dominates full estimated OLS &
+\ck{\checkmark\ \(\approx\)25\% lower loss} &
+\ck{\checkmark\ \(\kappa=2\) universally} &
+\ck{\checkmark\ OLS infeasible; RSM works} \\
+
+\rowcolor{lblue}
+RSM beats equal weights (large \(H\)) &
+\ck{\checkmark\ 10--42\% gains} &
+\ck{\checkmark\ 3.5--9.8\% RMSFE} &
+\ck{\checkmark\ 5--12\% RMSFE gain} \\
+
+Small-het approximation accurate &
+\no{\(\times\) Off by 2--21\(\times\)} \newline {\footnotesize 72--91\% rel.\ error} &
+\na &
+\na \\
+
+\(\kstar\approx\sqrt{T}\) as rule of thumb &
+\pa{\(\sim\) Coincidence at \(T\approx113\)} &
+\pa{\(\sim\) Valid at \(T=100\text{--}200\) only;\newline true scaling is \(T^{1/3}\)} &
+\pa{\(\sim\) Used in script;\newline grid \(\kstar\) is \(\approx2\times\) larger} \\
+\end{tabular}
+
+% =============================================================================
+\section{Open Items and Next Steps}
+
+\begin{tabular}{L{1.5cm} L{7.5cm} L{5.2cm}}
+\rowcolor{myblue}\color{white}\bfseries Priority &
+\color{white}\bfseries Item &
+\color{white}\bfseries Status \\
+
+\rowcolor{lblue}
+\no{High} &
+H=6 scaling run (500 reps, paper profile): verify cube-root exponent \(\approx1/3\)
+for exogenous case with meaningful heterogeneity &
+Running — PID active, \(\approx\)4--5\,h remaining \\
+
+\no{High} &
+\texttt{joint\_B\_H\_grid}: full \(\ahat(H)\) surface, \(B\times H\) interaction,
+cube-root scaling at \(H=6\) &
+Running — begins after \texttt{scaling\_T\_m} \\
+
+\rowcolor{lblue}
+\no{High} &
+Prove \(\ahat\in[1,2]\) for arbitrary \(\{\tau_i\}\): upper bound (Jensen) plausible;
+lower bound needs monotonicity in \(H\) or per-forecaster decomposition &
+Open theoretical problem \\
+
+\no{High} &
+Explain robustness of cube-root formula: why \(\kstar(\text{formula})=\kstar(\text{grid})\)
+when small-het approx fails by 3--21\(\times\)? &
+Empirical finding — no proof yet \\
+
+\rowcolor{lblue}
+\pa{Medium} &
+Endogenous G\_bag fix: re-run with \texttt{G\_bag=K\_RS} to populate
+\texttt{Q\_bag\_G\_mc} column (currently all NA) &
+Bug identified, not yet re-run \\
+
+\pa{Medium} &
+GDP legend fix: one-line \texttt{pt.pch} removal to regenerate combined figure &
+Trivial — pending \\
+
+\rowcolor{lblue}
+\pa{Medium} &
+Integrate addendum (Section~13) into main proposal:
+decide placement (Sec.~7 extension vs standalone appendix) &
+Decision pending \\
+
+\pa{Medium} &
+Formalise practitioner rule of thumb: \(\kstar\in[T^{1/3},T^{1/2}]\)
+as a documented recommendation &
+Needs paper section \\
+
+\rowcolor{lblue}
+{\color{dgrey}Low} &
+Fix GDP script bugs for final results: \texttt{exclude=1845}, \texttt{ak[-c(1:2),]}, \texttt{dm.test} NAs &
+Identified, deferred \\
+\end{tabular}
+
+\vspace{12pt}
+\noindent\rule{\linewidth}{0.4pt}
+
+\noindent{\small\color{dgrey}
+Generated 4 June 2026.
+Exogenous PID 71717 (\texttt{joint\_B\_H\_grid} running).
+H=6 scaling PID active (500 reps, paper profile).
+GDP outputs: \texttt{GDP\_constrained/all\_k\_results/}.
+LaTeX addendum: \texttt{rsm\_powerlaw\_section.tex}.
+}
+
+\end{document}

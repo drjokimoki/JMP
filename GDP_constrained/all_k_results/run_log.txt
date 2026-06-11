@@ -1,0 +1,143 @@
+Warning messages:
+1: package 'glmnet' was built under R version 4.3.3 
+2: package 'ranger' was built under R version 4.3.3 
+GDP all-k analysis started.
+Output directory: /Users/boris/Desktop/RSShapley/Combination_Monte/Final/codess/JMP/GDP_constrained/all_k_results 
+Running 102 vintages (k_grid: 2 to 55 | B_allk = 200 )...
+  Vintage 1999-09 | k_main = 9 | T_est = 83 | RS = 1.071 
+  Vintage 1999-12 | k_main = 9 | T_est = 84 | RS = 1.084 
+  Vintage 2000-03 | k_main = 9 | T_est = 85 | RS = 1.265 
+  Vintage 2000-06 | k_main = 9 | T_est = 86 | RS = 0.712 
+  Vintage 2000-09 | k_main = 9 | T_est = 87 | RS = 0.489 
+  Vintage 2000-12 | k_main = 9 | T_est = 88 | RS = 0.46 
+  Vintage 2001-03 | k_main = 9 | T_est = 89 | RS = 0.421 
+  Vintage 2001-06 | k_main = 6 | T_est = 34 | RS = 0.509 
+  Vintage 2001-09 | k_main = 6 | T_est = 35 | RS = 0.614 
+  Vintage 2001-12 | k_main = 6 | T_est = 36 | RS = 0.427 
+  Vintage 2002-03 | k_main = 6 | T_est = 37 | RS = 0.807 
+  Vintage 2002-06 | k_main = 6 | T_est = 38 | RS = 0.722 
+  Vintage 2002-09 | k_main = 6 | T_est = 39 | RS = 0.769 
+  Vintage 2002-12 | k_main = 6 | T_est = 40 | RS = 0.592 
+  Vintage 2003-03 | k_main = 6 | T_est = 41 | RS = 0.849 
+  Vintage 2003-06 | k_main = 6 | T_est = 42 | RS = 0.487 
+  Vintage 2003-09 | k_main = 7 | T_est = 43 | RS = 0.938 
+  Vintage 2004-03 | k_main = 7 | T_est = 45 | RS = 0.984 
+  Vintage 2004-06 | k_main = 7 | T_est = 46 | RS = 1.177 
+  Vintage 2004-09 | k_main = 7 | T_est = 47 | RS = 0.934 
+  Vintage 2004-12 | k_main = 7 | T_est = 48 | RS = 0.959 
+  Vintage 2005-03 | k_main = 7 | T_est = 49 | RS = 0.906 
+  Vintage 2005-06 | k_main = 7 | T_est = 50 | RS = 0.846 
+  Vintage 2005-09 | k_main = 7 | T_est = 51 | RS = 0.913 
+  Vintage 2005-12 | k_main = 7 | T_est = 52 | RS = 1.128 
+  Vintage 2006-03 | k_main = 7 | T_est = 53 | RS = 0.864 
+  Vintage 2006-06 | k_main = 7 | T_est = 54 | RS = 0.904 
+  Vintage 2006-09 | k_main = 7 | T_est = 55 | RS = 0.716 
+  Vintage 2006-12 | k_main = 7 | T_est = 56 | RS = 0.807 
+  Vintage 2007-03 | k_main = 8 | T_est = 57 | RS = 0.691 
+  Vintage 2007-06 | k_main = 8 | T_est = 58 | RS = 0.741 
+  Vintage 2007-09 | k_main = 8 | T_est = 59 | RS = 0.588 
+  Vintage 2007-12 | k_main = 8 | T_est = 60 | RS = 0.762 
+  Vintage 2008-03 | k_main = 8 | T_est = 61 | RS = 0.277 
+  Vintage 2008-06 | k_main = 8 | T_est = 62 | RS = 0.52 
+  Vintage 2008-09 | k_main = 8 | T_est = 63 | RS = 0.012 
+  Vintage 2008-12 | k_main = 8 | T_est = 64 | RS = -0.335 
+  Vintage 2009-03 | k_main = 8 | T_est = 62 | RS = -0.275 
+  Vintage 2009-06 | k_main = 8 | T_est = 63 | RS = -0.303 
+  Vintage 2009-09 | k_main = 8 | T_est = 64 | RS = 0.619 
+  Vintage 2009-12 | k_main = 8 | T_est = 65 | RS = 0.446 
+  Vintage 2010-03 | k_main = 8 | T_est = 66 | RS = 0.618 
+  Vintage 2010-06 | k_main = 8 | T_est = 67 | RS = 0.826 
+  Vintage 2010-09 | k_main = 8 | T_est = 68 | RS = 0.536 
+  Vintage 2010-12 | k_main = 8 | T_est = 69 | RS = 0.591 
+  Vintage 2011-03 | k_main = 8 | T_est = 70 | RS = 0.833 
+  Vintage 2011-06 | k_main = 8 | T_est = 71 | RS = 0.436 
+  Vintage 2011-09 | k_main = 8 | T_est = 72 | RS = 0.701 
+  Vintage 2011-12 | k_main = 9 | T_est = 73 | RS = 0.692 
+  Vintage 2012-03 | k_main = 9 | T_est = 74 | RS = 0.776 
+  Vintage 2012-06 | k_main = 9 | T_est = 75 | RS = 0.638 
+  Vintage 2012-09 | k_main = 9 | T_est = 76 | RS = 0.543 
+  Vintage 2012-12 | k_main = 9 | T_est = 77 | RS = 0.586 
+  Vintage 2013-03 | k_main = 9 | T_est = 78 | RS = 0.805 
+  Vintage 2013-06 | k_main = 9 | T_est = 79 | RS = 0.599 
+  Vintage 2013-09 | k_main = 9 | T_est = 80 | RS = 0.674 
+  Vintage 2013-12 | k_main = 9 | T_est = 81 | RS = 0.866 
+  Vintage 2014-03 | k_main = 9 | T_est = 82 | RS = 0.537 
+  Vintage 2014-06 | k_main = 9 | T_est = 83 | RS = 0.697 
+  Vintage 2014-09 | k_main = 9 | T_est = 84 | RS = 0.633 
+  Vintage 2014-12 | k_main = 9 | T_est = 85 | RS = 0.891 
+  Vintage 2015-03 | k_main = 9 | T_est = 86 | RS = 0.587 
+  Vintage 2015-06 | k_main = 9 | T_est = 87 | RS = 0.617 
+  Vintage 2015-09 | k_main = 9 | T_est = 88 | RS = 0.74 
+  Vintage 2015-12 | k_main = 9 | T_est = 89 | RS = 0.613 
+  Vintage 2016-03 | k_main = 9 | T_est = 90 | RS = 0.689 
+  Vintage 2016-06 | k_main = 10 | T_est = 91 | RS = 0.708 
+  Vintage 2016-09 | k_main = 10 | T_est = 92 | RS = 0.63 
+  Vintage 2016-12 | k_main = 10 | T_est = 93 | RS = 0.666 
+  Vintage 2017-03 | k_main = 10 | T_est = 94 | RS = 0.615 
+  Vintage 2017-06 | k_main = 10 | T_est = 95 | RS = 0.76 
+  Vintage 2017-09 | k_main = 10 | T_est = 96 | RS = 0.516 
+  Vintage 2017-12 | k_main = 10 | T_est = 97 | RS = 0.831 
+  Vintage 2018-03 | k_main = 10 | T_est = 98 | RS = 0.861 
+  Vintage 2018-06 | k_main = 10 | T_est = 99 | RS = 0.74 
+  Vintage 2018-09 | k_main = 10 | T_est = 100 | RS = 0.82 
+  Vintage 2018-12 | k_main = 10 | T_est = 101 | RS = 0.649 
+  Vintage 2019-03 | k_main = 10 | T_est = 102 | RS = 0.574 
+  Vintage 2019-06 | k_main = 10 | T_est = 103 | RS = 0.557 
+  Vintage 2019-09 | k_main = 10 | T_est = 104 | RS = 0.6 
+  Vintage 2019-12 | k_main = 10 | T_est = 105 | RS = 0.663 
+  Vintage 2020-03 | k_main = 10 | T_est = 106 | RS = 0.638 
+  Vintage 2020-06 | k_main = 10 | T_est = 107 | RS = -6.13 
+  Vintage 2020-09 | k_main = 10 | T_est = 108 | RS = 2.524 
+  Vintage 2020-12 | k_main = 10 | T_est = 109 | RS = 1.453 
+  Vintage 2021-03 | k_main = 10 | T_est = 108 | RS = 0.825 
+  Vintage 2021-06 | k_main = 10 | T_est = 109 | RS = 0.781 
+  Vintage 2021-09 | k_main = 10 | T_est = 110 | RS = 1.154 
+  Vintage 2021-12 | k_main = 11 | T_est = 111 | RS = 1.283 
+  Vintage 2022-03 | k_main = 11 | T_est = 112 | RS = 1.227 
+  Vintage 2022-06 | k_main = 11 | T_est = 113 | RS = 0.878 
+  Vintage 2022-09 | k_main = 11 | T_est = 114 | RS = 0.8 
+  Vintage 2022-12 | k_main = 11 | T_est = 115 | RS = 0.558 
+  Vintage 2023-03 | k_main = 11 | T_est = 116 | RS = 0.753 
+  Vintage 2023-06 | k_main = 11 | T_est = 117 | RS = 0.807 
+  Vintage 2023-09 | k_main = 11 | T_est = 118 | RS = 0.769 
+  Vintage 2023-12 | k_main = 11 | T_est = 119 | RS = 0.418 
+  Vintage 2024-03 | k_main = 11 | T_est = 120 | RS = 0.568 
+  Vintage 2024-06 | k_main = 11 | T_est = 121 | RS = 0.588 
+  Vintage 2024-09 | k_main = 11 | T_est = 122 | RS = 0.583 
+  Vintage 2024-12 | k_main = 13 | T_est = 179 | RS = 0.559 
+  Vintage 2025-03 | k_main = 11 | T_est = 124 | RS = 0.696 
+There were 50 or more warnings (use warnings() to see the first 50)
+res_list saved.
+Loading actuals from: FRED-QD_2025m03.csv 
+Main results and all-k matrix saved.
+
+--- Evaluation set: Full sample | n = 101 ---
+
+--- Evaluation set: COVID-excluded | n = 99 ---
+
+Table 1 — GDP Forecast Evaluation: Full Sample
+# A tibble: 5 x 5
+  Model          MAFE MAFE_sig RMSFE RMSFE_sig
+  <chr>         <dbl> <chr>    <dbl> <chr>    
+1 Mean           0.54 ""        1.1  ""       
+2 RSM            0.45 "**"      0.76 "*"      
+3 Lasso          0.51 ""        0.73 "*"      
+4 Ridge          0.49 "*"       0.98 ""       
+5 Random Forest  0.55 ""        1.24 ""       
+
+Table 2 — GDP Forecast Evaluation: Excluding COVID-19
+# A tibble: 5 x 5
+  Model          MAFE MAFE_sig RMSFE RMSFE_sig
+  <chr>         <dbl> <chr>    <dbl> <chr>    
+1 Mean           0.42 ""        0.6  ""       
+2 RSM            0.38 "**"      0.53 "**"     
+3 Lasso          0.45 ""        0.58 ""       
+4 Ridge          0.39 "**"      0.54 "**"     
+5 Random Forest  0.41 ""        0.57 "*"      
+
+Figure 29 (full): k* = 19, RMSFE = 0.662 | sqrt(T) ref k = 9, RMSFE = 0.755
+Figure 30 (no COVID): k* = 21, RMSFE = 0.499 | sqrt(T) ref k = 9, RMSFE = 0.523
+Error in legend("topright", legend = c(sprintf("RSM  k*=%d (RMSFE=%.3f)",  : 
+  unused argument (pt.pch = c(19, NA))
+Calls: make_rmsfe_fig
+Execution halted

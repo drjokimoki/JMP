@@ -894,7 +894,8 @@ run_scenario <- function(sc) {
   pop_mc <- q_population_mc_general(
     Sigma_e  = Sigma_e,
     k_grid   = z_grid,
-    n_subsets = N_POP_MC_ENDO
+    n_subsets = N_POP_MC_ENDO,
+    G_bag    = K_RS
   )
 
   # Inflation-adjusted population loss curves (using paper formula).
@@ -937,6 +938,7 @@ run_scenario <- function(sc) {
   for (rr in seq_len(N_REP)) {
     if (rr %% max(1, floor(N_REP / 5)) == 0) {
       cat("  replication", rr, "of", N_REP, "\n")
+      gc(verbose = FALSE)
     }
     set.seed(GLOBAL_SEED + 100000L * sc$scenario_id + rr)
     rep_dfs[[rr]] <- run_one_rep_all_z(
