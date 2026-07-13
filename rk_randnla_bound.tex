@@ -1,0 +1,281 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage[margin=1in]{geometry}
+
+\newcommand{\Sig}{\Sigma_e}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\Rk}{R_k^{\mathrm{bag},\infty}}
+\newcommand{\Qsub}{Q_k^{\mathrm{sub}}}
+\newcommand{\Qopt}{Q^{\mathrm{opt}}}
+\newcommand{\iotab}{\bm{\iota}}
+
+\newtheorem{assumption}{Assumption}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+\title{Bounding the Infinite-Bagged RSM Remainder under Common Loading\\
+\large A randomized-linear-algebra/coherence argument}
+\date{June 18, 2026}
+
+\begin{document}
+\maketitle
+
+%==========================================================================
+\section{Purpose}
+This note gives a clean way to bound the infinite-bagged RSM remainder
+\[
+  \Rk = Q_k^{\mathrm{bag},\infty} - \Qopt,
+\]
+under the common-loading heteroskedastic forecast-error structure. The goal is not to
+assume a functional form such as $C/k^2$, but to show when such a rate is theoretically
+justified. The randomized-linear-algebra (RandNLA) idea enters through leverage coherence:
+uniform random subspace sampling is close to leverage sampling only when the leverage/oracle
+weights are not too concentrated. When leverage is highly concentrated, the safe bound is the
+Jensen bound $0\le \Rk \le \Qsub - \Qopt$.
+
+%==========================================================================
+\section{Common-loading setup and exact remainder}
+Assume the common-loading covariance structure
+\[
+  \Sig = q\,\iotab\iotab' + D,\qquad D=\diag(\sigma_1^2,\dots,\sigma_m^2),
+  \qquad \tau_i=\sigma_i^{-2}>0.
+\]
+Let
+\[
+  A_m=\sum_{i=1}^m\tau_i=m\bar\tau,\qquad \ell_i=\frac{\tau_i}{A_m},
+  \qquad \sum_{i=1}^m\ell_i=1.
+\]
+Under common loading the full oracle combination weight is $w_i^*=\tau_i/A_m=\ell_i$, so the
+oracle weights are exactly the normalized precision scores --- the link to leverage-score
+sampling. For a subset $S$ of size $k$, define the sampled leverage mass
+$L_S=\sum_{j\in S}\ell_j=A_S/A_m$, $A_S=\sum_{j\in S}\tau_j$. The embedded subset weight is
+$v_{S,i}=\mathbf 1\{i\in S\}\,\tau_i/A_S=\mathbf 1\{i\in S\}\,\ell_i/L_S$, so the
+infinite-bagged weight is $\bar v_{k,i}=\E_S[\mathbf 1\{i\in S\}\,\ell_i/L_S]$.
+Since $\bar v_k'\iotab=1$, the exact excess-risk identity is
+\[
+  \Rk=(\bar v_k-w^*)'\Sig(\bar v_k-w^*)=\sum_{i=1}^m\frac{(\bar v_{k,i}-w_i^*)^2}{\tau_i}.
+\]
+Because $w_i^*=\ell_i$ and $\tau_i=A_m\ell_i$,
+\begin{equation}\label{eq:R1}
+  \Rk=\frac{1}{A_m}\sum_{i=1}^m\ell_i\left(\frac{\bar v_{k,i}}{\ell_i}-1\right)^2.
+\end{equation}
+This is the RandNLA form: $\Rk$ is a weighted squared error from estimating the
+leverage/oracle vector by uniform subset sampling.
+
+%==========================================================================
+\section{The coherence parameter}
+Define the leverage coherence and normalized precision dispersion
+\[
+  \kappa=m\max_i\ell_i=\frac{\tau_{\max}}{\bar\tau},\qquad
+  h_i=m\ell_i-1=\frac{\tau_i-\bar\tau}{\bar\tau},\qquad
+  V_\delta=\frac1m\sum_i h_i^2=m\sum_i\Big(\ell_i-\tfrac1m\Big)^2.
+\]
+Low coherence means no coordinate dominates the oracle weight; high coherence means a few
+forecasts carry a large fraction of it.
+
+%==========================================================================
+\section{Low-coherence/balanced-leverage bound}
+\begin{assumption}[Balanced leverage]\label{ass:bl}
+There exist constants $0<c\le C<\infty$ such that, for all $m$ and all $i$,
+$c/m\le\ell_i\le C/m$, equivalently $c\le\tau_i/\bar\tau\le C$.
+\end{assumption}
+Let $p=k/m$. Conditional on $i\in S$, write $L_{i,R}=\ell_i+\sum_{j\in R}\ell_j$, where $R$
+is a size-$(k-1)$ subset drawn uniformly without replacement from $\{1,\dots,m\}\setminus\{i\}$.
+Then $\bar v_{k,i}/\ell_i=p\,\E_R[1/L_{i,R}]$, with conditional mean
+\[
+  \mu_i=\E_R[L_{i,R}]=\ell_i+(k-1)\frac{1-\ell_i}{m-1}
+  =p+\frac{m-k}{m-1}\Big(\ell_i-\tfrac1m\Big),\qquad
+  z_k=\frac1k-\frac1m=\frac{m-k}{km}.
+\]
+\begin{lemma}[Reciprocal expansion with explicit remainder]\label{lem:recip}
+For each $i$,
+$\E_R[1/L_{i,R}]=1/\mu_i+\E_R\!\big[(L_{i,R}-\mu_i)^2/(L_{i,R}\mu_i^2)\big]$, hence
+\[
+  \frac{\bar v_{k,i}}{\ell_i}-1=\Big(\frac{p}{\mu_i}-1\Big)
+  +p\,\E_R\!\left[\frac{(L_{i,R}-\mu_i)^2}{L_{i,R}\mu_i^2}\right].
+\]
+\end{lemma}
+\begin{proof}
+Use the exact identity $1/x=1/\mu-(x-\mu)/\mu^2+(x-\mu)^2/(x\mu^2)$ with $x=L_{i,R}$,
+$\mu=\mu_i$; the first-order term vanishes since $\E_R[L_{i,R}-\mu_i]=0$.
+\end{proof}
+The first-order term is governed by deviations of $\ell_i$ from $1/m$; the second is a
+finite-population ratio-estimator bias.
+\begin{proposition}[Coherence-controlled RandNLA bound]\label{prop:lowcoh}
+Under balanced leverage, for $2\le k<m$ and $m\ge4$, there is a constant $K_{c,C}<\infty$,
+depending only on $c,C$, with
+\begin{equation}\label{eq:lowcoh}
+  \Rk\le\frac{K_{c,C}}{m\bar\tau}\big(V_\delta+V_\delta^2\big)\,z_k^2 .
+\end{equation}
+If $V_\delta$ is bounded this is $\Rk=O\!\big(V_\delta z_k^2/(m\bar\tau)\big)$, a $1/k^2$
+envelope for $k\ll m$.
+\end{proposition}
+\begin{proof}[Proof sketch]
+Balanced leverage gives $L_{i,R}\ge cp$ and $\mu_i\ge cp$. Then
+$|p/\mu_i-1|=|p-\mu_i|/\mu_i\le K_c|h_i|z_k$. The SRSWOR variance
+$\Var_R(L_{i,R})\le\frac{(k-1)(m-k)}{m(m-1)(m-2)}V_\delta$ controls the ratio-bias term by
+$K_cV_\delta z_k$, so $|\bar v_{k,i}/\ell_i-1|\le K_cz_k(|h_i|+V_\delta)$. Plugging into
+\eqref{eq:R1} and using $\ell_i\le C/m$, $\sum_i\ell_i h_i^2\le CV_\delta$, gives
+\eqref{eq:lowcoh}.
+\end{proof}
+\begin{remark}
+Uniform subset sampling is close to leverage sampling when leverage scores are balanced; the
+bias of uniform infinite bagging is then second order in the sampling distortion, so the
+excess risk has a $z_k^2$ envelope. This is the theoretical source of the cube-root rule in
+the low-coherence common-loading case. The envelope is an upper bound; the matching lower
+bound is supplied in Section~\ref{sec:bracket}.
+\end{remark}
+
+%==========================================================================
+\section{Using the low-coherence bound to choose $k$}
+Let $A=\sigma_\varepsilon^2+\Qopt=\sigma_\varepsilon^2+q+1/A_m$. The infinite-bagged loss is
+$L_k^{\mathrm{bag},\infty}=(A+\Rk)\frac{T-1}{T-k}$. Under the low-coherence envelope
+$\Rk\lesssim C_R z_k^2$, $C_R\asymp V_\delta/(m\bar\tau)$, and $z_k\approx1/k$ for $k\ll m$,
+the first-order condition $R_k'(T-k)+(A+R_k)=0$ becomes $Ak^3+3C_Rk-2C_RT=0$, so for large $T$
+\begin{equation}\label{eq:k3}
+  k^*\approx\Big(\frac{2C_RT}{A}\Big)^{1/3}\propto T^{1/3}.
+\end{equation}
+
+%==========================================================================
+\section{High-coherence case: the safe Jensen bound}
+If leverage is highly concentrated the constants in \eqref{eq:lowcoh} explode; this is the
+main economic case (a dominant high-precision forecast). Then do not use a $z_k^2$ bound
+unless verified empirically; use the exact Jensen sandwich.
+\begin{proposition}[High-coherence fallback]\label{prop:jensen}
+For any positive precision vector and any $1\le k\le m$,
+\begin{equation}\label{eq:jensen}
+  0\le \Rk=Q_k^{\mathrm{bag},\infty}-\Qopt\le \Qsub-\Qopt
+  =\E_S[1/A_S]-\frac{1}{A_m}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+Lower bound: $w^*$ minimizes $w'\Sig w$ over sum-to-one weights and $\bar v_k$ is feasible.
+Upper bound: Jensen, $Q_k^{\mathrm{bag},\infty}=(\E_Sv_S)'\Sig(\E_Sv_S)\le\E_S[v_S'\Sig v_S]=\Qsub$.
+Subtract $\Qopt$; under common loading $Q(S)=q+1/A_S$, $\Qopt=q+1/A_m$.
+\end{proof}
+\begin{remark}
+The high-coherence bound is first-order: $\Qsub-\Qopt\approx C_{\mathrm{sub}}(1/k-1/m)$ is
+closer to $z_k$ than $z_k^2$. This is why the effective exponent drifts from $2$ toward $1$
+when a few high-precision forecasts dominate.
+\end{remark}
+
+%==========================================================================
+\section{Choosing $k$ in the high-coherence case}
+Minimize the conservative upper bound
+$L_k^{\mathrm{bag},\infty}\le(A+\Qsub-\Qopt)\frac{T-1}{T-k}$. With the leading approximation
+$\Qsub-\Qopt\approx C_{\mathrm{sub}}/k$ this returns square-root behavior
+$k^*\asymp(C_{\mathrm{sub}}T/A)^{1/2}\propto T^{1/2}$.
+
+%==========================================================================
+\section{A distribution-free two-sided bracket}
+\label{sec:bracket}
+The previous bounds are one-sided unless coherence is controlled. Here is a two-sided
+bracket that needs \emph{no} coherence or distributional assumption, built only from the
+unconditional average-subset quantity $E:=\E_S[1/A_S]$.
+
+Write $g_i(k)=k\,\E_S[1/A_S\mid i\in S]$. Using $\bar v_{k,i}=\tau_i g_i(k)/m$, the exact
+remainder \eqref{eq:R1} becomes
+\begin{equation}\label{eq:Rg}
+  \Rk=\frac1{m^2}\sum_{i=1}^m\tau_i\Big(g_i-\tfrac1{\bar\tau}\Big)^2
+     =\frac1{m^2}\sum_{i=1}^m\tau_i g_i^2-\frac1{A_m}.
+\end{equation}
+Two \emph{exact} linear identities hold for $\{g_i\}$:
+\begin{equation}\label{eq:moments}
+  \sum_{i=1}^m\tau_i g_i=m\quad(\text{conservation law}),\qquad
+  \sum_{i=1}^m g_i=km\,E\quad\Big(\text{since }\tfrac1m\textstyle\sum_i g_i=kE\Big).
+\end{equation}
+
+\begin{proposition}[Closed-form two-sided bracket]\label{prop:bracket}
+For $1\le k\le m$,
+\begin{equation}\label{eq:bracket}
+  \frac{\big(k\,\E_S[1/A_S]-1/\bar\tau\big)^2}{\sum_i\sigma_i^2-m/\bar\tau}
+  \;\le\;\Rk\;\le\;\E_S[1/A_S]-\frac1{A_m}.
+\end{equation}
+The denominator $\sum_i\sigma_i^2-m/\bar\tau=\sum_i1/\tau_i-m^2/A_m\ge0$ by Cauchy--Schwarz,
+with equality iff the $\tau_i$ are equal (in which case $\Rk=0$).
+\end{proposition}
+\begin{proof}
+The upper bound is Proposition~\ref{prop:jensen}. For the lower bound, minimize
+$\sum_i\tau_ig_i^2$ over all vectors satisfying the two identities \eqref{eq:moments}. In the
+inner product $\langle x,y\rangle_\tau=\sum_i\tau_ix_iy_i$ these read
+$\langle g,\iotab\rangle_\tau=m$ and $\langle g,c\rangle_\tau=kmE$ with $c_i=1/\tau_i$.
+Orthogonalizing $c$ against $\iotab$ ($\|\iotab\|_\tau^2=A_m$,
+$\langle c,\iotab\rangle_\tau=m$, $\|c\|_\tau^2=\sum_i1/\tau_i$),
+\[
+  \min\sum_i\tau_ig_i^2=\frac{m^2}{A_m}
+  +\frac{\big(kmE-m^2/A_m\big)^2}{\sum_i1/\tau_i-m^2/A_m}
+  =\frac{m}{\bar\tau}+\frac{m^2\big(kE-1/\bar\tau\big)^2}{\sum_i1/\tau_i-m/\bar\tau}.
+\]
+Since the true $g$ satisfies the identities, $\sum_i\tau_ig_i^2$ is at least this minimum.
+Substituting into \eqref{eq:Rg} and using $\frac1{m^2}\cdot\frac{m}{\bar\tau}=\frac1{A_m}$,
+the oracle term cancels and \eqref{eq:bracket} follows.
+\end{proof}
+
+\begin{remark}[Tightness and a hierarchy]
+The Gram lower bound is \emph{exact} whenever $g\in\mathrm{span}\{\iotab,\,1/\tau\}$, which
+holds for any profile with at most two distinct precision values (then $g$ takes two values,
+fully pinned by the two identities). For continuous profiles $g$ leaves that span only
+slightly, and the bound is near-exact numerically (within a few percent). Adding a third
+exact identity, e.g.\ $\sum_i\tau_i^2g_i=m\,\E_S\!\big[\sum_{i\in S}\tau_i^2/A_S\big]$, makes
+the bound exact for three-group profiles, yielding a convergent hierarchy.
+\end{remark}
+
+Both sides of \eqref{eq:bracket} can be written as powers of $z_k$ using the exact moments
+$\E_S[A_S]=k\bar\tau$ and $\Var_S(A_S)=k\frac{m-k}{m(m-1)}V$, $V=\sum_i(\tau_i-\bar\tau)^2$,
+together with $\E_S[1/A_S]=\frac1{k\bar\tau}+\frac{\Var_S(A_S)}{(k\bar\tau)^3}+\cdots$.
+
+\begin{corollary}[Matching $z_k$ forms]\label{cor:zk}
+To leading order, with $B=1/\bar\tau$, $H=\overline{\sigma^2}\,\bar\tau$, and
+$V_\delta=\Var(\tau)/\bar\tau^2$,
+\begin{equation}\label{eq:zkforms}
+  \underbrace{\frac{V_\delta^2}{m(H-1)\,\bar\tau}\,z_k^2}_{\text{lower}}
+  \;\lesssim\;\Rk\;\lesssim\;
+  \underbrace{\frac{1}{\bar\tau}\,z_k}_{\text{upper}} .
+\end{equation}
+In the small-heterogeneity limit $H-1\to V_\delta$, so the lower constant collapses to
+$V_\delta/(m\bar\tau)$, matching the H\'ajek/$\alpha=2$ leading term.
+\end{corollary}
+\begin{proof}
+Upper: $\E_S[1/A_S]-1/A_m\approx\frac1{k\bar\tau}-\frac1{m\bar\tau}=z_k/\bar\tau$.
+Lower: $kE-1/\bar\tau\approx\Var_S(A_S)/(k^2\bar\tau^3)=Vz_k/((m-1)\bar\tau^3)$; squaring and
+dividing by $\sum_i\sigma_i^2-m/\bar\tau=mB(H-1)$, with $V=m\bar\tau^2V_\delta$, gives the
+stated coefficient.
+\end{proof}
+
+Since $0<z_k<1$, we have $z_k^2<z_k$: the higher power is the \emph{floor} and the lower power
+the \emph{ceiling}, so the ordering in \eqref{eq:zkforms} is the natural one. The bracket
+holds for any $R_k\sim z_k^\alpha$ with $\alpha\in[1,2]$, because $z_k^2\le z_k^\alpha\le z_k$.
+
+\begin{corollary}[$k^*$ bracket]\label{cor:kstar}
+Substituting each $z_k$-form into $L_k=(A+\Rk)\frac{T-1}{T-k}$ with $z_k\approx1/k$:
+the lower form $c_Lz_k^2$ gives $Ak^3+3c_Lk-2c_LT=0$, i.e.\ $k^*=\Theta(T^{1/3})$;
+the upper form $Bz_k$ gives $Ak^2+2Bk-BT=0$, i.e.\ $k^*=\Theta(T^{1/2})$. Hence
+\[
+  \Theta(T^{1/3})\;\le\;k^*\;\le\;\Theta(T^{1/2}),
+\]
+the rate bracket corresponding to $k^*\propto T^{1/(\alpha+1)}$ with $\alpha\in[1,2]$.
+\end{corollary}
+
+%==========================================================================
+\section{Summary}
+\begin{enumerate}
+\item Under common loading the oracle weights are leverage scores, $w_i^*=\ell_i=\tau_i/A_m$,
+and uniform RSM is a self-normalized uniform subset estimator of that vector.
+\item If leverage is balanced, $\Rk\le\frac{K_{c,C}}{m\bar\tau}(V_\delta+V_\delta^2)z_k^2$
+(a $1/k^2$ envelope $\Rightarrow$ cube-root $k^*$).
+\item If leverage is concentrated, use the Jensen fallback
+$0\le\Rk\le\E_S[1/A_S]-1/A_m$ ($\Rightarrow$ square-root $k^*$).
+\item \textbf{Distribution-free:} the Gram lower bound and the Jensen upper bound give the
+two-sided bracket \eqref{eq:bracket}, equivalently $c_Lz_k^2\lesssim\Rk\lesssim Bz_k$ and
+$\Theta(T^{1/3})\le k^*\le\Theta(T^{1/2})$ --- no coherence assumption. The lower bound is
+exact for $\le2$ distinct precision values and near-exact otherwise.
+\item The RandNLA/coherence story is the special case in which the two ends of the bracket
+pinch together ($\alpha\to2$, low coherence) or separate maximally ($\alpha\to1$, high
+coherence).
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,79 @@
+% ============================================================================
+% Draft "Relation to Chen and Maung (2023)" paragraph.
+% Drop into the related-literature or discussion section via \input, or copy.
+% Requires \cite keys: ChenMaung2023, Pagan1984 (bibtex at end of file).
+% Adjust notation (f_t, \varepsilon, \Sigma_e, k, m, T) to match the paper.
+% ============================================================================
+
+\subsection{Relation to nonparametric time-varying combination}
+\label{subsec:chenmaung}
+
+Our exogenous benchmark is closely related to the time-varying forecast combination
+framework of \citet{ChenMaung2023}, who model the combination weights nonparametrically as
+smooth functions of rescaled time and establish consistency, an oracle property, and
+optimal cross-validated bandwidth selection, including a high-dimensional variant with a
+group-SCAD penalty. Their analysis treats the individual forecasts
+$f_t=(f_{t1},\dots,f_{td})'$ as regressors and rests on their Assumption~A.3, that the
+combination error is a martingale difference sequence,
+$\mathbb{E}(\varepsilon_{t+1}\mid I_t)=0$ with $f_t\in I_t$. This predeterminedness and
+orthogonality condition plays, in their regression formulation, the same role that the
+exogeneity of the forecast errors plays in ours: both condition on the forecasts as given
+and require the error to be orthogonal to the information already in the forecasts. Our
+common-loading covariance $\Sigma_e=q\iota\iota'+D$ encodes this as a common unforecastable
+shock $q\iota\iota'$ plus idiosyncratic noise $D$; the additional restriction that $D$ is
+diagonal---mutually uncorrelated idiosyncratic errors---is a structural simplification
+beyond A.3 that we use only for the closed-form results.
+
+The assumption is well motivated for genuine external forecasts---for example the Survey of
+Professional Forecasters---where it follows from forecast efficiency: an efficient
+forecaster has incorporated all available information, so the error around the conditional
+mean is orthogonal to the forecast. It is on weaker footing when the forecasts are
+themselves estimated from macroeconomic data. In their empirical application the individual
+forecasts are constructed from FRED-MD predictors, as are ours; in both cases the forecasts
+are \emph{generated regressors} carrying first-stage estimation error and mutually
+correlated errors arising from overlapping predictors and a shared estimation sample.
+Neither the orthogonality condition A.3 nor the diagonal idiosyncratic structure $D$ is then
+delivered by forecast efficiency; both become conditioning assumptions whose validity is an
+empirical, specification-dependent matter. Importantly, the asymptotic results in
+\citet{ChenMaung2023}---the oracle property, the optimal bandwidth rate, and the limiting
+distribution---are derived treating the forecasts as observed, so the first-stage estimation
+uncertainty is not propagated. This is the standard generated-regressor caveat
+\citep{Pagan1984}, and it is most binding in precisely their high-dimensional case, where
+many estimated forecasts enter the selection step at once.
+
+This is the gap our endogenous analysis is designed to address. Rather than condition the
+first stage away, we model it. We replace the common-loading idealization with the factor
+and banded (Toeplitz) covariance structures that estimated, overlapping forecasts actually
+exhibit, and we account for the within-subset estimation cost of fitting $k-1$ weights from
+$T$ observations. The latter is what converts the exogenous cube-root tuning rule
+$k^\ast\asymp T^{1/3}$ into the square-root rule $k^\ast\asymp T^{1/2}$ in the empirically
+relevant regime $m\gtrsim T$: estimating the within-subset weights breaks the first-order
+cancellation that drives the cube root, and the Kan--Zhou inflation of the optimal subset
+size diverges as $m\to T$. Our exogenous results thus share the assumptions---and the
+SPF-strong, FRED-MD-approximate status---of \citet{ChenMaung2023}, while our endogenous
+results make explicit the first-stage estimation and the error dependence that their
+conditioning, and the forecast-combination literature more broadly, leaves implicit.
+
+% ============================================================================
+% BibTeX entries
+% ============================================================================
+% @article{ChenMaung2023,
+%   author  = {Chen, Bin and Maung, Kenwin},
+%   title   = {Time-varying forecast combination for high-dimensional data},
+%   journal = {Journal of Econometrics},
+%   volume  = {237},
+%   number  = {2},
+%   pages   = {105418},
+%   year    = {2023},
+%   doi     = {10.1016/j.jeconom.2023.01.024}
+% }
+%
+% @article{Pagan1984,
+%   author  = {Pagan, Adrian},
+%   title   = {Econometric Issues in the Analysis of Regressions with Generated Regressors},
+%   journal = {International Economic Review},
+%   volume  = {25},
+%   number  = {1},
+%   pages   = {221--247},
+%   year    = {1984}
+% }

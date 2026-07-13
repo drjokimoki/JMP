@@ -1,0 +1,84 @@
+\documentclass[preview,border=12pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+
+\newcommand{\Sig}{\Sigma_e}
+\newcommand{\wopt}{w^{\mathrm{opt}}}
+\newcommand{\Qopt}{Q^{\mathrm{opt}}}
+\newcommand{\Qave}{Q^{\mathrm{ave}}}
+\newcommand{\Qsub}{Q_k^{\mathrm{sub}}}
+\newcommand{\Rk}{R_k^{\mathrm{bag},\infty}}
+\newcommand{\zk}{z_k}
+
+\begin{document}
+\begin{minipage}{15cm}
+
+{\Large\textbf{When does RSM beat both benchmarks?}}
+\vspace{8pt}
+
+\textbf{The three losses.}
+\begin{align*}
+  L^{\mathrm{ave}} &= s + \Qave &&\text{(no inflation)}\\[2pt]
+  L_k^{\mathrm{bag},\infty} &= (A+\Rk)\,\frac{T-1}{T-k}, \quad A = s+\Qopt\\[2pt]
+  L^{\mathrm{full}} &= A\,\frac{T-1}{T-m} &&\text{(full estimated optimal)}
+\end{align*}
+
+\vspace{4pt}
+\textbf{1. RSM beats the full estimated optimal.}
+
+Exact equivalence:
+\[
+  L_k^{\mathrm{bag},\infty} < L^{\mathrm{full}}
+  \quad\Longleftrightarrow\quad
+  \Rk \;<\; A\cdot\frac{m-k}{T-m}.
+\]
+
+Certified sufficient condition, using the exact Jensen ceiling
+$\Rk\le\Qsub-\Qopt$ from Proposition~7 (the exact bracket):
+\[
+  \boxed{\;\Qsub-\Qopt \;<\; A\cdot\dfrac{m-k}{T-m}\;}
+\]
+
+Leading order ($R_k^{\mathrm{ceil}}\approx B\zk$, $\zk=\tfrac{m-k}{km}$, valid for
+$1\ll k\ll m$) — the $(m-k)$ factor cancels on both sides:
+\[
+  B\cdot\frac{m-k}{km} \;<\; A\cdot\frac{m-k}{T-m}
+  \quad\Longrightarrow\quad
+  \boxed{\;k\cdot m \;>\; \dfrac{B\,(T-m)}{A}\;}
+\]
+
+\vspace{6pt}
+\textbf{2. RSM beats equal weighting.}
+
+With $\Delta^{\mathrm{ave}} := \Qave - \Qopt = \dfrac{B(H-1)}{m}$ (exact):
+\[
+  L_k^{\mathrm{bag},\infty} < L^{\mathrm{ave}}
+  \quad\Longleftrightarrow\quad
+  (A+\Rk)\,\frac{T-1}{T-k} \;<\; A + \Delta^{\mathrm{ave}}.
+\]
+
+Certified sufficient condition:
+\[
+  \boxed{\;\bigl(A + \Qsub - \Qopt\bigr)\,\dfrac{T-1}{T-k}
+  \;<\; A + \dfrac{B(H-1)}{m}\;}
+\]
+
+Leading order, further taking $T\to\infty$ (so $\tfrac{T-1}{T}\to1$):
+\[
+  \boxed{\;k \;>\; \dfrac{m}{H-1}\;}
+\]
+\textcolor{gray}{\small (Sanity check: as $H\to1$ this threshold $\to\infty$ ---
+no finite $k$ beats equal weighting, matching Remark~7 (the flat-risk case)'s
+$k^*=1$ result exactly.)}
+
+\vspace{6pt}
+\textbf{Caveat.} The leading-order boxes use $\Qsub-\Qopt\approx B\zk$,
+which the paper itself only claims is accurate for $1\ll k\ll m$
+(the average-subset approximation's own stated scope). At small $k$ this drops
+Lemma~4 (Taylor expansion)'s correction term
+$\mathrm{Var}_S(A_S)/(k\bar\tau)^3$ and can understate the true ceiling.
+The two \emph{exact} boxes (using $\Qsub$ directly) do not have this
+problem and are valid at any $k$.
+
+\end{minipage}
+\end{document}

@@ -1,0 +1,108 @@
+SPF OLS-weighted RSM analysis -- 2026-07-04 15:46:04 
+RSM_DRAWS = 500 | K_GRID = 2:20 
+
+
+=== CPI_h1 ===
+Rounds: 165 | N range: 9 - 53 | median N: 35 | k_sqrtN: 6 | k_sqrtT: 13 
+  k = 2 
+  k = 3 
+  k = 4 
+  k = 5 
+  k = 6 
+  k = 7 
+  k = 8 
+  k = 9 
+  k = 10 
+  k = 11 
+  k = 12 
+  k = 13 
+  k = 14 
+  k = 15 
+  k = 16 
+  k = 17 
+  k = 18 
+  k = 19 
+  k = 20 
+                Model  k n_eval      MAFE     RMSFE comparable_mean_MAFE
+1                Mean NA    165 0.6821293 0.9740585            0.6821293
+2       OLS-RSM(k*=4)  4    161 0.6731929 0.9495933            0.6927916
+3  OLS-RSM(k=sqrtN=6)  6    141 0.7120020 1.0098033            0.6975790
+4 OLS-RSM(k=sqrtT=13) 13      7 1.0766784 1.2251494            1.4238908
+  comparable_mean_RMSFE rmsfe_gain_vs_comparable_mean_pct   coverage
+1             0.9740585                                NA 1.00000000
+2             0.9848851                          3.583339 0.97575758
+3             0.9937712                         -1.613261 0.85454545
+4             1.9351845                         36.690822 0.04242424
+  success_rate
+1           NA
+2  0.207490683
+3  0.083390071
+4  0.002571429
+
+=== CPI_h4 ===
+Rounds: 162 | N range: 9 - 53 | median N: 35 | k_sqrtN: 6 | k_sqrtT: 13 
+  k = 2 
+  k = 3 
+  k = 4 
+  k = 5 
+  k = 6 
+  k = 7 
+  k = 8 
+  k = 9 
+  k = 10 
+  k = 11 
+  k = 12 
+  k = 13 
+  k = 14 
+  k = 15 
+  k = 16 
+  k = 17 
+  k = 18 
+  k = 19 
+  k = 20 
+                Model  k n_eval      MAFE    RMSFE comparable_mean_MAFE
+1                Mean NA    162 0.9875486 1.471085            0.9875486
+2       OLS-RSM(k*=4)  4    157 0.9633409 1.377142            0.9925807
+3  OLS-RSM(k=sqrtN=6)  6    131 1.0715232 1.481666            1.0099402
+4 OLS-RSM(k=sqrtT=13) 13      3 5.2714733 5.814965            4.2103870
+  comparable_mean_RMSFE rmsfe_gain_vs_comparable_mean_pct   coverage
+1              1.471085                                NA 1.00000000
+2              1.486410                          7.351152 0.96913580
+3              1.537248                          3.615668 0.80864198
+4              4.923697                        -18.101591 0.01851852
+  success_rate
+1           NA
+2   0.20847134
+3   0.08509924
+4   0.00200000
+
+Master table:
+  series               Model  k n_eval      MAFE     RMSFE comparable_mean_MAFE
+1 CPI_h1                Mean NA    165 0.6821293 0.9740585            0.6821293
+2 CPI_h1       OLS-RSM(k*=4)  4    161 0.6731929 0.9495933            0.6927916
+3 CPI_h1  OLS-RSM(k=sqrtN=6)  6    141 0.7120020 1.0098033            0.6975790
+4 CPI_h1 OLS-RSM(k=sqrtT=13) 13      7 1.0766784 1.2251494            1.4238908
+5 CPI_h4                Mean NA    162 0.9875486 1.4710853            0.9875486
+6 CPI_h4       OLS-RSM(k*=4)  4    157 0.9633409 1.3771419            0.9925807
+7 CPI_h4  OLS-RSM(k=sqrtN=6)  6    131 1.0715232 1.4816665            1.0099402
+8 CPI_h4 OLS-RSM(k=sqrtT=13) 13      3 5.2714733 5.8149645            4.2103870
+  comparable_mean_RMSFE rmsfe_gain_vs_comparable_mean_pct   coverage
+1             0.9740585                                NA 1.00000000
+2             0.9848851                          3.583339 0.97575758
+3             0.9937712                         -1.613261 0.85454545
+4             1.9351845                         36.690822 0.04242424
+5             1.4710853                                NA 1.00000000
+6             1.4864102                          7.351152 0.96913580
+7             1.5372483                          3.615668 0.80864198
+8             4.9236971                        -18.101591 0.01851852
+  success_rate
+1           NA
+2  0.207490683
+3  0.083390071
+4  0.002571429
+5           NA
+6  0.208471338
+7  0.085099237
+8  0.002000000
+
+Done. Outputs saved in GDP_constrained/SPF_ols_results 

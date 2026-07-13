@@ -1,0 +1,19 @@
+
+Call:
+lm(formula = log(kstar) ~ log(T), data = s)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.08141 -0.05158 -0.01348  0.03470  0.11355 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  0.56190    0.16206   3.467   0.0133 *  
+log(T)       0.34721    0.02847  12.194 1.85e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.07456 on 6 degrees of freedom
+Multiple R-squared:  0.9612,	Adjusted R-squared:  0.9547 
+F-statistic: 148.7 on 1 and 6 DF,  p-value: 1.851e-05
+

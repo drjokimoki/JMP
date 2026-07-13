@@ -1,0 +1,203 @@
+% Paste-ready corrections for the theoretical part of the current
+% Job_Market_paper_Kozyrev-2.pdf (61-page version, 2026-07-11 15:38 CEST).
+
+% --------------------------------------------------------------------------
+% Replace the joint moment display after Assumptions 1--2.
+% --------------------------------------------------------------------------
+
+We interpret the moment restrictions conditionally on the information set
+available when the individual forecasts are formed. In particular,
+\[
+ E\!\left[
+ \begin{pmatrix}y_t\\f_t\end{pmatrix}
+ \middle|\mathcal F_{t-1}
+ \right]
+ =
+ \begin{pmatrix}\mu_t\\\mu_t\iota_m\end{pmatrix},
+ \qquad
+ \operatorname{Var}\!\left[
+ \begin{pmatrix}y_t\\f_t\end{pmatrix}
+ \middle|\mathcal F_{t-1}
+ \right]
+ =
+ \begin{pmatrix}
+ \sigma_\epsilon^2&0\\
+ 0&\Sigma_{e,m}
+ \end{pmatrix}.
+\]
+These equations specify conditional first and second moments; they do not by
+themselves impose a joint distribution.
+
+% --------------------------------------------------------------------------
+% Replace the discussion surrounding Equation (4).
+% --------------------------------------------------------------------------
+
+Throughout the population analysis, $w$ is a fixed weight vector. Since
+$f_t=\mu_t\iota_m+u_t$ and $y_t=\mu_t+\epsilon_t$,
+\[
+ w'f_t-y_t=(w'\iota_m-1)\mu_t+w'u_t-\epsilon_t.
+\]
+The conditional moment restrictions therefore imply
+\[
+ E[(w'f_t-y_t)^2\mid\mathcal F_{t-1}]
+ =
+ (w'\iota_m-1)^2\mu_t^2+\sigma_\epsilon^2+w'\Sigma_{e,m}w.
+\]
+Under $w'\iota_m=1$, the bias term vanishes. When weights are estimated, we
+evaluate them on a new observation independent of the training sample.
+Conditional on the training sample, the estimated weights are fixed; the
+unconditional out-of-sample risk subsequently averages over training-sample
+uncertainty.
+
+% --------------------------------------------------------------------------
+% Replace the inflation-factor paragraph.
+% --------------------------------------------------------------------------
+
+To summarize the estimation-error trade-off, we use the working factor
+\[
+ I(T,k)=\frac{T-1}{T-k},\qquad 1\le k<T.
+\]
+For one correctly specified restricted regression, this factor follows from
+the standard i.i.d. Gaussian random-design calculation with $k-1$ free
+coefficients and an independent evaluation observation. Assumptions 1--2
+alone do not imply that calculation. Moreover, subset regressions fitted on
+the same training sample have correlated coefficient-estimation errors.
+Consequently, multiplying the infinite-bagged population risk by $I(T,k)$ is
+a stylized finite-sample criterion, not an exact risk formula for the feasible
+bagged estimator.
+
+% --------------------------------------------------------------------------
+% Add after Definition 2.
+% --------------------------------------------------------------------------
+
+The quantity $Q_k^{\mathrm{bag},G}$ averages only over the random subset
+draws while treating every subset weight as its population value. It should
+therefore be distinguished from the out-of-sample risk of feasible RSM, in
+which the subset weights are estimated from a common training sample.
+
+% --------------------------------------------------------------------------
+% Replace the discussion after Proposition 2.
+% --------------------------------------------------------------------------
+
+Proposition~2 establishes two endpoints: the RSM family contains equal
+weighting at $k=1$ and the population-optimal linear combination at $k=m$.
+It does not establish that weights or risks move monotonically between these
+endpoints as $k$ increases. Intermediate values of $k$ may nevertheless be
+attractive because they balance approximation to the oracle weights against
+weight-estimation error. When $k$ is selected from the data, its tuning cost
+must also be taken into account; dominance over both endpoints is therefore
+an empirical possibility rather than a consequence of Proposition~2.
+
+% --------------------------------------------------------------------------
+% Replace the interpretation after Proposition 3.
+% --------------------------------------------------------------------------
+
+This equivalence concerns a conditional mean. A forecast receives more than
+the equal global weight if and only if its mean weight, across the subsets in
+which it appears, exceeds $1/k$. It need not receive more than $1/k$ in every
+subset, and a large regression weight should not by itself be interpreted as
+a measure of standalone forecast accuracy.
+
+% --------------------------------------------------------------------------
+% Recommended finite-sample version of Proposition 5.
+% --------------------------------------------------------------------------
+
+\begin{proposition}[Second-order approximation to average-subset risk]
+Under the common-loading model, the exact average-subset population risk is
+\[
+ Q_k^{\mathrm{sub}}=q+E_S\!\left[\frac{1}{A_S}\right].
+\]
+A second-order Taylor approximation around $E_S[A_S]=k\bar\tau$ gives
+\[
+ Q_k^{\mathrm{sub}}
+ \approx
+ q+\frac{1}{k\bar\tau}
+ +\frac{m-k}{k^2(m-1)}\frac{v_\tau}{\bar\tau^3}.
+\]
+Equivalently, defining
+\[
+ \eta_k=
+ \frac{\operatorname{Var}_S(A_S)}{E_S[A_S]^2}
+ =\frac{m-k}{k(m-1)}\frac{v_\tau}{\bar\tau^2},
+\]
+the approximation is
+\[
+ E_S[1/A_S]\approx\frac{1}{k\bar\tau}(1+\eta_k).
+\]
+It is expected to be accurate when $\eta_k$ is small and the distribution of
+$A_S$ is not strongly skewed. It becomes exact at $k=m$.
+\end{proposition}
+
+% If the author prefers a formal asymptotic remainder, append instead:
+%
+% Consider a sequence with $m\to\infty$, $k\to\infty$, and precision
+% profiles satisfying
+% $0<\underline\tau\le\tau_{i,m}\le\overline\tau<\infty$ uniformly.
+% Under this sequence, the omitted remainder is $O(k^{-3})$. The subsequent
+% rate analysis uses the stronger interior-panel condition $k/m\to0$.
+
+% --------------------------------------------------------------------------
+% Replace the clipping rule after Equation (25).
+% --------------------------------------------------------------------------
+
+Let $K_T=\min\{m,T-1\}$. The feasible integer choice based on the continuous
+approximation is
+\[
+ k^*=\min\{K_T,\max\{1,\operatorname{round}(k_{\mathrm{sub}}^*)\}\}.
+\]
+
+% --------------------------------------------------------------------------
+% Replace Proposition 8 and make the same changes in Appendix G.
+% --------------------------------------------------------------------------
+
+\begin{proposition}[Rate window under the stylized finite-sample criterion]
+Let $m=m_T$, set $K_T=\min\{m_T,T-1\}$, and define
+\[
+ L_{k,T}^{\mathrm{bag}}
+ =
+ \left(A+R_{k,T}^{\mathrm{bag}}\right)\frac{T-1}{T-k},
+ \qquad
+ A=\sigma_\epsilon^2+Q^{\mathrm{opt}}>0,
+\]
+for $1\le k\le K_T$. Let
+\[
+ k_T^*\in\arg\min_{1\le k\le K_T}L_{k,T}^{\mathrm{bag}}.
+\]
+Suppose the marginal regularity bounds hold uniformly along the sequence,
+$R_{k,T}^{\mathrm{bag}}$ is uniformly bounded, and
+\[
+ T\to\infty,
+ \qquad
+ \frac{T^{1/2}}{m_T}\to0.
+\]
+Then
+\[
+ k_T^*=\Omega(T^{1/3}),
+ \qquad
+ k_T^*=O(T^{1/2}).
+\]
+Thus, under the stipulated criterion and regularity condition, the minimizing
+subset size lies between the cube-root and square-root rates.
+\end{proposition}
+
+The proposition concerns the stylized criterion above, not the exact
+finite-sample risk of feasible finite-$G$ RSM. Establishing the same rate for
+estimated overlapping subset regressions would additionally require control
+of cross-subset coefficient-estimation covariances and the finite-$G$ subset
+draw term.
+
+% --------------------------------------------------------------------------
+% Add at the end of Section 4.
+% --------------------------------------------------------------------------
+
+\paragraph{Interpretation of the rate results.}
+The exact results in this section concern finite-dimensional population
+risks. The square-root formula is obtained by minimizing an approximate
+finite-sample criterion, while the cube-root--square-root window describes a
+sequence of such criteria as $T$ and the forecast pool grow. These results
+motivate finite-sample choices of $k$ but do not make $\sqrt T$ the exact
+finite-sample optimum. We therefore evaluate $k=\operatorname{round}(\sqrt T)$
+separately in the Monte Carlo experiments and empirical application.
+
+% Preamble presentation fix after loading hyperref:
+% \hypersetup{hidelinks}

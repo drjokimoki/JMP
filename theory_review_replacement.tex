@@ -1,0 +1,413 @@
+% Replacement text for the theory part of Job_Market_paper_Kozyrev-2.pdf.
+% Suggested use:
+% 1. Replace Section 4.7 with Part I below.
+% 2. Replace the current Appendix F/G material on exact bounds and rates with Part II below.
+
+% --------------------------------------------------------------------------
+% Part I. Main-text replacement for Section 4.8
+% --------------------------------------------------------------------------
+
+\subsection{Bounds on $R_k$}
+\label{sec:rk_bounds}
+
+The representation above shows that $R_k^{\mathrm{bag}}$ is the squared
+distance between the infinite-bagged RSM weights and the oracle weights.
+Although the conditional harmonic means inside $g_i(k)$ do not admit a
+general closed form, the excess risk can still be bounded.  Let
+\[
+  z_k=\frac{1}{k}-\frac{1}{m}.
+\]
+
+\begin{proposition}[Exact bracket for infinite-bagged excess risk]
+\label{prop:exact_bracket}
+For every $1\le k\le m$,
+\[
+  \frac{
+    \left(kE_S[1/A_S]-1/\bar\tau\right)^2
+  }{
+    \sum_{i=1}^m\sigma_i^2-m/\bar\tau
+  }
+  \le
+  R_k^{\mathrm{bag}}
+  \le
+  E_S[1/A_S]-\frac{1}{A_m}.
+\]
+Using the Taylor expansion of $E_S[1/A_S]$, the bracket becomes, to leading
+order,
+\[
+  \frac{V_\delta^2}{m(H-1)\bar\tau}z_k^2
+  \lesssim
+  R_k^{\mathrm{bag}}
+  \lesssim
+  \frac{1}{\bar\tau}z_k,
+\]
+up to the finite-$m$ factor $m^2/(m-1)^2$ in the lower bound.
+\end{proposition}
+
+\noindent
+The upper bound is the Jensen ceiling and is linear in $z_k$.  The lower
+bound is the Cauchy--Schwarz projection floor and is quadratic in $z_k$.
+Thus the two boundary criteria correspond to the two endpoint rates:
+the linear ceiling gives the square-root rule, whereas the quadratic floor
+gives the cube-root rule.  A level bracket alone, however, does not pin down
+the minimizer of the true loss: for that we need a regularity condition on
+the one-step decline of $R_k^{\mathrm{bag}}$.
+
+\begin{assumption}[Marginal regularity]
+\label{ass:marginal_regular}
+Let
+\[
+  \Delta R_k=R_k^{\mathrm{bag}}-R_{k+1}^{\mathrm{bag}}.
+\]
+Consider a triangular array indexed by $T$, with pool size $m=m_T$ and
+excess-risk sequence $R_{k,T}^{\mathrm{bag}}$.  For $1\ll k\ll m_T$,
+suppose there exist constants $0<d_L\le d_U<\infty$ that are uniform in
+$T$, $m_T$, and $k$, such that
+\[
+  d_L\left(z_k^2-z_{k+1}^2\right)
+  \le
+  \Delta R_k
+  \le
+  d_U\left(z_k-z_{k+1}\right).
+\]
+Equivalently, for $k\ll m$,
+\[
+  \Delta R_k\gtrsim k^{-3},
+  \qquad
+  \Delta R_k\lesssim k^{-2}.
+\]
+\end{assumption}
+
+\begin{proposition}[Rate window for the optimal subset size]
+\label{prop:rate_window}
+Let
+\[
+  L_k^{\mathrm{bag}}
+  =
+  \left(A+R_k^{\mathrm{bag}}\right)\frac{T-1}{T-k},
+  \qquad
+  A=\sigma_\epsilon^2+Q^{\mathrm{opt}}>0,
+\]
+and let
+\[
+  k_T^*\in\arg\min_{1\le k\le m}L_k^{\mathrm{bag}}.
+\]
+Suppose Assumption~\ref{ass:marginal_regular} holds uniformly along the
+triangular array, $R_{k,T}^{\mathrm{bag}}$ is uniformly bounded, and the
+pool size is large enough that the relevant range satisfies
+$T^{1/2}=o(m_T)$.  Then
+\[
+  k_T^*=\Omega(T^{1/3}),
+  \qquad
+  k_T^*=O(T^{1/2}).
+\]
+Thus the optimal subset size lies between the cube-root and square-root
+rates:
+\[
+  T^{1/3}\lesssim k_T^*\lesssim T^{1/2}.
+\]
+If $m$ is fixed or grows more slowly than $T^{1/2}$, the upper rate is
+truncated by the constraint $k\le m$.
+\end{proposition}
+
+\noindent
+The uniform marginal condition is substantive.  It is not implied by the
+level bracket in Proposition~\ref{prop:exact_bracket}; in particular, the
+coefficient in the displayed quadratic lower envelope contains $1/m$ and
+may vanish when the forecast pool grows.  The proposition should therefore
+be read as a conditional rate result, not as an unconditional consequence
+of the common-loading model.  With a fixed pool, no nontrivial
+$T\to\infty$ rate is possible because the optimizer is eventually capped
+at $m$.
+
+The proofs of Propositions~\ref{prop:exact_bracket} and
+\ref{prop:rate_window} are given in Appendix~\ref{app:rk_bounds_rates}.
+
+% --------------------------------------------------------------------------
+% Part II. Appendix replacement for current Appendix F/G material
+% --------------------------------------------------------------------------
+
+\section{Exact Bounds on $R_k$ and the Optimal Subset-Size Window}
+\label{app:rk_bounds_rates}
+
+\subsection{Proof of Proposition~\ref{prop:exact_bracket}}
+
+The upper bound follows from Jensen's inequality.  Since
+$v\mapsto v'\Sigma_e v$ is convex,
+\[
+  Q_k^{\mathrm{bag},\infty}
+  =
+  \left(E_S v_S\right)'\Sigma_e\left(E_S v_S\right)
+  \le
+  E_S[v_S'\Sigma_e v_S]
+  =
+  Q_k^{\mathrm{sub}}.
+\]
+Subtracting $Q^{\mathrm{opt}}$ and using
+\[
+  Q_k^{\mathrm{sub}}=q+E_S[1/A_S],
+  \qquad
+  Q^{\mathrm{opt}}=q+\frac{1}{A_m},
+\]
+gives
+\[
+  R_k^{\mathrm{bag}}
+  \le
+  E_S[1/A_S]-\frac{1}{A_m}.
+\]
+
+For the lower bound, define
+\[
+  h_i(k)=g_i(k)-\frac{1}{\bar\tau}.
+\]
+The score identities imply
+\[
+  \sum_{i=1}^m\tau_i g_i(k)=m,
+  \qquad
+  \sum_{i=1}^m g_i(k)=kmE_S[1/A_S].
+\]
+Therefore
+\[
+  \sum_{i=1}^m\tau_i h_i(k)=0
+\]
+and
+\[
+  \sum_{i=1}^m h_i(k)
+  =
+  m\left(kE_S[1/A_S]-\frac{1}{\bar\tau}\right)
+  \equiv d_k.
+\]
+The true vector $h(k)$ is feasible for the constrained minimization problem
+\[
+  \min_h \sum_{i=1}^m\tau_i h_i^2
+  \quad\text{s.t.}\quad
+  \sum_i\tau_i h_i=0,\qquad
+  \sum_i h_i=d_k.
+\]
+The Lagrangian first-order condition implies
+\[
+  h_i=a+\frac{b}{\tau_i}.
+\]
+Using $\sum_i\tau_i h_i=0$ gives $a=-b/\bar\tau$, hence
+\[
+  h_i=b\left(\frac{1}{\tau_i}-\frac{1}{\bar\tau}\right).
+\]
+Using $\sum_i h_i=d_k$ gives
+\[
+  b=
+  \frac{d_k}{
+    \sum_i1/\tau_i-m/\bar\tau
+  }.
+\]
+Thus the minimum weighted norm is
+\[
+  \sum_i\tau_i h_i^2
+  =
+  \frac{d_k^2}{
+    \sum_i1/\tau_i-m/\bar\tau
+  }.
+\]
+Since
+\[
+  R_k^{\mathrm{bag}}
+  =
+  \frac{1}{m^2}\sum_i\tau_i h_i(k)^2
+\]
+and $d_k=m(kE_S[1/A_S]-1/\bar\tau)$, we obtain
+\[
+  R_k^{\mathrm{bag}}
+  \ge
+  \frac{
+    \left(kE_S[1/A_S]-1/\bar\tau\right)^2
+  }{
+    \sum_i1/\tau_i-m/\bar\tau
+  }.
+\]
+Finally, $1/\tau_i=\sigma_i^2$, giving the stated lower bound.
+
+\subsection{Taylor Expansion in $z_k$}
+\label{app:zk_expansion}
+
+The Taylor expansion of $E_S[1/A_S]$ around $k\bar\tau$ is
+\[
+  E_S[1/A_S]
+  =
+  \frac{1}{k\bar\tau}
+  +
+  \frac{\operatorname{Var}_S(A_S)}{(k\bar\tau)^3}
+  +
+  o(z_k).
+\]
+Under simple random sampling without replacement,
+\[
+  \operatorname{Var}_S(A_S)
+  =
+  k\frac{m-k}{m-1}
+  \frac{1}{m}\sum_{i=1}^m(\tau_i-\bar\tau)^2
+  =
+  k^2z_k\frac{m}{m-1}V_\tau,
+\]
+where
+\[
+  V_\tau=\frac{1}{m}\sum_{i=1}^m(\tau_i-\bar\tau)^2,
+  \qquad
+  V_\delta=\frac{V_\tau}{\bar\tau^2}.
+\]
+
+For the upper bound,
+\[
+  E_S[1/A_S]-\frac{1}{A_m}
+  =
+  \frac{1}{k\bar\tau}-\frac{1}{m\bar\tau}
+  +o(z_k)
+  =
+  \frac{1}{\bar\tau}z_k+o(z_k).
+\]
+Thus the Jensen ceiling is linear in $z_k$:
+\[
+  R_k^{\mathrm{bag}}\lesssim \frac{1}{\bar\tau}z_k.
+\]
+
+For the lower bound, define
+\[
+  D_k=kE_S[1/A_S]-\frac{1}{\bar\tau}.
+\]
+The first-order term cancels, and the Taylor expansion gives
+\[
+  D_k
+  =
+  \frac{\operatorname{Var}_S(A_S)}{k^2\bar\tau^3}
+  +o(z_k)
+  =
+  \frac{m}{m-1}\frac{V_\delta}{\bar\tau}z_k
+  +o(z_k).
+\]
+Moreover,
+\[
+  \sum_i\sigma_i^2-\frac{m}{\bar\tau}
+  =
+  \frac{m(H-1)}{\bar\tau},
+  \qquad
+  H=\overline{\sigma^2}\bar\tau.
+\]
+Therefore the projection floor is quadratic in $z_k$:
+\[
+  R_k^{\mathrm{bag}}
+  \gtrsim
+  \frac{V_\delta^2}{m(H-1)\bar\tau}z_k^2,
+\]
+up to the finite-$m$ factor $m^2/(m-1)^2$.  Hence, to leading order,
+\[
+  \frac{V_\delta^2}{m(H-1)\bar\tau}z_k^2
+  \lesssim
+  R_k^{\mathrm{bag}}
+  \lesssim
+  \frac{1}{\bar\tau}z_k.
+\]
+
+\subsection{Boundary Optima and Proof of Proposition~\ref{prop:rate_window}}
+
+We first compute the two boundary optimizers.  For the upper boundary, set
+\[
+  R_k^U=Bz_k,
+  \qquad
+  B=\frac{1}{\bar\tau}.
+\]
+Since $A=\sigma_\epsilon^2+q+B/m$, the loss becomes
+\[
+  \left(\sigma_\epsilon^2+q+\frac{B}{k}\right)
+  \frac{T-1}{T-k}.
+\]
+The first-order condition gives
+\[
+  k_U^*
+  =
+  \frac{
+    -B+\sqrt{B^2+(\sigma_\epsilon^2+q)BT}
+  }{
+    \sigma_\epsilon^2+q
+  }
+  \sim
+  \left(
+    \frac{BT}{\sigma_\epsilon^2+q}
+  \right)^{1/2}.
+\]
+Thus the Jensen ceiling gives the square-root rule,
+\[
+  k_U^*\asymp T^{1/2}.
+\]
+
+For the lower boundary, set
+\[
+  R_k^L=C_Lz_k^2,
+  \qquad
+  C_L=\frac{V_\delta^2}{m(H-1)\bar\tau}.
+\]
+The continuous first-order condition is
+\[
+  -\frac{2C_Lz_k}{k^2}(T-k)+A+C_Lz_k^2=0.
+\]
+For the interior range $k\ll m$, so that $z_k\approx1/k$, this becomes
+\[
+  Ak^3+3C_Lk-2C_LT=0.
+\]
+Hence
+\[
+  k_L^*
+  \sim
+  \left(
+    \frac{2C_LT}{A}
+  \right)^{1/3}
+  =
+  \left(
+    \frac{2V_\delta^2T}
+    {m(H-1)\bar\tau A}
+  \right)^{1/3}.
+\]
+Thus the projection floor gives the cube-root rule,
+\[
+  k_L^*\asymp T^{1/3}.
+\]
+
+The level bounds alone do not mechanically imply that the minimizer of the
+true $R_k^{\mathrm{bag}}$ lies between these two optima.  For that conclusion
+we use Assumption~\ref{ass:marginal_regular}.
+
+The loss decreases from $k$ to $k+1$ if and only if
+\[
+  L_{k+1}^{\mathrm{bag}}<L_k^{\mathrm{bag}}.
+\]
+Using
+\[
+  L_k^{\mathrm{bag}}
+  =
+  \left(A+R_k^{\mathrm{bag}}\right)\frac{T-1}{T-k},
+\]
+cross-multiplication gives the equivalent condition
+\[
+  (T-k)\Delta R_k>A+R_k^{\mathrm{bag}}.
+\]
+
+For the lower rate bound, the marginal lower envelope implies
+\[
+  (T-k)\Delta R_k\gtrsim Tk^{-3}
+\]
+for $k\ll T$.  Since $A+R_k^{\mathrm{bag}}$ is uniformly bounded above,
+the inequality still holds for all $k\le cT^{1/3}$ for some constant
+$c>0$.  Hence the loss is decreasing up to the cube-root scale, so the
+minimizer cannot occur below it:
+\[
+  k_T^*=\Omega(T^{1/3}).
+\]
+
+For the upper rate bound, the marginal upper envelope implies
+\[
+  (T-k)\Delta R_k\lesssim Tk^{-2}.
+\]
+Since $A+R_k^{\mathrm{bag}}\ge A>0$, this quantity is smaller than
+$A+R_k^{\mathrm{bag}}$ for all $k\ge CT^{1/2}$, for some sufficiently large
+constant $C$.  Hence the loss is increasing beyond the square-root scale,
+so
+\[
+  k_T^*=O(T^{1/2}).
+\]

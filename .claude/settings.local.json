@@ -27,7 +27,10 @@
       "Bash(awk '{print \"PID:\",$2,\" elapsed:\",$10,\" cmd:\", $11}')",
       "Bash(ps aux *)",
       "Bash(/Library/TeX/texbin/pdflatex -interaction=nonstopmode RSM_paper_v2.tex)",
-      "Bash(Rscript fit_powerlaw_rmsfe.R)"
+      "Bash(Rscript fit_powerlaw_rmsfe.R)",
+      "Bash(find /Users/boris/Desktop/RSShapley/Combination_Monte/Final -maxdepth 2 -iname \"*marco*\" -o -maxdepth 2 -iname \"*handoff*\" 2>/dev/null)",
+      "Read(//Users/boris/Desktop/RSShapley/**)",
+      "Bash(grep -v \"\\\\.pdf$\")"
     ]
   }
 }

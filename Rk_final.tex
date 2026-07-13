@@ -1,0 +1,322 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage[margin=1in]{geometry}
+
+\newcommand{\Sig}{\Sigma_e}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\Rk}{R_k^{\mathrm{bag},\infty}}
+\newcommand{\Qsub}{Q_k^{\mathrm{sub}}}
+\newcommand{\Qopt}{Q^{\mathrm{opt}}}
+\newcommand{\Qave}{Q^{\mathrm{ave}}}
+\newcommand{\iotab}{\bm{\iota}}
+\newcommand{\inner}[2]{\langle #1,#2\rangle_\tau}
+
+\newtheorem{assumption}{Assumption}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+\title{The Infinite-Bagged RSM Excess Risk $R_k$\\
+\large Exact Results}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Under the common-loading forecast-error structure, the infinite-bagged RSM excess risk
+$\Rk=Q_k^{\mathrm{bag},\infty}-\Qopt$ is exactly the squared distance between the bagged
+weight vector and the oracle weight vector, measured in the error-covariance metric. From
+this single identity we obtain a computable, assumption-free two-sided bracket
+$z_k^2\lesssim\Rk\lesssim z_k$ --- so the optimal subset size $k^\ast$ lies between the cube
+and square roots of $T$ --- together with a sharp dichotomy in which bounded coherence with
+non-degenerate heterogeneity gives the cube root ($\alpha=2$) while a dominant forecaster
+gives the square root ($\alpha=1$), and an intermediate crossover in between. The guiding
+principle: which assumption is binding determines how far the ceiling of the bracket is
+pulled down.
+\end{abstract}
+
+\noindent\fbox{\parbox{\linewidth}{\small\textbf{Reader's summary.}
+\begin{enumerate}\itemsep2pt
+\item With some heterogeneity, $z_k^2\lesssim\Rk\lesssim z_k$, so the optimal $k$ rate lies
+between the cube root and the square root of $T$.
+\item Bounded coherence and non-degenerate heterogeneity $\Rightarrow$ $\Rk$ follows the
+power form $\asymp z_k^2$ $\Rightarrow$ $k^\ast\asymp T^{1/3}$ (cube root).
+\item High coherence with a dominant forecaster $\Rightarrow$ $\Rk\asymp z_k$ $\Rightarrow$
+$k^\ast\asymp T^{1/2}$ (square root); partial coherence interpolates between the two.
+\end{enumerate}}}
+
+%==========================================================================
+\section{Setup and notation}
+Assume the common-loading covariance of the forecast errors,
+\[
+  \Sig = q\,\iotab\iotab' + D,\qquad D=\diag(\sigma_1^2,\dots,\sigma_m^2),
+  \qquad \tau_i=\sigma_i^{-2}>0,
+\]
+where $q\ge0$ is the variance of the common (unforecastable) shock and $\tau_i$ is the
+precision of forecaster $i$. Write
+\[
+  A_m=\sum_{i=1}^m\tau_i=m\bar\tau,\quad \ell_i=\frac{\tau_i}{A_m},\quad
+  A_S=\sum_{j\in S}\tau_j,\quad \inner{a}{b}=\sum_i\frac{a_ib_i}{\tau_i}.
+\]
+RSM draws size-$k$ subsets $S$ uniformly, fits the constrained (sum-to-one) optimal weights
+$v_{S,i}=\mathbf 1\{i\in S\}\,\tau_i/A_S$ within each, and bags. The infinite-bagging
+($G\to\infty$) weight is $\bar v_{k,i}=\E_S[v_{S,i}]$, and the object of interest is
+\[
+  \Rk=Q_k^{\mathrm{bag},\infty}-\Qopt=\bar v_k'\Sig\bar v_k-\Qopt .
+\]
+Two functionals carry the story, together with $z_k$:
+\[
+  V_\delta=\frac1m\sum_i\Big(\frac{\tau_i}{\bar\tau}-1\Big)^2=\frac{\Var(\tau)}{\bar\tau^2}
+  \ \ (\text{dispersion}),\quad
+  H=\overline{\sigma^2}\,\bar\tau\ge1\ \ (\text{Cauchy--Schwarz gap}),\quad
+  z_k=\frac1k-\frac1m .
+\]
+
+%==========================================================================
+\section{$R_k$ is a squared weight deviation}\label{sec:identity}
+Everything rests on one identity: $\Rk$ is the squared distance of the bagged weights from
+the oracle weights.
+
+\begin{proposition}[Oracle weights are leverage scores]\label{prop:oracle}
+The constrained-optimal full combination is $w_i^\ast=\tau_i/A_m=\ell_i$, with
+$\Qopt=q+1/A_m$; for any subset, $Q(S)=q+1/A_S$.
+\end{proposition}
+\begin{proof}
+Since $\iotab'w=1$, the term $w'q\iotab\iotab'w=q$ is constant, so minimizing $w'\Sig w$
+reduces to minimizing $\sum_iw_i^2\sigma_i^2$ subject to $\sum_iw_i=1$; the Lagrange
+solution is $w_i\propto\tau_i$, giving $\Qopt=q+\sum_i\ell_i^2/\tau_i=q+1/A_m$. The subset
+claim is the same argument restricted to $S$.
+\end{proof}
+
+\begin{proposition}[Exact quadratic-form identity]\label{prop:identity}
+Because $w^\ast$ is the constrained minimizer, the cross term vanishes and
+\[
+  \Rk=(\bar v_k-w^\ast)'\Sig(\bar v_k-w^\ast)=\|\bar v_k-w^\ast\|_\tau^2
+  =\sum_{i}\frac{(\bar v_{k,i}-\ell_i)^2}{\tau_i}
+  =\frac{1}{m^2}\sum_i\tau_i\Big(g_i-\frac1{\bar\tau}\Big)^2,
+\]
+with $g_i(k)=k\,\E_S[1/A_S\mid i\in S]$ and $\bar v_{k,i}=\tau_i g_i(k)/m$.
+\end{proposition}
+\begin{proof}
+$\Sig w^\ast=(q+1/A_m)\iotab=\Qopt\iotab$, and $\iotab'(\bar v_k-w^\ast)=0$ (both sum to
+one), so the cross term and the common factor $q\iotab\iotab'$ both drop, leaving
+$\sum_i(\bar v_{k,i}-\ell_i)^2/\tau_i$. The last form uses $\ell_i=\tau_i/A_m$.
+\end{proof}
+
+\noindent\emph{Interpretation.} $\Rk$ is the squared weight error in the $\Sig$-metric:
+each coordinate's error $(\bar v_{k,i}-\ell_i)^2$ is weighted by $1/\tau_i=\sigma_i^2$, so
+mis-weighting a noisy forecaster is penalized more. At infinite bagging there is no
+Monte-Carlo variance, so $\Rk$ is the pure systematic gap of the bagged weights from
+optimal. The whole tuning problem trades this (decreasing in $k$) against estimation noise.
+
+\begin{proposition}[Endpoints: averaging $\to$ oracle]\label{prop:endpoints}
+$\bar v_1=\tfrac1m\iotab$ (simple averaging), so $R_1$ is the excess risk of equal weights;
+$\bar v_m=w^\ast$, so $R_m=0$. Thus $k$ traces a path from averaging to the oracle, and
+\[
+  R_1=\Qave-\Qopt=\frac{H-1}{m\bar\tau},\qquad \Qave=q+\frac{1}{m^2}\sum_i\sigma_i^2 .
+\]
+\end{proposition}
+
+%==========================================================================
+\section{Exact bounds: the two-sided bracket}\label{sec:bracket}
+All statements here hold for any positive precision vector and every $1\le k\le m$ --- no
+distributional assumption, no expansion, no asymptotics.
+
+\begin{lemma}[Two exact moment identities]\label{lem:moments}
+$\sum_i\tau_ig_i=m$ (conservation) and $\sum_ig_i=km\,\E_S[1/A_S]$.
+\end{lemma}
+
+\begin{proposition}[Two-sided bracket]\label{prop:bracket}
+For all $1\le k\le m$,
+\[
+  \underbrace{\frac{\big(k\,\E_S[1/A_S]-1/\bar\tau\big)^2}{\sum_i\sigma_i^2-m/\bar\tau}}
+  _{\text{Gram / projection floor}}
+  \;\le\;\Rk\;\le\;
+  \underbrace{\E_S[1/A_S]-\frac1{A_m}}_{\text{Jensen ceiling}} .
+\]
+Both ends are computable from $\{\tau_i\}$ and $\E_S[1/A_S]$. The denominator
+$\sum_i\sigma_i^2-m/\bar\tau=m^2(\Qave-\Qopt)\ge0$ (Cauchy--Schwarz), $=0$ iff all $\tau_i$
+equal. The floor is \emph{exact} for $\le2$ distinct precision types; a hierarchy of exact
+lower bounds follows by appending higher moments to Lemma~\ref{lem:moments}.
+\end{proposition}
+\begin{proof}
+\emph{Ceiling:} $w^\ast$ is the global sum-to-one minimizer (lower) and, by Jensen on the
+convex $v\mapsto v'\Sig v$, $Q_k^{\mathrm{bag},\infty}\le\E_S[v_S'\Sig v_S]=\Qsub$ (upper);
+subtract $\Qopt$ and use $Q(S)=q+1/A_S$. \emph{Floor:} minimize $\sum_i\tau_ig_i^2$ over
+vectors meeting the two identities of Lemma~\ref{lem:moments}; the Gram minimum equals
+$\frac{m}{\bar\tau}+\frac{m^2(k\E_S[1/A_S]-1/\bar\tau)^2}{\sum_i1/\tau_i-m/\bar\tau}$, and
+substituting into Proposition~\ref{prop:identity} cancels the oracle term.
+\end{proof}
+
+\noindent\emph{Equivalent projection form.} Writing $\delta_k=\bar v_k-w^\ast$ and
+$\eta=w^{ave}-w^\ast$, the identity gives $\|\delta_k\|_\tau^2=\Rk$ and
+$\|\eta\|_\tau^2=\Qave-\Qopt$, and the floor is the Cauchy--Schwarz projection
+$\Rk\ge\inner{\delta_k}{\eta}^2/\|\eta\|_\tau^2$ with
+$\inner{\delta_k}{\eta}=\frac km(\Qsub-q)-(\Qopt-q)$. The floor thus uses only the three
+aggregate risks $\Qsub,\Qave,\Qopt$ (and the level $q$); the ceiling uses only
+$\Qsub,\Qopt$ and is $q$-free.
+
+\begin{corollary}[Open bracket]\label{cor:open}
+To leading order, with $\E_S[1/A_S]=\frac1{k\bar\tau}+\frac{\Var_S(A_S)}{(k\bar\tau)^3}
++\cdots$ and $\Var_S(A_S)=k\frac{m-k}{m(m-1)}\,m\bar\tau^2V_\delta$,
+\[
+  \underbrace{\frac{V_\delta^2}{m(H-1)\,\bar\tau}\,z_k^2}_{\text{floor}}
+  \;\lesssim\;\Rk\;\lesssim\;\underbrace{\frac{1}{\bar\tau}\,z_k}_{\text{ceiling}} .
+\]
+\end{corollary}
+
+\begin{remark}[The two ends answer to different things]\label{rem:asym}
+Since $0<z_k<1$, $z_k^2<z_k$: the bracket has a gap between exponents, so unconditionally
+$\Rk\sim z_k^\alpha$ with $\alpha\in[1,2]$ and $k^\ast\in[\Theta(T^{1/3}),\Theta(T^{1/2})]$.
+The \textbf{floor} $z_k^2$ comes from the dispersion $V_\delta$ and is present whenever the
+forecasters are heterogeneous; the \textbf{ceiling} $z_k$ is the Jensen bound, first order
+because it cannot see that bagging cancels the leading term. The effective exponent is read
+off the ceiling: \emph{the floor is always $z_k^2$, and where $\alpha$ lands is decided by
+how far the ceiling can be pulled down.}
+\end{remark}
+
+\begin{proposition}[Monotonicity and the exact $k^\ast$ condition]\label{prop:mono}
+If each $g_i(k)$ is monotone in $k$, then $\Rk$ strictly decreases in $k$:
+$\frac{d\Rk}{dk}=\frac{2}{m^2}\sum_i\tau_i(g_i-1/\bar\tau)\dot g_i<0$ (using
+$\sum_i\tau_i\dot g_i=0$). Hence in population there is no bias--variance trade-off; an
+interior optimum exists only through estimation error. With $A=\sigma_\varepsilon^2+\Qopt$
+and idealized loss $L_k=(A+\Rk)\frac{T-1}{T-k}$, the discrete optimum satisfies
+\[
+  (T-k^\ast)\,(R_{k^\ast}-R_{k^\ast+1})=A+R_{k^\ast}.
+\]
+\end{proposition}
+\noindent (The unconditional bound $\Rk\le R_1$ holds regardless, by Jensen on the harmonic
+mean.) As a by-product, RSM dominates equal-within-subset CSR for every $k$, since
+constrained-OLS minimizes $w'\Sig w$ over the choice $1/k$ inside each subset.
+
+%==========================================================================
+\section{Two regimes and the crossover}\label{sec:regimes}
+The open bracket is two-sided but its exponents differ. Two minimal, checkable assumptions
+close it; each governs a different end.
+
+\begin{assumption}[Bounded coherence]\label{ass:A}
+There are constants $0<c\le C<\infty$, independent of $m$, with $c\le\tau_i/\bar\tau\le C$.
+\end{assumption}
+\noindent The upper part ($C$) is ``no dominant forecaster''; the lower part ($c$) forces
+$A_S\ge ck\bar\tau$, keeping $1/A_S$ and its reciprocal moments bounded --- which makes the
+expansion of $\E_S[1/A_S]$ rigorous, not heuristic.
+
+\begin{assumption}[Non-degenerate dispersion]\label{ass:B}
+There is $v>0$, independent of $m$, with $V_\delta\ge v$ (genuine heterogeneity).
+\end{assumption}
+
+\begin{theorem}[Cube-root regime]\label{thm:rate}
+Under Assumptions~\ref{ass:A}--\ref{ass:B} there are $0<c_1\le c_2<\infty$ (depending only
+on $c,C,v$) with $\frac{c_1}{m\bar\tau}z_k^2\le\Rk\le\frac{c_2}{m\bar\tau}z_k^2$ for
+$2\le k<m$. Hence $\alpha=2$ and $k^\ast\asymp T^{1/3}$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Assumption~\ref{ass:A} controls the reciprocal expansion: with
+$\Var_R(L_{i,R})\le\frac{(k-1)(m-k)}{m(m-1)(m-2)}V_\delta$ one gets
+$|\bar v_{k,i}/\ell_i-1|\le K_cz_k(|h_i|+V_\delta)$, so by Proposition~\ref{prop:identity}
+$\Rk\le\frac{K_{c,C}}{m\bar\tau}(V_\delta+V_\delta^2)z_k^2$. The floor of
+Corollary~\ref{cor:open} is bounded below by Assumption~\ref{ass:B}. Inserting
+$\Rk\asymp C_Rz_k^2$ into Proposition~\ref{prop:mono} gives $Ak^3+3C_Rk-2C_RT=0$, i.e.\
+$k^\ast\approx(2C_RT/A)^{1/3}$.
+\end{proof}
+
+\paragraph{Minimality.} Each assumption guards a different end of the bracket:
+\begin{center}
+\begin{tabular}{lcccc}
+\hline
+Assumptions & Floor & Ceiling & $\alpha$ & $k^\ast$ \\
+\hline
+\ref{ass:A} and \ref{ass:B} & $z_k^2$ & $z_k^2$ & $2$ & $\Theta(T^{1/3})$ \\
+\ref{ass:B} only (no \ref{ass:A}) & $z_k^2$ & $z_k$ & $[1,2]$ & $[\Theta(T^{1/3}),\Theta(T^{1/2})]$ \\
+\ref{ass:A} only (no \ref{ass:B}) & $0$ & $z_k^2$ & $[0,2]$ & up to $\Theta(T^{1/3})$ \\
+neither & $0$ & $z_k$ & $[0,2]$ & --- \\
+\hline
+\end{tabular}
+\end{center}
+Dropping bounded coherence leaves the floor at $z_k^2$ but springs the ceiling back to the
+Jensen $z_k$: a dominant/negligible forecaster ($\tau_{\min}/\bar\tau\to0$) gives
+$k^\ast\asymp T^{1/2}$; a homogeneous panel ($V_\delta\to0$) gives $\Rk\to0$ and averaging
+is optimal. So the cube root is exactly the bounded-coherence, heterogeneous regime.
+
+\begin{remark}[The intermediate case is a crossover, not a new power]\label{rem:cross}
+Partial coherence does \emph{not} produce a single power $z_k^\alpha$ with fixed
+$\alpha\in(1,2)$. It is an additive crossover,
+\[
+  \Rk\;\approx\;\underbrace{\frac{\rho}{\bar\tau}\,z_k}_{\text{coherence leakage}}
+  +\underbrace{b\,z_k^2}_{\text{dispersion}},\qquad\rho\in[0,1],\ \ b>0,
+\]
+with $\rho=0$ the cube root and $\rho=1$ the square root. The \emph{local} slope slides
+from $\approx2$ at small $k$ (where $z_k^2$ dominates) to $\approx1$ at large $k$ (where
+$z_k$ dominates), crossing near $k_\times\sim b\bar\tau/\rho$. A finite-range log--log fit
+then reads an effective $\alpha\in(1,2)$ --- the average local slope --- and $k^\ast$
+interpolates as $T^{1/(\alpha+1)}$, sitting near $T^{1/3}$ for moderate $T$ and drifting
+toward $T^{1/2}$ as $T$ grows whenever $\rho>0$.
+\end{remark}
+
+\begin{remark}[What is exact and what needs a form]\label{rem:epist}
+The intermediate \emph{region} ($k^\ast\in[T^{1/3},T^{1/2}]$) is exact --- it is the
+bracket, no functional form assumed; likewise a computed $k^\ast$ for a given profile is
+obtained by minimizing the exact $L_k$ over integer $k$. Only a \emph{clean single
+exponent} or closed-form scaling needs the power form of Remark~\ref{rem:cross}, and that
+form is anchored ($R_m=0$, $R_1=(H-1)/(m\bar\tau)$, and the leading curvature) and
+falsifiable against computed $\Rk$, not free. Two qualifiers: the bracket itself is exact
+even at fixed $m$ (only the uniform-in-$m$ \emph{rate} needs Assumptions~\ref{ass:A}--%
+\ref{ass:B} with $m$-free constants); and everything here is the population object --- the
+map to a realized finite-$G$, finite-$T$ MSFE adds the inflation factor $\frac{T-1}{T-k}$
+and a Monte-Carlo ensemble term.
+\end{remark}
+
+%==========================================================================
+\section{Interpretation}\label{sec:interp}
+
+\paragraph{One dial, two costs.} By Proposition~\ref{prop:identity}, $\Rk$ is the squared
+distance of the bagged weights from the oracle weights, and it decreases in $k$ (larger
+subsets capture more of the covariance structure). Estimating the within-subset weights
+from $T$ observations costs a variance that increases in $k$ and decreases in $T$. The
+subset size is therefore a single bias--variance dial: $k=1$ is pure averaging (no
+estimation, robust, biased if heterogeneous), $k=m$ is full constrained OLS (no bias,
+maximal estimation noise), and the optimum $k^\ast\propto T^{1/(\alpha+1)}$ balances the
+two. It rises when there is more structure to capture and when more data $T$ are available
+to capture it.
+
+\paragraph{When equal weights are already good.} If the forecasters are homogeneous
+($V_\delta\approx0$, $H\approx1$), then $R_1=\Qave-\Qopt\approx0$: equal weights are already
+near-optimal and the bias is negligible at every $k$. One keeps $k$ \emph{low} --- staying
+near simple averaging --- and needs little $T$; not because the weights are easy to
+estimate, but because there is essentially nothing to estimate. The gain from optimal
+combination is small (the regime in which averaging wins).
+
+\paragraph{When a few forecasts dominate.} If some forecasters are far more precise than the
+rest, the oracle weights are far from equal ($R_1$ and $H$ large), so there is real bias to
+remove and a real gain to capture. One pushes $k$ \emph{up}, because only larger subsets
+up-weight the precise forecasters, and one needs more $T$, because the large, differentiated
+weights must now be estimated from data. In the extreme this is the square-root regime,
+$k^\ast\asymp T^{1/2}$ --- larger, and growing faster in $T$, than the cube root.
+
+\paragraph{The mechanism: how fast the weights converge.} The deepest reading uses
+$\Rk=\|\bar v_k-w^\ast\|_\tau^2$. Under bounded coherence every weight coordinate converges
+to its target at a uniform, fast rate as $k$ grows, so the gap closes like $z_k^2$ and a
+modest $k$ suffices (cube root). With a dominant forecaster, that coordinate is heavily
+under-weighted at equal weights and converges \emph{slowly} --- it must be ``found''
+through random subsets and given proper weight only as $k$ grows --- so the gap closes only
+like $z_k$ and a large $k$ is needed (square root). The bagging exponent is the convergence
+rate of the slowest weight.
+
+\paragraph{One good forecaster, or several?} What matters is not the number of good
+forecasters but their \emph{share of the total precision}. If $g$ forecasters carry
+essentially all the precision, the coherence is $\kappa=\tau_{\max}/\bar\tau\approx m/g$. A
+vanishing fraction ($g\ll m$, a small clique amid many noisy forecasters --- the single
+dominant forecaster being the extreme $g=1$) makes $\kappa$ large, breaking bounded
+coherence: square root, large $k^\ast$, more $T$. A substantial fraction ($g\propto m$)
+keeps $\kappa$ bounded: cube root. This is the common-loading face of the Elliott--Liao
+result that the worst case for averaging is to average over a good subset of size $m_1$ and
+discard the rest, with the gain large precisely when $m_1$ is small relative to $m$.
+``Dominant'' means dominant in \emph{share of precision}, whether that is one forecaster or
+a few.
+
+\end{document}

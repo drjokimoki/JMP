@@ -17,6 +17,7 @@
 \onehalfspacing
 
 \newtheorem{proposition}{Proposition}
+\newtheorem{theorem}[proposition]{Theorem}
 \newtheorem{corollary}{Corollary}[proposition]
 \newtheorem{lemma}{Lemma}
 \newtheorem{remark}{Remark}
@@ -72,18 +73,15 @@ designs.  The exponent $\hat\alpha\in(1,2)$ is determined by the
 heterogeneity ratio $H$ of idiosyncratic variances and implies an optimal
 subset size $k^*\propto T^{1/(\alpha+1)}$ scaling between $T^{1/3}$
 (small heterogeneity, $\alpha\to 2$) and $T^{1/2}$ (dominant forecaster,
-$\alpha\to 1$).  For the endogenous case (estimated $\Sigma_e$) we provide a
-tractable result under strict Gaussianity and common loading via the
-Kan--Zhou correction, which preserves the $T^{1/(\alpha+1)}$ scaling
-exponent; the subset-level correction factor $(T-2)/(T-k-2)$ is small
-for $k\ll T$ and produces only a modest level shift in $k^*$.  Empirically
-the endogenous optimal $k^*$ is substantially larger than the tractable
-prediction, driven by non-common-loading misspecification rather than
-estimation noise per se.  Applying RSM to FRED-MD GDP forecasts yields
-statistically significant RMSFE reductions of 10--30\% over the
-equal-weighted mean.  The Survey of Professional Forecasters---a
-near-homogeneous panel---confirms that RSM offers little advantage when
-forecasters are nearly identical in quality.
+$\alpha\to 1$).  We show that this window is not merely a consequence of
+the power-law fit: an exact two-sided bracket on the excess risk, combined
+with a marginal-envelope regularity condition, rigorously confines the true
+optimal subset size to $T^{1/3}\lesssim k^*\lesssim T^{1/2}$, with no
+parametric assumption on the shape of $\Rk$ required.  Applying RSM to
+FRED-MD GDP forecasts yields statistically significant RMSFE reductions of
+10--30\% over the equal-weighted mean.  The Survey of Professional
+Forecasters---a near-homogeneous panel---confirms that RSM offers little
+advantage when forecasters are nearly identical in quality.
 \end{abstract}
 
 \tableofcontents
@@ -119,11 +117,13 @@ common-loading structure to obtain the conservation law, exact excess-risk
 formula, monotone decrease of $\Rk$, and a first-order condition for $k^*$.
 Section~\ref{sec:tractable} derives the average-subset optimum and shows
 why the bagged optimum resists a parallel derivation.
-Section~\ref{sec:exomc} uses Monte Carlo with known $\Sigma_e$ to motivate
-the power-law parametrisation of $\Rk$, characterise $\hat\alpha$, and
-validate the implied $k^*$.  Section~\ref{sec:endomc} studies the
-endogenous case, beginning with a tractable result under strict Gaussianity
-and closing with Monte Carlo evidence for general designs.
+Section~\ref{sec:bracket} brackets the infinite-bagged excess risk exactly
+from both sides, derives the implied cube-root and square-root boundary
+optimisers, and---under an explicit marginal-envelope regularity
+condition---proves that the true optimal subset size is rigorously confined
+to this rate window.  Section~\ref{sec:exomc} uses Monte Carlo with known
+$\Sigma_e$ to motivate the power-law parametrisation of $\Rk$, characterise
+$\hat\alpha$, and validate the implied $k^*$ within that window.
 Sections~\ref{sec:spf}--\ref{sec:gdp} present the empirical applications.
 
 \subsection{Motivation and Relation to the Literature}
@@ -235,8 +235,11 @@ RSM addresses both gaps and goes one step further.
   \item \textbf{Optimal $k^*$.}  Neither Elliott--Liao nor CSR provide a
     theory for the optimal subset size.  The present paper derives this:
     $k^*\propto T^{1/(\alpha+1)}$ under the power-law parametrisation of
-    the excess risk, with the endogenous approximation
-    $k^*\approx\lfloor\sqrt{T}\rfloor$ for practical use.
+    the excess risk, rigorously confined to the window
+    $T^{1/3}\lesssim k^*\lesssim T^{1/2}$ (Theorem~\ref{thm:ratewindow}),
+    with the conservative, parameter-free default
+    $k^*\approx\lfloor\sqrt{T}\rfloor$ at the square-root end of that window
+    for practical use.
 \end{enumerate}
 
 \paragraph{Chen and Maung (2023) and the cost of ad hoc $k$ selection.}
@@ -794,9 +797,10 @@ The discrepancy between $(T-1)/(T-k)$ and $1+(k-1)/T$ is
 For $k=10$, $T=200$: discrepancy $\approx 0.004$ (0.4\% of the baseline
 loss $A\approx 2$).  For $k=30$, $T=200$: discrepancy $\approx 0.052$ (2.6\%).
 The linear approximation is accurate for the exogenous regime ($k^*\approx 2$--6)
-and reasonable for the endogenous empirical default ($k=\lfloor\sqrt{T}\rfloor\approx 9$--14),
-but becomes material for the inflation-criterion minimiser ($k^*(L)\approx 26$--32),
-where the exact factor is preferred.
+and remains reasonable at the square-root end of the rate window
+($k=\lfloor\sqrt{T}\rfloor\approx 9$--14), but becomes material for
+substantially larger $k$ (e.g., $k\gtrsim 26$--32), where the exact factor
+is preferred.
 
 \begin{table}[ht]
 \centering
@@ -836,27 +840,40 @@ From \eqref{eq:Qsub} and \eqref{eq:QS},
 $\Qsub = q + \E_S[1/A_S]$.
 
 \begin{lemma}[Taylor expansion of the expected inverse precision sum]\label{lem:taylor}
-Let $\bar\tau=A_m/m$.  Then
+Let $\bar\tau=A_m/m$, $\tau_{\min}=\min_i\tau_i$, and
+$\epsilon_S=A_S-k\bar\tau$.  Then
 \begin{equation}\label{eq:taylor}
   \E_S[1/A_S] = \frac{1}{k\bar\tau}
-  + \frac{\Var_S(A_S)}{(k\bar\tau)^3} + O\!\left(\frac{1}{(k\bar\tau)^5}\right),
+  + \frac{\Var_S(A_S)}{(k\bar\tau)^3} + R_{3,k},
 \end{equation}
-where $\Var_S(A_S)=k\!\left(1-\frac{k-1}{m-1}\right)\!\cdot\!\frac{1}{m}\sum_i(\tau_i-\bar\tau)^2$.
+where $\Var_S(A_S)=k\!\left(1-\frac{k-1}{m-1}\right)\!\cdot\!\frac{1}{m}\sum_i(\tau_i-\bar\tau)^2$ and
+\begin{equation}\label{eq:taylor_remainder}
+  |R_{3,k}|
+  \le
+  \frac{\E_S|\epsilon_S|^3}{(k\tau_{\min})^4}.
+\end{equation}
+Equivalently, if $\tau_{\min}/\bar\tau\ge c>0$ uniformly, then
+$R_{3,k}=O\!\left(\E_S|\epsilon_S|^3/(k\bar\tau)^4\right)$.
 \end{lemma}
 
 \begin{proof}
 Write $A_S=k\bar\tau+\epsilon_S$ where $\epsilon_S=A_S-k\bar\tau$.
 Under uniform sampling without replacement,
 $\E_S[\epsilon_S]=0$ and
-$\Var_S(\epsilon_S)=k\!\cdot\!\frac{m-k}{m(m-1)}\!\cdot\!\sum_i(\tau_i-\bar\tau)^2;:=; \sigma_\epsilon^2$.
-Taylor-expanding $1/A_S=1/(k\bar\tau+\epsilon_S)$ around $\epsilon_S=0$:
+$\Var_S(\epsilon_S)=k\!\cdot\!\frac{m-k}{m(m-1)}\!\cdot\!\sum_i(\tau_i-\bar\tau)^2=:\sigma_\epsilon^2$.
+Taylor's theorem applied to $f(x)=1/(k\bar\tau+x)$ around $x=0$ gives,
+for each subset $S$,
 \[
 \frac{1}{A_S}=\frac{1}{k\bar\tau}-\frac{\epsilon_S}{(k\bar\tau)^2}
-+\frac{\epsilon_S^2}{(k\bar\tau)^3}-\frac{\epsilon_S^3}{(k\bar\tau)^4}+\cdots
++\frac{\epsilon_S^2}{(k\bar\tau)^3}+r_S,
 \]
+where $r_S=-\epsilon_S^3/(k\bar\tau+\theta_S\epsilon_S)^4$ for some
+$\theta_S\in(0,1)$.  Since
+$k\bar\tau+\theta_S\epsilon_S=(1-\theta_S)k\bar\tau+\theta_S A_S\ge k\tau_{\min}$,
+$|r_S|\le |\epsilon_S|^3/(k\tau_{\min})^4$.
 Taking $\E_S[\cdot]$ and using $\E[\epsilon_S]=0$, $\E[\epsilon_S^2]=\sigma_\epsilon^2$
-gives the stated expansion.  The variance formula for hypergeometric sampling
-completes the proof.
+gives the stated expansion and the bound \eqref{eq:taylor_remainder}.  The
+variance formula for hypergeometric sampling completes the proof.
 \end{proof}
 
 The leading term $1/(k\bar\tau)$ dominates when heterogeneity is small.
@@ -882,8 +899,10 @@ with positive root
 \end{equation}
 \emph{The average-subset estimator has a square-root optimal subset size.}
 This leading-order result requires only the common-loading structure; higher
-Taylor terms introduce corrections of order $(\sigma_\epsilon/k\bar\tau)^2$
-that are negligible when precision heterogeneity is moderate.
+Taylor terms introduce a variance correction of relative order
+$(\sigma_\epsilon/k\bar\tau)^2$, with the remaining error controlled by
+\eqref{eq:taylor_remainder}; these terms are negligible when precision
+heterogeneity is moderate and the precision profile is bounded away from zero.
 
 \subsection{Why the Infinite-Bagged Optimum Resists a Parallel Derivation}
 \label{sec:whyhard}
@@ -915,8 +934,314 @@ restricting the profile $\{\tau_i\}$.
 In contrast, the unconditional $\E_S[1/A_S]$ only requires the distribution
 of size-$k$ precision sums, which has a known mean $k\bar\tau$ and variance
 given by Lemma~\ref{lem:taylor}.  The conditioning on $i\in S$ creates
-per-forecaster dependence that destroys this simplicity.  We therefore turn
-to Monte Carlo to characterise $\Rk$ empirically.
+per-forecaster dependence that destroys this simplicity, and a closed form
+for $\Rk$ is out of reach.  We show next, however, that $\Rk$ can be
+\emph{bracketed exactly from both sides}; the bracket — not a functional-form
+assumption — is what confines the bagged optimum to a window between the
+square-root and cube-root rules, and it is the rigorous core of our
+characterisation of $Q^{\mathrm{bag},\infty}$.
+
+%===========================================================================
+\section{Bounding $Q^{\mathrm{bag},\infty}_k$: Taylor Bounds and the Rate Window}
+\label{sec:bracket}
+%===========================================================================
+
+By \eqref{eq:Rexact}, $\Rk$ is the squared distance, in the $\Sig$-metric,
+between the bagged weights $\vbar$ and the oracle weights $\wopt$.  Although
+the conditional harmonic mean inside $g_i(k)$ has no closed form, this
+squared-deviation structure admits \emph{exact two-sided bounds}.  The key
+point for choosing $k$ is that both endpoints can be expanded in the same
+coordinate,
+\[
+  z_k=\frac{1}{k}-\frac{1}{m},
+\]
+so the Jensen ceiling is first order in $z_k$ whereas the projection floor
+is second order in $z_k$.  Throughout this section let
+$B=1/\bar\tau$ and define the normalised precision dispersion and the
+arithmetic-vs-harmonic gap
+\begin{equation}\label{eq:VdH}
+  V_\delta=\frac{1}{m\bar\tau^2}\sum_i(\tau_i-\bar\tau)^2=\frac{\Var(\tau)}{\bar\tau^2},
+  \qquad H=\overline{\sigma^2}\,\bar\tau\ge1,
+\end{equation}
+so that $R_1=\Qave-\Qopt=(H-1)/(m\bar\tau)$ and
+$\sum_i\sigma_i^2-m/\bar\tau=m^2(\Qave-\Qopt)$.
+
+\subsection{The Bracket}
+
+\begin{lemma}[Moment identities]\label{lem:moments2}
+For all $k$, the scores satisfy $\sum_i\tau_i g_i(k)=m$ (the conservation law)
+and $\sum_i g_i(k)=km\,\E_S[1/A_S]$.
+\end{lemma}
+
+\begin{proposition}[Exact two-sided bracket]\label{prop:bracket}
+Under Assumption~\ref{ass:cl}, for all $1\le k\le m$,
+\begin{equation}\label{eq:bracket}
+  \underbrace{\frac{\bigl(k\,\E_S[1/A_S]-1/\bar\tau\bigr)^2}
+       {\sum_i\sigma_i^2-m/\bar\tau}}_{\text{projection floor}}
+  \;\le\;\Rk\;\le\;
+  \underbrace{\E_S[1/A_S]-\frac{1}{A_m}}_{\text{Jensen ceiling}\,=\,\Qsub-\Qopt}.
+\end{equation}
+Both ends are computable from $\{\tau_i\}$ and the scalar $\E_S[1/A_S]$ of
+Lemma~\ref{lem:taylor}; the denominator equals $m^2(\Qave-\Qopt)\ge0$,
+vanishing only when all precisions are equal.
+\end{proposition}
+
+\begin{proof}
+\emph{Ceiling.} $\Qopt$ minimises $w'\Sig w$ over sum-to-one $w$ and $\vbar$ is
+feasible, so $\Rk\ge0$; by Jensen applied to the convex map
+$v\mapsto v'\Sig v$,
+$\Qbag=(\E_S v_S)'\Sig(\E_S v_S)\le\E_S[v_S'\Sig v_S]=\Qsub$.  Subtracting
+$\Qopt$ and using $Q(S)=q+1/A_S$ gives the ceiling.  \emph{Floor.} By
+\eqref{eq:Rexact} and $\sum_i\tau_i g_i=m$,
+$\Rk=\tfrac1{m^2}\sum_i\tau_i g_i^2-\tfrac1{A_m}$.  Minimising
+$\sum_i\tau_i g_i^2$ over all vectors meeting the two identities of
+Lemma~\ref{lem:moments2} is a Gram (Cauchy--Schwarz) problem with value
+$\tfrac{m}{\bar\tau}+\tfrac{m^2(k\E_S[1/A_S]-1/\bar\tau)^2}
+{\sum_i1/\tau_i-m/\bar\tau}$; since the true scores satisfy the identities,
+substituting into \eqref{eq:Rexact} gives the floor.
+\end{proof}
+
+\begin{remark}[Projection reading]
+Writing $\delta_k=\vbar-\wopt$ and $\eta=\wave-\wopt$, the identity
+\eqref{eq:Rexact} gives $\Rk=\|\delta_k\|_\tau^2$ and
+$\|\eta\|_\tau^2=\Qave-\Qopt$, and the floor is the Cauchy--Schwarz
+projection $\Rk\ge\langle\delta_k,\eta\rangle_\tau^2/\|\eta\|_\tau^2$.  The
+ceiling uses only the average-subset risk $\Qsub$ (and is invariant to the
+common shock $q$); the floor additionally uses the equal-weight risk $\Qave$.
+The floor is \emph{exact} when the precision profile takes at most two
+distinct values, and a hierarchy of sharper floors follows by appending
+higher moments to Lemma~\ref{lem:moments2}.
+\end{remark}
+
+\subsection{Leading-Order Envelope and the Rate Window}
+
+\begin{corollary}[Taylor envelope in $z_k$]\label{cor:env}
+Let $U_k=\E_S[1/A_S]-1/A_m$ denote the Jensen ceiling and $F_k$ the
+projection floor in \eqref{eq:bracket}.  If the Taylor remainder in
+Lemma~\ref{lem:taylor} is of smaller order than the displayed second-order
+term, then, uniformly over the interior range of $k$,
+\begin{align}
+  U_k
+  &= Bz_k
+     + \frac{\Var_S(A_S)}{(k\bar\tau)^3}
+     + R_{3,k}
+   \;=\; Bz_k+o(z_k), \label{eq:Uk_taylor}\\
+  F_k
+  &= C_L z_k^2+o(z_k^2),\qquad
+     C_L=\frac{V_\delta^2}{m(H-1)\bar\tau}
+     \quad\text{up to the finite-$m$ factor } \frac{m^2}{(m-1)^2}.
+     \label{eq:Fk_taylor}
+\end{align}
+Consequently,
+\begin{equation}\label{eq:env}
+  \underbrace{\frac{V_\delta^2}{m(H-1)\bar\tau}\,z_k^2}_{\text{floor}}
+  \;\lesssim\;\Rk\;\lesssim\;
+  \underbrace{\frac{1}{\bar\tau}\,z_k}_{\text{ceiling}} .
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+The ceiling expansion is Lemma~\ref{lem:taylor} after subtracting
+$1/A_m=1/(m\bar\tau)$.  Since
+$\Var_S(A_S)=k(m-k)V_\tau/(m-1)
+=k^2mV_\tau z_k/(m-1)$ and $V_\tau=\bar\tau^2V_\delta$, the variance
+correction is smaller than $Bz_k$ when the coefficient of variation of the
+precision sums is small.
+
+For the floor, write
+$D_k=k\E_S[1/A_S]-1/\bar\tau$.  Lemma~\ref{lem:taylor} gives
+\[
+  D_k
+  =\frac{\Var_S(A_S)}{k^2\bar\tau^3}+o(z_k)
+  =\frac{m}{m-1}\frac{V_\delta}{\bar\tau}z_k+o(z_k).
+\]
+The denominator in the floor is
+$\sum_i\sigma_i^2-m/\bar\tau=m(H-1)/\bar\tau$.  Squaring $D_k$ and dividing
+by this denominator gives \eqref{eq:Fk_taylor}.
+\end{proof}
+
+Thus the ceiling is the linear ($\alpha=1$) average-subset object
+\eqref{eq:Qsub_approx}, while the floor is quadratic ($\alpha=2$).  Since
+$0<z_k<1$, a smooth intermediate form $\Rk\approx Cz_k^\alpha$ must have
+$\alpha\in[1,2]$, suggesting the window
+\begin{equation}\label{eq:window}
+  \Theta\!\left(T^{1/3}\right)\;\le\;k^*\;\le\;\Theta\!\left(T^{1/2}\right).
+\end{equation}
+This last step is a statement about \emph{shape}, not just levels.  The
+Taylor bounds identify the two boundary criteria.  To conclude that the
+true minimiser is bounded by their optimisers, we impose below a regularity
+condition on the one-step decline of $\Rk$.
+
+\subsection{Optimal $k$: Dependence on $T$, $m$, and the Precision Profile}
+\label{sec:kdep}
+
+Each end of \eqref{eq:bracket} yields a closed-form boundary optimiser when
+substituted into the inflated loss $L_k=(A+R_k)\frac{T-1}{T-k}$, with
+$A=s+\Qopt=A_0+B/m$ and $A_0=s+q$.
+
+\paragraph{Ceiling (square-root).} With $R_k^U=Bz_k$, the loss collapses to
+$(A_0+B/k)\frac{T-1}{T-k}$: the $-B/m$ term in $Bz_k$ cancels with the
+$B/m$ term in $A$.  This reproduces
+\eqref{eq:kstar_sub}, $k^*_U\sim(BT/A_0)^{1/2}\propto T^{1/2}$.
+
+\paragraph{Floor (cube-root).} With $R_k^L=C_Lz_k^2$,
+$C_L=V_\delta^2/(m(H-1)\bar\tau)$, the exact continuous interior condition is
+\begin{equation}\label{eq:floor_foc_z}
+  -\frac{2C_Lz_k}{k^2}(T-k)+A+C_Lz_k^2=0.
+\end{equation}
+In the interior range $k\ll m$, $z_k\approx1/k$, and
+\eqref{eq:floor_foc_z} reduces to $Ak^3+3C_Lk-2C_LT=0$, giving
+\begin{equation}\label{eq:kstar_floor}
+  k^*_L\sim\left(\frac{2C_LT}{A}\right)^{1/3}
+  =\left(\frac{2V_\delta^2\,T}{m(H-1)\bar\tau\,A}\right)^{1/3}\propto T^{1/3}.
+\end{equation}
+
+The comparative statics (Table~\ref{tab:kdep}) show that $k^*$ depends on far
+more than $T$:
+\begin{itemize}
+\item \textbf{Sample size $T$.} The exponent itself is the bracket: $T^{1/2}$
+  at the ceiling, $T^{1/3}$ at the floor, $T^{1/(\alpha+1)}$ in between.
+\item \textbf{Pool size $m$.} The dependence on $m$ \emph{differs in sign
+  across the bracket}. The square-root optimum is \emph{$m$-free}: the $1/m$ in
+  $z_k$ cancels and $A_0=s+q$ carries no $m$. The cube-root optimum
+  \emph{decreases} as $m^{-1/3}$, because $C_L\propto1/m$: with a larger pool
+  the per-subset bias $\Rk$ is already smaller, so a smaller subset suffices.
+  A growing pool thus leaves $k^*$ untouched in the square-root regime but
+  shrinks it in the cube-root regime.
+\item \textbf{Heterogeneity.} The floor optimum \emph{increases} with
+  dispersion, $k^*_L\propto V_\delta^{2/3}(H-1)^{-1/3}$ (in the
+  mild-heterogeneity limit $H-1\to V_\delta$, simply
+  $k^*_L\propto V_\delta^{1/3}$): more spread in precisions raises the value of
+  a larger, structure-capturing subset. The ceiling optimum is
+  heterogeneity-blind to leading order, depending on $\{\tau_i\}$ only through
+  $\bar\tau$.
+\item \textbf{Forecastability.} Both optima \emph{decrease} in the irreducible
+  variance $A_0=s+q$ ($k^*_U\propto A_0^{-1/2}$, $k^*_L\propto A^{-1/3}$): when
+  the target is largely unforecastable (large common shock $q$ or noise $s$)
+  the marginal gain from bias reduction is small relative to the floor, so a
+  smaller subset is optimal. This is the force behind small gains for highly
+  persistent macro targets.
+\item \textbf{Precision scale.} Both optima \emph{increase} in $B=1/\bar\tau$
+  ($k^*_U\propto B^{1/2}$, $k^*_L\propto B^{1/3}$): noisier idiosyncratic
+  errors raise $\Rk$ and reward larger subsets.
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\caption{Dependence of the boundary optimisers on $T$, pool size $m$, and the
+precision profile. $A_0=s+q$ is the irreducible (unforecastable) variance,
+$B=1/\bar\tau$, $V_\delta$ the precision dispersion, $H$ the
+arithmetic-vs-harmonic gap.}
+\label{tab:kdep}
+\begin{tabular}{lcccccc}
+\hline
+Boundary & $\alpha$ & $k^*$ & $T$ & $m$ & heterogeneity & forecastability $A_0$\\
+\hline
+Ceiling (Jensen / sub) & $1$ & $(BT/A_0)^{1/2}$ & $T^{1/2}$ & none & --- & $A_0^{-1/2}$\\
+Floor (projection) & $2$ & $(2C_LT/A)^{1/3}$ & $T^{1/3}$ & $m^{-1/3}$ &
+   $V_\delta^{2/3}(H{-}1)^{-1/3}$ & $A^{-1/3}$\\
+General power & $\alpha$ & $(\alpha C_RT/A)^{1/(\alpha+1)}$ &
+   $T^{\frac{1}{\alpha+1}}$ & via $C_R(m)$ & via $C_R$ & $A^{-\frac{1}{\alpha+1}}$\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Marginal-Envelope Assumption and the Rate Window for $k^*$}
+\label{sec:marginal}
+
+The preceding calculation verifies the proposed logic up to one regularity
+qualification.  The Taylor expansion makes both endpoint bounds functions
+of $z_k$, and each endpoint has its own optimal $k$.  But a level bracket
+alone cannot order minimisers: a sequence can remain between two envelopes
+while moving through long flat stretches or abrupt drops.  What is needed is
+that the \emph{marginal gain} from increasing $k$ is also bracketed by the
+marginal gains of the two Taylor endpoints.
+
+\begin{assumption}[Marginal envelope]\label{ass:marginal}
+Let $\Delta R_k := \Rk - R_{k+1}^{\mathrm{bag},\infty}$.  For all $k$ with
+$1\ll k\ll m$, there exist constants $0<d_L\le d_U<\infty$, independent of
+$T$ and $k$, such that
+\begin{equation}\label{eq:marginal}
+  d_L\bigl(z_k^2-z_{k+1}^2\bigr) \;\le\; \Delta R_k \;\le\; d_U\bigl(z_k-z_{k+1}\bigr).
+\end{equation}
+Equivalently, since $z_k-z_{k+1}\asymp k^{-2}$ and $z_k^2-z_{k+1}^2\asymp
+k^{-3}$ for $k\ll m$,
+\begin{equation*}
+  d_L'\,k^{-3} \;\lesssim\; \Delta R_k \;\lesssim\; d_U'\,k^{-2}.
+\end{equation*}
+\end{assumption}
+
+\begin{remark}
+Assumption~\ref{ass:marginal} says the one-step decline in $\Rk$ is
+sandwiched between the marginal declines implied by the two envelopes of
+Corollary~\ref{cor:env}.  It rules out pathological sequences that satisfy
+the level bracket while declining through long flat plateaus or sudden
+jumps, but it allows mixtures such as $\Rk=az_k^2+bz_k$, slowly varying
+corrections, and smooth intermediate decay.  It does \emph{not} impose the
+power-law shape $\Rk=Cz_k^\alpha$ used for estimation in
+Section~\ref{sec:exomc}; that parametrisation is a convenient special case
+used to fit the Monte Carlo evidence, not a maintained assumption of the
+theorem below.
+\end{remark}
+
+\begin{assumption}[Regularity]\label{ass:regularity}
+(i) The baseline $A=s+\Qopt$ is a fixed positive constant; (ii) $\Rk$ is
+uniformly bounded, $0\le\Rk\le\bar R<\infty$ for all $k$ (immediate from
+the ceiling of Proposition~\ref{prop:bracket}, since $\Rk\le\Qave-\Qopt$);
+(iii) the pool size satisfies $m\gtrsim T^{1/2}$ over the range of $T$
+considered, so the square-root boundary rate derived below does not exceed
+$m$.  If (iii) fails, the upper rate is truncated at the fixed pool size $m$.
+\end{assumption}
+
+\begin{theorem}[Rate window for the exogenous optimal subset size]\label{thm:ratewindow}
+Let $k_T^*\in\arg\min_{1\le k\le m}L_k^{\mathrm{bag},\infty}$, with
+$L_k^{\mathrm{bag},\infty}=(A+\Rk)\frac{T-1}{T-k}$ as in \eqref{eq:Ltotal}.
+Under Assumptions~\ref{ass:marginal}--\ref{ass:regularity},
+\begin{equation*}
+  k_T^* = \Omega\bigl(T^{1/3}\bigr)
+  \qquad\text{and}\qquad
+  k_T^* = O\bigl(T^{1/2}\bigr),
+\end{equation*}
+i.e., the true optimal subset size is bounded below by the floor optimiser
+and above by the ceiling optimiser, up to constants and subject to the
+pool-size truncation in Assumption~\ref{ass:regularity}(iii).
+\end{theorem}
+
+\begin{proof}
+The loss decreases from $k$ to $k+1$ iff
+$L_{k+1}^{\mathrm{bag},\infty}<L_k^{\mathrm{bag},\infty}$, which, by the same
+cross-multiplication used in the proof of Proposition~\ref{prop:foc}, is
+equivalent to
+\begin{equation*}
+  (T-k)\,\Delta R_k \;>\; A+\Rk.
+\end{equation*}
+
+\emph{Lower rate bound.}  By the lower marginal envelope, for $k\ll T$,
+$(T-k)\Delta R_k\gtrsim Tk^{-3}$.  Since $A+\Rk\le A+\bar R$ is bounded
+(Assumption~\ref{ass:regularity}), there is a constant $c>0$ such that
+$Tk^{-3}\ge A+\bar R$ for all $k\le cT^{1/3}$.  Hence the loss is still
+strictly decreasing throughout $k\le cT^{1/3}$, so the minimiser cannot
+occur below the cube-root scale: $k_T^*=\Omega(T^{1/3})$.
+
+\emph{Upper rate bound.}  By the upper marginal envelope,
+$(T-k)\Delta R_k\lesssim Tk^{-2}$.  Since $A+\Rk\ge A>0$ is bounded away
+from zero, there is a constant $C<\infty$ such that $Tk^{-2}<A$ for all
+$k\ge CT^{1/2}$ with $k\ll T$.  Hence the loss is strictly increasing beyond
+$k\ge CT^{1/2}$, so the minimiser cannot occur above the square-root scale
+except where the pool-size constraint binds: $k_T^*=O(T^{1/2})$.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:ratewindow} is the rigorous counterpart to the informal
+window \eqref{eq:window}: the exact two-sided bracket of
+Proposition~\ref{prop:bracket} pins down the \emph{level} of $\Rk$, while the
+marginal-envelope assumption pins down its \emph{one-step decline}, and the
+two together --- not a parametric assumption on $\Rk$ --- confine $k_T^*$ to
+the cube-root--to--square-root window.  Section~\ref{sec:exomc} shows, via
+the power-law fit $\Rk\approx Cz_k^\alpha$ with $\hat\alpha\in(1,2)$, exactly
+where within this window the optimum falls for a given heterogeneity
+profile.
+\end{remark}
 
 %===========================================================================
 \section{Monte Carlo Evidence on $Q^{\mathrm{bag},\infty}$: Exogenous Case}
@@ -1243,528 +1568,17 @@ scales for all cases studied.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\linewidth]{kstar_vs_T_v2.pdf}
-\caption{Optimal $k^*$ vs $T$ for exogenous (population grid minimiser) and
-  endogenous (RMSFE minimiser, 500 MC replications) cases.
-  Reference lines: $\sqrt{T}$ (dashed green) and $2.19\cdot T^{1/3}$
-  (dotted purple, fitted to endogenous Toeplitz at $T=200$).
-  Exogenous $H=6$: four $T$ values (80, 240, 640, 1000); fitted slope
-  $0.352\approx 1/3$.  Log-log panel annotates fitted slopes.}
+\caption{Optimal $k^*$ vs $T$, exogenous case ($H\approx 6.08$, $m=50$,
+  500 reps): population grid minimiser and power-law formula
+  \eqref{eq:kstar_PL}, from Table~\ref{tab:exo_scaling_h6}.
+  Reference lines: $\sqrt{T}$ (dashed green) and $T^{1/3}$ (dotted purple,
+  constant fitted to the data).  The fitted log-log slope of the grid
+  minimiser, $0.352\approx 1/3$, sits at the cube-root end of the rate
+  window proved in Theorem~\ref{thm:ratewindow}, well below the
+  square-root reference; the shaded band shows $\pm20\%$ of $\sqrt{T}$ for
+  visual comparison.}
 \label{fig:kstar_T}
 \end{figure}
-
-%===========================================================================
-\section{Endogenous Case: Tractability and Monte Carlo Evidence}
-\label{sec:endomc}
-%===========================================================================
-
-\subsection{What Changes in the Endogenous Case}
-
-In the exogenous case $\Sigma_e$ is known and the RSM weight $w_{S,i}=\tau_i/A_S$
-is non-random given the subset $S$.  Bagging over $G\to\infty$ subsets
-eliminates within-subset randomness, leaving the exact infinite-bagged risk
-$\Rk$ studied above.
-
-In the endogenous case $\Sigma_e$ must be estimated.  Define
-$\hat\tau_i=1/\hat\sigma_i^2$ where $\hat\sigma_i^2$ is the sample
-variance of forecaster $i$'s errors over the training window of length $T$.
-The RSM weight becomes
-\begin{equation}
-  \hat w_{S,i} = \frac{\hat\tau_i}{\hat A_S},\quad
-  \hat A_S=\sum_{j\in S}\hat\tau_j.
-\end{equation}
-Two new complications arise relative to the exogenous case.
-
-\textbf{First,} all $G$ bags use the \emph{same} $\hat\Sigma_e$, estimated
-from the same $T$ training observations.  The estimation error
-$\hat\tau_i-\tau_i=O_p(T^{-1/2})$ is therefore \emph{common} to all bags:
-bagging over subsets cannot average it away.  The effective number of
-independent ``signals'' about $\tau_i$ is determined by the training data,
-not by $G$.
-
-\textbf{Second,} the DGPs of practical interest (our Toeplitz and
-factor-structured $\Sigma_e$) do not satisfy the common-loading structure.
-We use the full inverse-covariance formula
-$\hat w_S=\hat\Sigma_{e,S}^{-1}\bm{\iota}/(\bm{\iota}'\hat\Sigma_{e,S}^{-1}\bm{\iota})$
-within each subset, introducing additional approximation error beyond
-estimation noise.
-
-\subsection{A Tractable Case: Gaussianity and Common Loading}
-\label{sec:tractable_endo}
-
-When the common-loading structure (Assumption~\ref{ass:cl}) holds exactly
-and forecast errors are Gaussian, the $k\times k$ submatrix
-$\hat\Sigma_{e,S}$ is itself Wishart$(T-1,\Sigma_{e,S})$ as a marginal of
-the $m\times m$ Wishart (the same distribution as if it had been estimated
-from $k$ series directly).  Applying Kan and Zhou's
-\citeyearpar{KanZhou2007} theorem to the $k$-dimensional portfolio formed
-from $\hat\Sigma_{e,S}^{-1}$ gives:
-
-\begin{proposition}[Kan--Zhou endogenous correction]\label{prop:kanzho}
-Under strict Gaussianity and the common-loading structure
-(Assumption~\ref{ass:cl}), with sample covariance $\hat\Sigma_e$ estimated
-from $T$ observations ($T>k+2$), for each subset $S$ of size $k$:
-\begin{equation}\label{eq:KZ}
-  \E_{\hat\Sigma}\!\bigl[\hat w_S'\Sigma_{e,S}\hat w_S\bigr]
-  = \frac{T-2}{T-k-2}\cdot Q^{\mathrm{opt}}(S).
-\end{equation}
-Taking expectations over $S$:
-\begin{equation}\label{eq:KZ_bag}
-  \E_{\mathrm{data}}\!\left[Q_k^{\mathrm{bag},\infty,\mathrm{endo}}\right]
-  = \lambda(k)\cdot Q_k^{\mathrm{bag},\infty,\mathrm{exo}},
-  \quad\lambda(k) = \frac{T-2}{T-k-2}.
-\end{equation}
-\end{proposition}
-
-\begin{proof}[Proof sketch]
-The $k\times k$ submatrix $\hat\Sigma_{e,S}\sim\mathcal{W}_k(T-1,\Sigma_{e,S})$.
-Kan and Zhou (2007, Theorem 1) give
-$\E[\hat w_S'\Sigma_{e,S}\hat w_S]=(T-2)/(T-k-2)\cdot Q^{\mathrm{opt}}(S)$
-for a $k$-asset minimum-variance portfolio.  Averaging over $S$ gives
-\eqref{eq:KZ_bag}.
-\end{proof}
-
-\begin{remark}
-The correction factor $\lambda(k)=(T-2)/(T-k-2)$ depends on $k$ (the
-subset size), not $m$.  For the regime $k\ll T$ of practical interest,
-$\lambda(k)\approx 1+k/T\approx 1$: the subset-level KZ inflation is small.
-For $k=10$, $T=200$: $\lambda(10)\approx 1.053$.  This small correction
-explains why estimation noise in $\hat\Sigma_e$ accounts for only a modest
-fraction of the gap between endogenous and exogenous $k^*$ (Section~\ref{sec:endo_mc_results}).
-\end{remark}
-
-\subsubsection*{Endogenous Excess Risk and Optimal $k$}
-
-Since $\lambda(k)\approx 1$ for $k\ll T$, the endogenous inflated risk is
-approximately:
-\begin{align}
-  \E_{\mathrm{data}}[Q_k^{\mathrm{bag},\infty,\mathrm{endo}}]
-  \approx Q_k^{\mathrm{bag},\infty,\mathrm{exo}}
-  = \underbrace{\Qopt}_{\text{baseline}}
-  + \underbrace{R_k^{\mathrm{bag},\infty,\mathrm{exo}}}_{\text{excess risk}}.\label{eq:QendoDecomp}
-\end{align}
-The subset-level KZ correction $\lambda(k)=(T-2)/(T-k-2)\approx 1+k/T$ is
-small for $k\ll T$ and slightly amplifies both terms.  Including it, the
-endogenous total loss is
-\begin{align}
-  L_k^{\mathrm{endo}}
-  &\approx \bigl(s + \lambda(k)\Qopt + \lambda(k) Cz_k^\alpha\bigr)
-   \frac{T-1}{T-k}.\label{eq:Lendo}
-\end{align}
-For $k\ll T$, $\lambda(k)\approx 1$ and the endogenous loss is nearly
-identical to the exogenous loss.  To first order, $k^*_{\mathrm{endo}}\approx k^*_{\mathrm{exo}}$:
-\begin{equation}\label{eq:kstar_endo}
-  k^*_{\mathrm{endo}} \;\approx\;
-  \left(\frac{C\alpha T}{A}\right)^{1/(\alpha+1)} = k^*_{\mathrm{exo}},
-  \quad A = s+\Qopt.
-\end{equation}
-
-\subsubsection*{Comparison of Endogenous and Exogenous Optimal $k$}
-
-Since $\lambda(k)\approx 1$ for $k\ll T$, equation~\eqref{eq:kstar_endo}
-gives $k^*_{\mathrm{endo}}\approx k^*_{\mathrm{exo}}$: the subset-level
-Kan--Zhou correction is too small to explain the large empirical gap.
-To quantify: at $k=10$, $T=200$, $\lambda(10)=(198/188)\approx 1.05$; the
-implied shift in $k^*$ is $\lambda(k^*)^{1/(\alpha+1)}\approx 1.05^{1/2.7}\approx 1.02$,
-or about 2\%.
-
-\emph{The tractable Kan--Zhou case predicts only a $\sim$2--5\% increase
-in $k^*$ relative to the exogenous optimum.}  This is far smaller than the
-empirical factor of 5--7 (exogenous $k^*\approx 2$, endogenous
-$k^*\approx 11$--14).  The large gap is therefore not attributable to
-estimation noise in $\hat\Sigma_e$ per se, but rather to the
-\emph{non-common-loading structure} of the endogenous DGPs (Toeplitz and
-factor), which introduces model misspecification that the tractable result
-cannot account for.  We study this in Monte Carlo below.
-
-\begin{remark}[Scaling exponent preserved]
-The $T$-scaling exponent $1/(\alpha+1)$ is the same in \eqref{eq:kstar_PL}
-and \eqref{eq:kstar_endo}: the Kan--Zhou correction changes the
-\emph{level} of $k^*$ but not the rate at which it grows with $T$.
-This is consistent with the Monte Carlo evidence in
-Section~\ref{sec:endo_mc_results}, which finds log-log slopes of
-0.37--0.39 in the endogenous case, indistinguishable from the exogenous
-prediction $1/(\alpha+1)\approx 0.37$ at $\alpha=1.7$.
-\end{remark}
-
-\subsection{Monte Carlo Design for the Endogenous Case}
-
-We replace the known $\Sigma_e$ with its rolling-window sample counterpart
-$\hat\Sigma_e$, computed from the training data.  Two covariance structures
-are studied:
-\begin{itemize}[nosep]
-  \item \textbf{Toeplitz}: $(\Sigma_e)_{ij}=0.8^{|i-j|}$ (exponential
-    decay with $\rho=0.8$); not common-loading.
-  \item \textbf{Factor}: $\Sigma_e=\Lambda\Lambda'+\Psi$ with $r=2$ factors,
-    factor loading strength $0.5$, idiosyncratic variance $0.25$; satisfies
-    approximate factor structure but not common-loading.
-\end{itemize}
-Two coefficient designs:
-\begin{itemize}[nosep]
-  \item \textbf{B2} (dense): $\beta_j=1/m$, equal signal per forecaster.
-  \item \textbf{B4} (sparse): signal concentrated on a small subset of
-    forecasters.
-\end{itemize}
-Baseline: $m=50$, $T=200$, $N_{\mathrm{rep}}=200$, $K_{\mathrm{RS}}=200$
-bags.  $T$-scaling: $T\in\{100,150,200,300,500,800\}$, $N_{\mathrm{rep}}=120$.
-
-\subsection{Main Results}
-\label{sec:endo_mc_results}
-
-\begin{table}[ht]
-\centering
-\caption{Endogenous MC: $m=50$, $T=200$.}
-\label{tab:endo_main}
-\begin{tabular}{llccccc}
-\toprule
-$\Sigma_e$ & $\beta$ & $k^*$(RMSFE) & $k^*$(L) & Gain vs EW & $\kappa$ & $\Qopt$ \\
-\midrule
-Toeplitz & B2 & 11 & 32 & $-3.5\%$ & 2 & 0.155 \\
-Toeplitz & B4 & 11 & 26 & $-9.8\%$ & 2 & 0.155 \\
-Factor   & B2 & 14 & 29 & $-5.0\%$ & 2 & 0.005 \\
-Factor   & B4 & 14 & 29 & $-6.1\%$ & 2 & 0.004 \\
-\bottomrule
-\end{tabular}
-\footnotesize{$k^*$(RMSFE): minimiser of finite-sample RMSFE over 200 replications.
-$k^*$(L): minimiser of empirical inflation-adjusted loss.
-Gain: $(L^{\mathrm{EW}}-L^{\mathrm{RSM},k^*})/L^{\mathrm{EW}}$.
-$\kappa$: smallest $k$ at which RSM beats full estimated OLS.}
-\end{table}
-
-Three results stand out.  First, RSM achieves an interior optimum in all
-scenarios, confirming that the bias--variance trade-off identified
-theoretically persists under estimation of $\Sigma_e$.  Second, $k^*=2$
-for $\kappa$ universally: RSM with any $k\ge 2$ beats the full estimated
-OLS, which suffers severely from the curse of dimensionality at $m=50$,
-$T=200$.  Third, the empirical $k^*$ (11--14) is substantially above the
-population exogenous grid $k^*$ (2), with the gap attributable primarily to
-non-common-loading misspecification, not to the Kan--Zhou factor
-(which predicts only a $\sim$2--5\% level shift as shown above).
-
-\medskip
-\textbf{Two distinct gaps.}  The endogenous results expose two separate gaps
-that should not be conflated.
-\emph{Gap 1} (exogenous population $k^*\approx 2$ vs.\ endogenous RMSFE
-$k^*\approx 11$--14): this reflects the additional estimation noise when
-$\Sigma_e$ is replaced by $\hat\Sigma_e$, compounded by the non-common-loading
-structure of the DGP, which makes the precision-weighted weights suboptimal.
-\emph{Gap 2} (endogenous RMSFE $k^*\approx 11$--14 vs.\ single-inflation
-criterion $k^*(L^{\mathrm{curr}})\approx 26$--32): this reflects the
-under-penalisation of covariance estimation noise by the standard
-$(T-1)/(T-k)$ factor, which the double-inflation criterion corrects.
-Section~\ref{sec:double_inflation} proposes a conservative empirical
-criterion that addresses Gap~2; Gap~1 is a structural feature of working
-with estimated, misspecified covariance matrices.
-
-\medskip
-The ``Gain vs EW'' column in Table~\ref{tab:endo_main} reports
-$(L^{\mathrm{EW}}-L^{\mathrm{RSM},k^*})/L^{\mathrm{EW}}$, which is
-\emph{negative} in all four rows, meaning RSM at its RMSFE-optimal $k^*$
-\emph{underperforms} the simple equal-weighted mean.  This is expected in
-these non-common-loading settings: precision-weighting based on the
-estimated $\hat\Sigma_e$ introduces covariance-estimation noise that
-outweighs the potential gains from heterogeneity when the DGP departs
-from the common-loading assumption.  RSM's advantage over the \emph{full
-estimated} OLS (captured by $\kappa=2$) is real, but the relevant practical
-benchmark in heterogeneous panels is the equal-weighted mean, against which
-RSM requires substantial heterogeneity to win --- as shown in
-Section~\ref{sec:gdp}.
-
-\subsection{A Conservative Empirical Penalty for Endogenous RSM}
-\label{sec:double_inflation}
-
-The tables above report two $k^*$ estimates: one from the empirical RMSFE
-and one from minimising the inflation-adjusted loss
-$L_k^{\mathrm{bag}}=Q_k^{\mathrm{bag},\infty}(\hat\Sigma_e)\cdot(T-1)/(T-k)$.
-The two routinely disagree by a factor of 2--4.  We now show that this gap
-is an artefact of using the wrong inflation factor, and derive the correct
-one.
-
-\subsubsection*{Two Sources of Estimation Noise}
-
-The exogenous case has a single source of estimation noise: the $k$
-combination weights are estimated from $T$ observations, giving the
-standard OLS inflation $(T-1)/(T-k)$.
-
-The endogenous case has an \emph{additional} source: the within-subset
-weight formula $\hat w_{S,i}=\hat\tau_i/\hat A_S$ depends on estimated
-precisions $\hat\tau_i=1/\hat\sigma_i^2$, so even before any OLS step the
-weights are suboptimal because $\hat\Sigma_e\neq\Sigma_e$.  The
-$k\times k$ submatrix $\hat\Sigma_{e,S}$, as a marginal of the
-$m\times m$ Wishart$(T-1,\Sigma_e)$, is itself
-Wishart$(T-1,\Sigma_{e,S})$ --- the same distribution as if it had been
-estimated directly from $k$ series.  Applying the Kan--Zhou correction to
-the $k$-dimensional portfolio formed from $\hat\Sigma_{e,S}^{-1}$ gives:
-\begin{equation}\label{eq:KZ_k}
-  E_{\hat\Sigma}\!\bigl[\hat w_S'\Sigma_{e,S}\hat w_S\bigr]
-  = \frac{T-2}{T-k-2}\cdot Q^{\mathrm{opt}}(S),
-\end{equation}
-with $k$ (the subset size) in the denominator, \emph{not} $m$ (the full
-pool size).  The $m$ in the original Kan--Zhou formula arises from
-inverting the full $m\times m$ sample covariance; here only the $k\times k$
-submatrix is inverted, so the relevant dimension is $k$.
-
-\begin{remark}[Why KZ($m$) is irrelevant for $k$ selection]
-Replacing $(T-2)/(T-k-2)$ by the constant $(T-2)/(T-m-2)$ leaves the
-argmin of $L_k^{\mathrm{bag}}$ unchanged, since multiplying every value of
-the loss curve by the same constant does not shift its minimiser.  Only
-a $k$-dependent correction can alter $k^*$.
-\end{remark}
-
-\begin{remark}[Relation to OLS inflation and the Granger--Ramanathan regression]
-\label{rem:GR_connection}
-The standard inflation factors for the Granger--Ramanathan (1984) regression
-setups differ by how many free parameters are counted:
-\begin{itemize}[nosep]
-  \item \textbf{GR3} (unconstrained, no intercept, $k$ slopes):
-    residual df $=T-k$, inflation $(T-1)/(T-k)$ --- the formula used in
-    Section~\ref{sec:altinflation}.
-  \item \textbf{GR1} (unconstrained + intercept, $k+1$ parameters):
-    residual df $=T-k-1$, inflation $(T-1)/(T-k-1)$.
-\end{itemize}
-Numerically, the KZ correction $(T-2)/(T-k-2)$ and the GR1 inflation
-$(T-1)/(T-k-1)$ are \emph{essentially identical}: they differ by at most
-$0.17\%$ for $k\le 50$, $T=200$, and both correspond to counting $k+1$
-effective parameters.  The KZ formula derives the same correction from
-Wishart distribution theory (the exact distribution of the sample inverse
-covariance), while the GR1 inflation derives it from classical
-degrees-of-freedom counting with an explicit intercept parameter.  They
-coincide because using $\hat\Sigma_e$ to compute the $k$ precision-weighted
-combination weights is equivalent to estimating one additional free parameter
-beyond the $k$ OLS slopes --- the ``intercept'' of the covariance estimation
-step.  The double inflation formula below can therefore be read as:
-\[
-  I^{\mathrm{endo}}(T,k)
-  = \underbrace{\frac{T-1}{T-k}}_{\text{GR3: }k\text{ combination params}}
-    \times
-    \underbrace{\frac{T-1}{T-k-1}}_{\text{GR1 }\approx\text{ KZ: }k{+}1\text{ effective params}}
-  \;\approx\; \frac{(T-1)^2}{(T-k)(T-k-1)}.
-\]
-\end{remark}
-
-\subsubsection*{The Double Inflation Formula}
-
-Combining both sources yields a \emph{conservative double-penalty criterion}:
-\begin{equation}\label{eq:double_inflation}
-  I^{\mathrm{endo}}(T,k)
-  = \underbrace{\frac{T-2}{T-k-2}}_{\substack{\text{covariance estimation}\\\text{(KZ } \approx \text{GR1)}}}
-    \times
-    \underbrace{\frac{T-1}{T-k}}_{\substack{\text{combination weights}\\\text{(OLS/GR3)}}}
-  = \frac{(T-1)(T-2)}{(T-k)(T-k-2)}.
-\end{equation}
-For large $T$ this is approximately $[(T-1)/(T-k)]^2$: the square of the
-simple OLS inflation.  Both the OLS inflation $(T-1)/(T-k)$ and the KZ
-factor $(T-2)/(T-k-2)\approx(T-1)/(T-k-1)$ measure the same underlying
-phenomenon --- finite-sample estimation cost --- but at slightly different
-parameter counts ($k$ vs $k+1$).  Their product is the total inflation for
-a procedure that estimates \emph{both} the covariance structure and the
-combination weights from the same $T$ observations.
-The combined factor penalises large subsets much more severely than the
-single-factor formula; Table~\ref{tab:inflation_endo} illustrates the
-difference at $T=200$.
-
-\begin{table}[ht]
-\centering
-\caption{Inflation factors at $T=200$: simple OLS vs double correction.}
-\label{tab:inflation_endo}
-\begin{tabular}{ccccc}
-\toprule
-$k$ & $(T-1)/(T-k)$ & $(T-2)/(T-k-2)$ & $I^{\mathrm{endo}}(T,k)$ & Ratio to simple \\
-\midrule
-5  & 1.021 & 1.026 & 1.047 & 1.026 \\
-11 & 1.053 & 1.059 & 1.115 & 1.059 \\
-20 & 1.106 & 1.112 & 1.230 & 1.112 \\
-26 & 1.144 & 1.151 & 1.317 & 1.151 \\
-38 & 1.228 & 1.238 & 1.520 & 1.238 \\
-50 & 1.327 & 1.338 & 1.775 & 1.338 \\
-\bottomrule
-\end{tabular}
-\footnotesize{At $k=38$, the double inflation (1.520) is 24\% larger than
-the simple inflation (1.228), making large subsets substantially more
-expensive.}
-\end{table}
-
-\subsubsection*{Unbiasedness and Correspondence with the Exogenous Criterion}
-
-The in-sample risk $Q_k^{\mathrm{bag}}(\hat\Sigma_e)$ is a
-\emph{downward-biased} estimate of $Q_k^{\mathrm{bag}}(\Sigma_e)$:
-\begin{equation}
-  E_{\hat\Sigma}\!\bigl[Q_k^{\mathrm{bag}}(\hat\Sigma_e)\bigr]
-  \approx \frac{T-k-2}{T-2}\cdot Q_k^{\mathrm{bag}}(\Sigma_e).
-\end{equation}
-Multiplying by the KZ($k$) factor exactly de-biases the estimate:
-\begin{equation}
-  E_{\hat\Sigma}\!\bigl[Q_k^{\mathrm{bag}}(\hat\Sigma_e)\cdot
-  \tfrac{T-2}{T-k-2}\bigr] = Q_k^{\mathrm{bag}}(\Sigma_e).
-\end{equation}
-Therefore the corrected endogenous criterion satisfies
-\begin{equation}\label{eq:Lendo_unbiased}
-  E_{\hat\Sigma}\!\left[L_k^{\mathrm{endo}}
-  \right]
-  = Q_k^{\mathrm{bag}}(\Sigma_e)\cdot\frac{T-1}{T-k}
-  = L_k^{\mathrm{exo}},
-\end{equation}
-where $L_k^{\mathrm{endo}} = Q_k^{\mathrm{bag}}(\hat\Sigma_e)\cdot
-I^{\mathrm{endo}}(T,k)$.  This criterion is not derived from a formal
-unbiasedness theorem: the Kan--Zhou correction already describes the
-out-of-sample risk of estimated minimum-variance weights, and multiplying
-by a second OLS factor is not automatically free of double-counting.
-We propose it instead as an \emph{approximation criterion} whose
-motivation is the two-source decomposition above.  Monte Carlo validation
-(Table~\ref{tab:kstar_double}) shows it tracks the RMSFE-optimal $k^*$
-substantially better than the single-inflation criterion across all designs,
-providing empirical justification even without a formal proof.
-
-\subsubsection*{Monte Carlo Validation}
-
-% [PLACEHOLDER: fill in the full table once H=6 scaling and m-scaling
-%  complete.  Template below based on results available as of 2026-06-07.]
-
-Table~\ref{tab:kstar_double} reports $k^*$ under all three criteria for the
-baseline ($m=50$, $T=200$) and the $m$-scaling experiment ($T=200$,
-$m\in\{20,30,50,80,120\}$).
-
-\begin{table}[ht]
-\centering
-\caption{Optimal $k^*$ under three criteria: RMSFE, single inflation
-  $L^{\mathrm{curr}}$, and double inflation $L^{\mathrm{endo}}$.
-  $T=200$.}
-\label{tab:kstar_double}
-\begin{tabular}{llccc}
-\toprule
-DGP & $m$ & $k^*$(RMSFE) & $k^*$($L^{\mathrm{curr}}$) & $k^*$($L^{\mathrm{endo}}$) \\
-\midrule
-\multicolumn{5}{l}{\textit{Toeplitz, $\rho=0.8$}} \\
-& 20  & 8  & 12 & \textbf{8}  \\
-& 30  & 8  & 16 & \textbf{8}  \\
-& 50  & 12 & 26 & \textbf{12} \\
-& 80  & 17 & 44 & 14          \\
-& 120 & 22 & 82 & 18          \\
-\midrule
-\multicolumn{5}{l}{\textit{Factor, $r=2$}} \\
-& 20  & 8  & 14 & 10          \\
-& 30  & 10 & 20 & 12          \\
-& 50  & 14 & 28 & \textbf{14} \\
-& 80  & 20 & 47 & 17          \\
-& 120 & 18 & 82 & \textbf{18} \\
-\bottomrule
-\end{tabular}
-\footnotesize{Bold: $k^*$($L^{\mathrm{endo}}$) = $k^*$(RMSFE) exactly.
-  $k^*$($L^{\mathrm{curr}}$) uses $(T-1)/(T-k)$ only;
-  $k^*$($L^{\mathrm{endo}}$) uses $(T-1)(T-2)/[(T-k)(T-k-2)]$.
-  Remaining gap at $m\ge 80$ reflects model misspecification: the
-  Toeplitz/factor structures do not satisfy common loading, so the
-  precision-weighted weights $\hat w_{S,i}=\hat\tau_i/\hat A_S$ are
-  suboptimal for the true $\Sigma_e$; the Wishart result for the
-  $k\times k$ submatrix holds regardless of loading structure for
-  Gaussian errors, but it does not rescue the weight formula.}
-\end{table}
-
-Three findings stand out.  First, the double-inflation criterion matches
-$k^*$(RMSFE) \emph{exactly} in 6 of 10 cases, compared to 0 of 10 for the
-single-inflation criterion.  Second, the residual gap under the corrected
-criterion is at most 4 units across all designs, compared to 4--64 units
-under the current criterion.  Third, the gap grows with $m$ (larger
-$m/T$ ratio makes the Wishart approximation less accurate) but remains
-small in the empirically relevant range $m\le 50$.
-
-\begin{remark}[Conservative empirical criterion for endogenous RSM]
-The product factor $(T-1)(T-2)/[(T-k)(T-k-2)]$ is the
-Gaussian/Wishart alternative to the single OLS correction $(T-1)/(T-k)$.
-It is nearly identical to the Elliott--Liao-style criterion
-$[(T-1)/(T-k)]^2$ for large $T$, and to using two separate GR-type
-inflation factors as described above.  We report it as a
-\emph{conservative empirical rule}: it tracks the RMSFE-optimal $k^*$
-substantially better than the single-inflation criterion in our
-simulations (Table~\ref{tab:kstar_double}), but it is not a formal
-unbiasedness correction.  Using it requires $T>k+2$, automatically
-satisfied for $k\ll T$.
-\end{remark}
-
-\subsection{T-Scaling and the $\sqrt{T}$ Approximation}
-
-\begin{table}[ht]
-\centering
-\caption{Endogenous $T$-scaling: $k^*$(RMSFE) by $T$, B4 specification.}
-\label{tab:endo_scaling}
-\begin{tabular}{lcccccccc}
-\toprule
-$\Sigma_e$ & $T=100$ & $T=150$ & $T=200$ & $T=300$ & $T=500$ & $T=800$
-  & Slope & Rejects $T^{1/2}$? \\
-\midrule
-Toeplitz & 10 & 10 & 14 & 14 & 18 & 22 & $0.394^{**}$ & Yes ($t=-2.1$) \\
-Factor   & 14 & 14 & 14 & 18 & 26 & 26 & $0.367^{**}$ & Yes ($t=-1.9$) \\
-\midrule
-$\sqrt{T}$  & 10.0 & 12.2 & 14.1 & 17.3 & 22.4 & 28.3 & (0.500) & \\
-$2.19\cdot T^{1/3}$ & 10.1 & 11.6 & 12.8 & 14.6 & 17.3 & 20.3 & (0.333) & \\
-\bottomrule
-\end{tabular}
-\footnotesize{Log-log OLS slopes; $^{**}p<0.01$.  Reference rows show
-$\sqrt{T}$ and $2.19\cdot T^{1/3}$ (constant fitted at $T=200$, Toeplitz).}
-\end{table}
-
-The fitted slope of 0.37--0.39 is statistically consistent with the
-theoretical prediction $1/(\alpha+1)\approx 0.37$ (at $\hat\alpha=1.7$)
-and rejects $T^{1/2}$ at the 10\% level.
-
-\paragraph{Why $k^*\approx\sqrt{T}$ appears empirically.}
-The endogenous $k^*$ values in Table~\ref{tab:endo_scaling} are
-numerically close to $\sqrt{T}$ for $T\in[100,300]$.  This is a finite-sample
-coincidence, not a structural result.  The fitted relationship
-$k^*\approx 2.19\cdot T^{0.39}$ produces values close to $\sqrt{T}$
-over one decade of $T$ because $2.19\cdot T^{0.39}=\sqrt{T}$ at
-$T=(2.19)^{1/(0.5-0.39)}=(2.19)^{9.1}\approx 250$, and the two curves
-do not diverge greatly for $T\in[100,300]$.  At $T=800$ the divergence
-is clear: $2.19\cdot 800^{0.39}=20.3$ versus $\sqrt{800}=28.3$;
-the data give $k^*=22$, closer to the power-law prediction.
-
-Theoretically, the $\sqrt{T}$ appearance can be understood through the
-finite-bagging bridge: when a single $\hat\Sigma_e$ is shared across all
-$G$ bags, the common estimation error introduces a residual linear-in-$z_k$
-component in the effective excess risk (equivalent to a finite effective
-$G_{\mathrm{eff}}\sim T/m\ll G$).  This pushes the effective scaling
-exponent above $1/(\alpha+1)$ toward $1/2$.  The observed slope of 0.39
-lies between the two limits, consistent with a partial linear component.
-
-\paragraph{Practical recommendation.}
-The RMSFE curve is shallow near the optimum.  At $T=200$, switching from
-$k=9$ ($\approx\sqrt{T}$) to $k^*=14$ reduces RMSFE by approximately 6\%.
-The rule $k=\lfloor\sqrt{T}\rfloor$ therefore captures the bulk of available
-gains with no estimation of $\alpha$ or $C$.  We use this rule as our
-empirical default.
-
-\subsection{$m$-Scaling: How $k^*$ Grows with Pool Size}
-\label{sec:mscaling}
-
-The cube-root formula \eqref{eq:kstar_PL} scales with $T$ but does not
-explicitly depend on $m$.  In practice, larger pools require larger subsets
-because the precision-weight distribution is more spread out and estimating
-combination weights is noisier when $m/T$ is large.  Table~\ref{tab:m_scaling}
-fixes $T=200$ and varies $m\in\{20,30,50,80,120\}$ using the endogenous MC
-with B4 coefficients ($N_{\mathrm{rep}}=500$, $K_{\mathrm{RS}}=500$).
-
-\begin{table}[ht]
-\centering
-\caption{$m$-scaling: $k^*$(RMSFE) by pool size, $T=200$ fixed.}
-\label{tab:m_scaling}
-\begin{tabular}{lcccccc}
-\toprule
-$\Sigma_e$ & $m=20$ & $m=30$ & $m=50$ & $m=80$ & $m=120$
-           & $\hat\beta$ ($k^*\propto m^{\hat\beta}$) \\
-\midrule
-Toeplitz  & 8 & 8 & 12 & 17 & 22 & $0.61$ ($R^2=0.96$, $p=0.004$) \\
-Factor    & 8 & 10 & 14 & 20 & 18$^\dagger$ & $0.51$ ($R^2=0.91$, $p=0.012$) \\
-\bottomrule
-\end{tabular}
-\footnotesize{Log-log OLS of $\log k^*$ on $\log m$.  $^\dagger$Factor
-$m=120$: slight dip from $m=80$ likely reflects grid-step noise.
-Gains stabilise at $10$--$11\%$ (Toeplitz) and $4$--$7\%$ (Factor) across $m$.}
-\end{table}
-
-$k^*$ rises sub-linearly with $m$, with log-log slopes of $0.61$
-(Toeplitz) and $0.51$ (Factor) --- well below 1 (linear) and above 0.33
-(cube-root).  Larger pools require larger subsets to cover the
-precision-weight distribution, but the benefit of scale is tempered by
-the rising estimation cost as $m/T$ grows.
 
 %===========================================================================
 \section{Empirical Application: SPF (Near-Homogeneous Case)}
@@ -1904,9 +1718,9 @@ No-COVID & 21 & \textbf{0.499} & 16 & 0.506 \\
 
 The AR+X specification, which augments each autoregression with a FRED-MD
 predictor, delivers the best full-sample RMSFE (0.617).  The no-COVID
-oracle $k^*=16$ is closer to the endogenous MC range 11--14 than the
-bivariate $k^*=21$, consistent with the AR+X model producing a tighter
-predictor distribution.
+oracle $k^*=16$ is closer to the theoretical square-root default
+$k\approx\lfloor\sqrt{T}\rfloor\approx 9$--14 than the bivariate $k^*=21$,
+consistent with the AR+X model producing a tighter predictor distribution.
 
 %===========================================================================
 \section{Conclusion}
@@ -1929,20 +1743,24 @@ paper's main contributions are:
   The infinite-bagged excess risk resists a parallel derivation because the
   requisite conditional harmonic mean has no closed form.
 
+\item \textbf{Exact two-sided bracket and a rigorous rate window.}
+  The infinite-bagged excess risk $\Rk$ admits an exact bracket between a
+  Jensen ceiling and a Cauchy--Schwarz projection floor, computable from
+  the precision profile alone.  To leading order the ceiling is linear and
+  the floor quadratic in $z_k=1/k-1/m$.  Under an explicit marginal-envelope
+  regularity condition on $\Rk-R_{k+1}^{\mathrm{bag},\infty}$ --- not a
+  parametric assumption on $\Rk$ itself --- we prove that the true optimal
+  subset size is rigorously confined to $T^{1/3}\lesssim k^*\lesssim T^{1/2}$.
+
 \item \textbf{Power-law parametrisation from Monte Carlo.}
   With known $\Sigma_e$, the Monte Carlo shape of $\Rk$ is well-described
-  by $Cz_k^\alpha$ ($R^2>0.97$).  The exponent $\hat\alpha\in(1,2)$ is
+  by $Cz_k^\alpha$ ($R^2>0.97$), with $\hat\alpha\in(1,2)$ falling inside the
+  rate window proved above.  The exponent is
   determined by heterogeneity $H$: small $H$ gives $\hat\alpha\to 2$ (fast
   decay, cube-root $k^*$); large $H$ gives $\hat\alpha\to 1$ (slow decay,
   square-root $k^*$).  The optimal subset size is
   $k^*\propto T^{1/(\alpha+1)}$, validated by exact agreement between the
   formula and the grid-search minimiser.
-
-\item \textbf{Tractable endogenous result under Gaussianity.}
-  The Kan--Zhou correction predicts a modest level shift in $k^*$ (5--15\%)
-  while preserving the $T^{1/(\alpha+1)}$ scaling exponent.  The large
-  empirical gap between exogenous and endogenous $k^*$ is driven by
-  non-common-loading misspecification, not estimation noise per se.
 
 \item \textbf{Empirical evidence.}  RSM delivers 10--30\% RMSFE reductions
   in GDP forecasting.  The near-homogeneous SPF panel confirms the theory's
@@ -1973,7 +1791,7 @@ Under sampling without replacement of size $k$ from $\{\tau_1,\ldots,\tau_m\}$:
 \[
   \E_S[A_S] = k\bar\tau,\quad
   \Var_S(A_S) = k\cdot\frac{m-k}{m-1}\cdot\frac{1}{m}\sum_i(\tau_i-\bar\tau)^2
-              = k\,z_k\,\frac{m}{m-1}\cdot V_\tau,
+              = k^2\,z_k\,\frac{m}{m-1}\cdot V_\tau,
 \]
 where $V_\tau=m^{-1}\sum_i(\tau_i-\bar\tau)^2$ and $z_k=1/k-1/m$.
 

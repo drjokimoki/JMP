@@ -1,0 +1,3 @@
+"rule","mean_absolute_k_gap","median_absolute_k_gap","mean_excess_msfe_pct","max_excess_msfe_pct"
+"round(sqrt(T))",5.375,3.5,0.437203388592317,0.881236760958104
+"round(T^(1/3))",6.125,5.5,1.99372126733353,2.96865632240062

@@ -1,0 +1,126 @@
+% Paste-ready revisions for the theoretical part of
+% Job_Market_paper_Kozyrev-2.pdf, updated version reviewed 2026-07-11.
+
+% Replace the joint-distribution display after Assumptions 1--2.
+We interpret the restrictions conditionally on the information set
+$\mathcal F_{t-1}$ available when the forecasts are formed. In particular,
+\[
+ E\!\left[\begin{pmatrix}y_t\\f_t\end{pmatrix}\middle|\mathcal F_{t-1}\right]
+ =\begin{pmatrix}\mu_t\\\mu_t\iota_m\end{pmatrix},
+ \qquad
+ \operatorname{Var}\!\left[
+ \begin{pmatrix}y_t\\f_t\end{pmatrix}\middle|\mathcal F_{t-1}\right]
+ =\begin{pmatrix}\sigma_\epsilon^2&0\\0&\Sigma_{e,m}\end{pmatrix}.
+\]
+These equations specify conditional first and second moments; they do not
+impose a joint distribution.
+
+% Replace the inflation-factor discussion.
+To summarize the trade-off between population fit and weight-estimation
+noise, we use the working factor
+\[
+ I(T,d)=\frac{T-1}{T-d},\qquad 1\le d<T.
+\]
+For one correctly specified restricted regression, this expression can be
+motivated by the standard i.i.d. Gaussian random-design calculation with
+$d-1$ free weights and an independent evaluation observation. The moment
+conditions above alone do not imply that calculation. Furthermore, subset
+regressions fitted on the same training sample have correlated
+coefficient-estimation errors. Thus $I(T,m)$ for the full combination and
+$I(T,k)$ for a subset combination define a stylized finite-sample criterion;
+they are not exact risk formulas for the feasible bagged estimator.
+
+% Add after Definition 2.
+The expectation in $Q_k^{\mathrm{bag},G}$ is over random subset draws while
+each subset weight is held at its population value. This quantity is
+therefore distinct from the out-of-sample risk of feasible RSM, in which the
+subset weights are estimated from a common training sample.
+
+% Replace the interpretation after Proposition 2.
+Proposition~2 identifies the two endpoints of the population RSM family. It
+does not imply that the weights or risks vary monotonically with $k$, nor
+does it supply a data-driven rule for selecting $k$. Intermediate subset
+sizes may be attractive because they trade approximation to the oracle
+weights against estimation noise. Dominance over both estimated endpoint
+rules is consequently a finite-sample possibility to be assessed under an
+explicit estimation model or empirically, rather than a consequence of the
+endpoint identities.
+
+% Replace Proposition 5.
+\begin{proposition}[Second-order approximation to average-subset risk]
+Under the common-loading model, the exact average-subset population risk is
+\[
+ Q_k^{\mathrm{sub}}=q+E_S\!\left[\frac{1}{A_S}\right].
+\]
+A second-order Taylor approximation around $E_S[A_S]=k\bar\tau$ gives
+\[
+ Q_k^{\mathrm{sub}}
+ \approx q+\frac{1}{k\bar\tau}
+ +\frac{m-k}{k^2(m-1)}\frac{v_\tau}{\bar\tau^3}.
+\]
+Equivalently, if
+\[
+ \eta_k=\frac{\operatorname{Var}_S(A_S)}{E_S[A_S]^2}
+ =\frac{m-k}{k(m-1)}\frac{v_\tau}{\bar\tau^2},
+\]
+then
+\[
+ E_S[1/A_S]\approx\frac{1}{k\bar\tau}(1+\eta_k).
+\]
+The approximation is expected to be accurate when $\eta_k$ is small and the
+distribution of $A_S$ is not strongly skewed; it is exact at $k=m$.
+\end{proposition}
+
+% Replace Assumption 4 and Proposition 8 if the goal is a defensible rate
+% statement without imposing marginal bounds over the whole feasible set.
+\begin{assumption}[Interior marginal regularity and no late minimum]
+Let $m=m_T$, $K_T=\min\{m_T,T-1\}$, and
+$\Delta R_{k,T}=R_{k,T}^{\mathrm{bag}}-R_{k+1,T}^{\mathrm{bag}}$.
+There is a deterministic sequence $b_T=o(m_T)$ with
+$T^{1/2}=O(b_T)$ and constants $0<d_L\le d_U<\infty$, uniform in
+$T$ and $k$, such that for every $k$ in the candidate range
+$k_0\le k<b_T$,
+\[
+ d_L(z_k^2-z_{k+1}^2)
+ \le \Delta R_{k,T}
+ \le d_U(z_k-z_{k+1}),
+ \qquad z_k=\frac1k-\frac1{m_T}.
+\]
+In addition, at least one global minimizer of the criterion below lies in
+$[k_0,b_T]$; equivalently, no point outside the candidate range has strictly
+smaller loss than every point inside it.
+\end{assumption}
+
+\begin{proposition}[Conditional rate window for an interior optimizer]
+Define the stylized criterion
+\[
+ L_{k,T}^{\mathrm{bag}}
+ =\left(A+R_{k,T}^{\mathrm{bag}}\right)\frac{T-1}{T-k},
+ \qquad A=\sigma_\epsilon^2+Q^{\mathrm{opt}}>0,
+\]
+and let $k_T^*$ be a global minimizer satisfying the preceding assumption.
+If $R_{k,T}^{\mathrm{bag}}$ is uniformly bounded, then
+\[
+ k_T^*=\Omega(T^{1/3}),\qquad k_T^*=O(T^{1/2}).
+\]
+Thus, under the working inflation criterion, uniform marginal bounds, and
+the no-late-minimum condition, an interior optimal subset size lies in the
+cube-root--square-root window.
+\end{proposition}
+
+\noindent
+The no-late-minimum condition is substantive: marginal bounds stated only
+for $k\ll m_T$ cannot by themselves rule out a lower value of the objective
+when $k$ is comparable with $m_T$ or $T$. Alternatively, one may omit this
+condition by imposing suitable marginal bounds over the entire feasible
+range in which a competing global minimum could occur.
+
+% Add at the end of Section 4.
+\paragraph{Scope of the rate statements.}
+The exact results in this section concern finite-dimensional population
+risks. The square-root expression minimizes a leading approximation to the
+average-subset criterion, while the cube-root--square-root window is a
+conditional asymptotic result for the stylized inflated criterion. Neither
+result makes $\operatorname{round}(\sqrt T)$ the exact finite-sample optimum
+for feasible RSM. That rule should therefore be described as a tuning
+heuristic and evaluated separately in simulations and applications.

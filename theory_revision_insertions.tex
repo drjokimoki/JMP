@@ -1,0 +1,146 @@
+% Targeted replacement/insert text for the theoretical part of
+% Job_Market_paper_Kozyrev-2.pdf (reviewed 2026-07-11).
+
+% --------------------------------------------------------------------------
+% Insert at the beginning of Section 4, after Assumptions 1--2.
+% --------------------------------------------------------------------------
+
+Throughout the population analysis, combination weights are treated as fixed
+and the loss is evaluated for a new forecast realization.  Because
+$E(u_t)=0$, $E(\epsilon_t)=0$, and $E(\epsilon_tu_t)=0$, the conditional MSE
+of a fixed weight vector $w$ is
+\[
+ E\!\left[(w'f_t-y_t)^2\mid\mu_t\right]
+ = (w'\iota_m-1)^2\mu_t^2+\sigma_\epsilon^2+w'\Sigma_{e,m}w.
+\]
+Under the restriction $w'\iota_m=1$, only the last two terms remain.  The
+population results below concern these fixed-weight risks.  Whenever estimated
+weights are considered, the evaluation observation is understood to be
+independent of the training sample.
+
+The joint display above records conditional first and second moments:
+\[
+ E\!\left[
+ \begin{pmatrix}y_t\\ f_t\end{pmatrix}\Bigm|\mu_t
+ \right]
+ =
+ \begin{pmatrix}\mu_t\\ \mu_t\iota_m\end{pmatrix},
+ \qquad
+ \operatorname{Var}\!\left[
+ \begin{pmatrix}y_t\\ f_t\end{pmatrix}\Bigm|\mu_t
+ \right]
+ =
+ \begin{pmatrix}\sigma_\epsilon^2&0\\0&\Sigma_{e,m}\end{pmatrix}.
+\]
+These moment restrictions do not by themselves impose joint normality.
+
+% --------------------------------------------------------------------------
+% Replace the finite-sample-factor discussion around Equation (7).
+% --------------------------------------------------------------------------
+
+To organize the finite-sample trade-off, we use
+\[
+ I(T,k)=\frac{T-1}{T-k}, \qquad T>k.
+\]
+This factor is exact for the expected out-of-sample loss of a correctly
+specified $k$-forecast restricted regression under the standard i.i.d.
+Gaussian random-design calculation, with an independent test observation and
+$k-1$ free coefficients.  Assumptions 1--2 alone are not sufficient for that
+exact calculation.  We therefore use $I(T,k)$ below as a stylized
+finite-sample criterion unless the additional sampling conditions are imposed.
+
+For a bagged estimator, regressions fitted on overlapping subsets use the same
+training sample, so their coefficient-estimation errors are generally
+correlated.  Consequently, multiplying an infinite-bagged population risk by
+$I(T,k)$ need not equal the exact finite-sample risk of the feasible bagged
+predictor.  The criterion is useful for displaying the approximation--
+estimation trade-off, but the resulting optimal-$k$ statements should be read
+conditional on this approximation.
+
+% --------------------------------------------------------------------------
+% Replace the two paragraphs after Proposition 2.
+% --------------------------------------------------------------------------
+
+Proposition~2 is an endpoint result: the RSM family contains equal weighting
+at $k=1$ and the population-optimal linear combination at $k=m$.  It does not,
+without additional restrictions on $\Sigma_{e,m}$, establish that individual
+weights or risks move monotonically between those endpoints as $k$ increases.
+Intermediate subset sizes can nevertheless be attractive in finite samples
+because they trade approximation to the oracle weights against the noise from
+estimating a larger restricted regression.  Selecting $k$ from the data adds a
+separate tuning cost, so dominance over both endpoints is an empirical
+possibility rather than a consequence of Proposition~2.
+
+% --------------------------------------------------------------------------
+% Replace the interpretation after Proposition 3.
+% --------------------------------------------------------------------------
+
+This equivalence concerns a conditional mean.  A forecast receives more than
+the equal global weight if and only if its mean weight, over the subsets in
+which it appears, exceeds $1/k$.  It need not exceed $1/k$ in every subset, or
+even in a majority of them, and the magnitude of a regression weight should
+not by itself be interpreted as a measure of standalone forecast accuracy.
+
+% --------------------------------------------------------------------------
+% Insert immediately before Proposition 5.
+% --------------------------------------------------------------------------
+
+For the order statements below, consider a sequence of panels for which the
+precision profile is uniformly bounded: there exist constants
+$0<\underline\tau\le\overline\tau<\infty$ such that
+$\underline\tau\le\tau_i\le\overline\tau$ for every $i$ and every panel.
+The subset size grows in the interior of the panel, under the joint $(k,m)$
+regime used in Appendix~C.  These conditions control the Taylor remainder;
+without them, Equation~(23) should be read only as a second-order delta-method
+approximation.
+
+% --------------------------------------------------------------------------
+% Replace the sentence introducing Equation (28).
+% --------------------------------------------------------------------------
+
+Conditioning on inclusion of forecast $i$ gives the exact identity
+\[
+ E_S\!\left[\frac{1}{A_S}\Bigm|i\in S\right]
+ =E\!\left[\frac{1}{\tau_i+A_{S\setminus\{i\}}}\right].
+\]
+A Taylor approximation can subsequently be applied to the expectation on the
+right, but no distribution-free closed form is available for a general
+precision profile.
+
+% --------------------------------------------------------------------------
+% Insert immediately before Proposition 8, and change its title as indicated.
+% --------------------------------------------------------------------------
+
+% Suggested new title:
+% \begin{proposition}[Rate window under the stylized finite-sample criterion]
+
+The following proposition concerns the criterion defined below, not the exact
+finite-sample risk of the feasible finite-$G$ RSM estimator.  Its conclusion is
+therefore conditional on both the inflation-factor approximation and the
+marginal regularity assumption.  Establishing the same rate window for
+estimated, overlapping subset regressions would additionally require control
+of cross-subset coefficient-estimation covariances and, when $G$ is finite,
+the Monte Carlo subset-draw term from Proposition~1.
+
+% --------------------------------------------------------------------------
+% Add near the end of Section 4.
+% --------------------------------------------------------------------------
+
+\paragraph{What the theory does and does not establish.}
+The exact population results separate three objects: the risk of one randomly
+drawn subset, the expected risk after finitely many population subset draws,
+and the deterministic infinite-bagged population risk.  The common-loading
+model then yields an exact oracle-distance representation and exact bounds for
+the last object.  The square-root rule for the average-subset approximation
+and the cube-root--square-root window for the bagged criterion add a stylized
+finite-sample inflation factor.  They explain the economic trade-off behind
+the choice of $k$, but they are not exact finite-sample risk formulas for the
+implemented estimator without the stronger sampling and dependence analysis
+described above.
+
+% --------------------------------------------------------------------------
+% Preamble presentation fix.
+% --------------------------------------------------------------------------
+
+% Add after loading hyperref:
+% \hypersetup{hidelinks}

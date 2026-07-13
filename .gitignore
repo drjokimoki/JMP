@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.nav
+*.snm
+
+# Python
+__pycache__/
+
+# scratch
+tmp/
+
+# downloaded reference papers (not project outputs)
+1908.01251v1.pdf
+20-AOS1984.pdf
+21-EJS1958.pdf
+2301.12649v2.pdf
+2402.11397v1.pdf
+2512.22472v1.pdf
+Combination.pdf
+Combining Forecasts - On Why Averaging Beats Optimal Linear Weights.pdf
+Giannone.pdf
+Maung.pdf

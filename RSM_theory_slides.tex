@@ -1,0 +1,739 @@
+%=============================================================================
+%  Beamer slides: Theoretical Model (Section 4) of the Job Market Paper
+%  "Random Subspace Method for Forecast Combination"
+%  Motivation drawn from RSM_paper_v2; theory follows JMP Section 4.
+%  Compile with pdflatex.
+%=============================================================================
+\documentclass[11pt,aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{itemize items}[circle]
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{bm}
+\usepackage{bbm}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[round,authoryear]{natbib}
+
+%---- accent color -----------------------------------------------------------
+\definecolor{rsmblue}{RGB}{31,73,125}
+\setbeamercolor{frametitle}{bg=rsmblue,fg=white}
+\setbeamercolor{title}{fg=rsmblue}
+\setbeamercolor{structure}{fg=rsmblue}
+
+%---- notation macros (consistent with the paper) ----------------------------
+\newcommand{\Sig}{\Sigma_{e,m}}
+\newcommand{\Sigk}{\Sigma_{e,k,S}}
+\newcommand{\wopt}{w^{\mathrm{opt}}}
+\newcommand{\wave}{w^{\mathrm{ave}}}
+\newcommand{\Qopt}{Q^{\mathrm{opt}}}
+\newcommand{\Qave}{Q^{\mathrm{ave}}}
+\newcommand{\Qsub}{Q_k^{\mathrm{sub}}}
+\newcommand{\Qbag}{Q_k^{\mathrm{bag},\infty}}
+\newcommand{\QbagG}{Q_k^{\mathrm{bag},G}}
+\newcommand{\Lopt}{L^{\mathrm{opt}}}
+\newcommand{\Lave}{L^{\mathrm{ave}}}
+\newcommand{\Lsub}{L_k^{\mathrm{sub}}}
+\newcommand{\Lbag}{L_k^{\mathrm{bag},\infty}}
+\newcommand{\Rk}{R_k^{\mathrm{bag}}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\im}{\bm{\iota}_m}
+\newcommand{\ik}{\bm{\iota}_k}
+
+%---- theorem-like blocks ----------------------------------------------------
+\newtheorem{assumptionX}{Assumption}
+\newtheorem{propositionX}{Proposition}
+\newtheorem{definitionX}{Definition}
+
+%---- title ------------------------------------------------------------------
+\title[RSM: Theoretical Model]{The Random Subspace Method for Forecast Combination}
+\subtitle{Theoretical Model}
+\author[Kozyrev]{Boris Kozyrev}
+\institute[]{Job Market Paper}
+\date{\today}
+
+\begin{document}
+
+%=============================================================================
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%=============================================================================
+\begin{frame}{Roadmap}
+  \tableofcontents
+\end{frame}
+
+%=============================================================================
+\section{Motivation}
+%=============================================================================
+
+\begin{frame}{The forecast-combination puzzle}
+  \begin{block}{A long-standing puzzle}
+    The \emph{equal-weighted mean} of individual forecasts typically
+    \textbf{outperforms} the estimated minimum-variance ``optimal''
+    combination --- even though the latter solves a simple constrained
+    OLS problem.
+    \hfill {\footnotesize \citep*{BatesGranger1969,GrangerRamanathan1984}}
+  \end{block}
+
+  \textbf{Two standard explanations:}
+  \begin{itemize}
+    \item \textbf{Estimation error.} Optimal weights must be estimated;
+      with $m$ forecasts and short samples $T$, the noise overwhelms the gains.
+    \item \textbf{Small population gains.} \citet*{ElliottLiao2025}: even
+      \emph{before} any finite-sample noise, the population gain
+      $\Qave-\Qopt$ is often tiny under empirically plausible covariance
+      structures (probably, not true in the endogenous case).
+  \end{itemize}
+
+  \begin{alertblock}{This paper}
+    Both forces point to using \emph{fewer} forecasts. The Random Subspace
+    Method (RSM) tries to answer how many of them are needed.
+  \end{alertblock}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{The inflation factor}
+  Estimating weights inflates the population loss. For the full
+  $m$-weight optimal combination (constrained OLS):
+  \[
+    I_m(T)=\frac{T-1}{T-m}\approx 1+\frac{m-1}{T}.
+  \]
+
+  \citet*{ElliottLiao2025} call $(m-1)/T$ the \emph{best case} estimation
+  cost. Optimal combination is worth it only if
+  \[
+    \Qave-\Qopt \;>\; \tfrac{m-1}{T}\,(\sigma_\varepsilon^2+\Qopt),
+  \]
+  which needs $T\gg m$ to hold (cost negligible); but in reality $T$ is of
+  moderate size, so it often \textbf{fails}.
+
+  \begin{alertblock}{The RSM departure}
+    Use a \textbf{subset} of size $k\ll m$, with inflation
+    $\dfrac{T-1}{T-k}\;\ll\;\dfrac{T-1}{T-m}$,\qquad
+    i.e.\ cost $\dfrac{k-1}{T}\ll\dfrac{m-1}{T}$.
+    \\[2pt]
+    A window of \emph{net} gains opens even when full OLS is not worth estimating.
+  \end{alertblock}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{What RSM adds over the literature}
+  \begin{description}
+    \item[Elliott--Liao ] When gains are largest, the optimum is a fixed
+      subset with equal within-subset weights. But: \emph{which} forecasts?
+      \emph{how large} the subset? --- left open.
+  \end{description}
+  \textbf{RSM closes both gaps and goes further:}
+  \begin{enumerate}
+    \item \textbf{Selection via randomisation} --- replaces an intractable
+      $\binom{m}{k}$ search with uniform random draws + averaging.
+      \item \textbf{In population}, RSM contains both equal-weighting ($k=1$) and optimal weights $k=m$.
+    \item \textbf{A theory for $k^*$} --- the (potential) optimal subset size, which
+      neither \citet*{ElliottLiao2025} nor \citet*{ChenMaung2023} provide.
+  \end{enumerate}
+  \begin{block}{The central question}
+    In a panel of $m$ forecasters, \emph{how many} should we randomly
+    subsample, and \emph{how} should we combine them, to minimise
+    out-of-sample loss?
+  \end{block}
+\end{frame}
+
+%=============================================================================
+\section{Setup and Loss Function}
+%=============================================================================
+
+\begin{frame}{Setup}
+  $m$ individual forecasts $f_t=(f_{1t},\dots,f_{mt})'$ of a scalar target
+  $y_t=\mu_t+\epsilon_t$. Forecast errors: $u_t=f_t-\mu_t\im$.
+
+  \begin{assumptionX}[Target innovation]
+    $\E(\epsilon_t)=0,\quad \Var(\epsilon_t)=\sigma_\varepsilon^2>0,\quad
+     \E(\epsilon_t u_{it})=0\ \ \forall i.$
+  \end{assumptionX}
+  \begin{assumptionX}[Forecast-error covariance]
+    $\E(u_t)=0,\quad \Var(u_t)=\Sig\succ 0.$
+  \end{assumptionX}
+
+  Following \citet*{ElliottLiao2025}:
+  \[
+    \begin{pmatrix} y_t \\ f_t \end{pmatrix}
+    \sim
+    \left(
+    \begin{pmatrix}\mu_t \\ \mu_t \end{pmatrix},
+    \begin{pmatrix}\sigma_\varepsilon^2 & 0 \\ 0 & \Sig\end{pmatrix}
+    \right).
+  \]
+  $\Sig$ summarises cross-forecast dispersion (diagonal: marginal error
+  variances; off-diagonal: co-movement). $\sigma_\varepsilon^2$ is the
+  \emph{irreducible noise} shared by every combination.
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{The loss function}
+  A combined forecast $w_m' f_t$ with $w_m'\im=1$ gives error
+  $w_m'u_t-\epsilon_t$ and MSE
+  \[
+    L=\underbrace{(1-w_m'\im)^2\mu_t^2}_{\text{Bias}}
+      +\underbrace{\sigma_\varepsilon^2+w_m'\Sig w_m}_{\text{Variance}}.
+  \]
+  Under the sum-to-one constraint the combination is \textbf{unbiased}, so
+  the bias term vanishes:
+  \[
+    L=\sigma_\varepsilon^2+w_m'\Sig w_m .
+  \]
+  \begin{itemize}
+    \item Comparison across methods reduces to minimising
+      $w_m'\Sig w_m$.
+    \item $\sigma_\varepsilon^2$ is common to all combinations --- but it
+      \emph{enters} the loss and gets inflated by estimation error, so
+      (unlike \citealp*{BootNibbering2019}) we keep it.
+  \end{itemize}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{The two benchmarks}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Equal weighting}
+        \[
+          \wave=m^{-1}\im
+        \]
+        \[
+          \Lave=\sigma_\varepsilon^2+\underbrace{m^{-2}\im'\Sig\im}_{\Qave}
+        \]
+        No weights estimated $\Rightarrow$ \emph{no} estimation penalty.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Optimal weighting}
+        \[
+          \wopt=\frac{\Sig^{-1}\im}{\im'\Sig^{-1}\im}
+        \]
+        \[
+          \Lopt\approx(\sigma_\varepsilon^2+\Qopt)\,\frac{T-1}{T-m}
+        \]
+        with $\Qopt=(\im'\Sig^{-1}\im)^{-1}$.
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{4pt}
+  \begin{alertblock}{Inflation factor}
+    We use the \textbf{exact} out-of-sample inflation
+    $I(T,k)=\dfrac{T-1}{T-k}$ for $k-1$ estimated coefficients.
+    \citet*{ElliottLiao2025} use its first-order approximation
+    $1+\tfrac{m-1}{T}$ (valid for $m\ll T$).
+  \end{alertblock}
+\end{frame}
+
+%=============================================================================
+\section{RSM: Definition and the Bagging Bridge}
+%=============================================================================
+
+\begin{frame}{RSM: subset weights}
+  Draw a subset $S\subset\{1,\dots,m\}$, $|S|=k$, uniformly without
+  replacement from $\binom{m}{k}$ subsets. Let $\Sigk$ be the $k\times k$
+  principal submatrix.
+
+  \begin{block}{Within-subset optimal weights}
+    \[
+      w_S=\frac{\Sigk^{-1}\ik}{\ik'\Sigk^{-1}\ik}.
+    \]
+  \end{block}
+  Embed into $\mathbb{R}^m$ via the zero-padding map $P_S$:
+  \[
+    v_S=P_S w_S,\qquad \sum_{i=1}^m v_{S,i}=1 .
+  \]
+  Zero-padding preserves the quadratic form:
+  \[
+    v_S'\Sig v_S=w_S'\Sigk w_S=Q(S),\qquad
+    Q(S)=(\ik'\Sigk^{-1}\ik)^{-1}.
+  \]
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Three population risks}
+  \begin{definitionX}[Average-subset RSM]
+    Single random draw, expected loss over all subsets:
+    \[
+      \Qsub=\E_S[v_S'\Sig v_S]=\E_S[Q(S)].
+    \]
+  \end{definitionX}
+  \begin{definitionX}[Finite-bagged RSM]
+    $G$ independent draws, $\hat v_{k,G}=\tfrac1G\sum_g v_{S_g}$, then
+    \[
+      \QbagG=\E[\hat v_{k,G}'\,\Sig\,\hat v_{k,G}].
+    \]
+    \footnotesize Loss of the \emph{aggregated} forecast --- not the average of losses.
+  \end{definitionX}
+  \begin{definitionX}[Infinite-bagged RSM]
+    $\bar v_k=\E_S[v_S]$ as $G\to\infty$, with deterministic risk
+    \[
+      \Qbag=\bar v_k'\Sig\bar v_k.
+    \]
+  \end{definitionX}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Convexity: bagging never hurts}
+  Since $\Sig\succ 0$, the map $v\mapsto v'\Sig v$ is strictly convex.
+  Jensen's inequality gives
+  \[
+    \Qsub=\E_S[v_S'\Sig v_S]
+    \;\ge\;
+    (\E_S[v_S])'\Sig(\E_S[v_S])=\Qbag .
+  \]
+
+  \begin{itemize}
+    \item Equality \emph{iff} $v_S$ is constant across subsets ---
+      which happens only when $k=m$.
+    \item Otherwise the inequality is \textbf{strict}: infinite bagging
+      strictly reduces population risk relative to a single draw.
+  \end{itemize}
+
+  \begin{exampleblock}{Takeaway}
+    Averaging weight vectors (bagging) is a free variance reduction ---
+    no distributional assumptions needed beyond $\Sig\succ0$.
+  \end{exampleblock}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{The finite-bagging bridge}
+  \begin{propositionX}[Finite-bagging bridge]
+    For independent subset draws,
+    \[
+      \QbagG=\Qbag+\frac{1}{G}\bigl(\Qsub-\Qbag\bigr),
+    \]
+    hence
+    \[
+      \Qbag\;\le\;\QbagG\;\le\;\Qsub .
+    \]
+  \end{propositionX}
+  \begin{itemize}
+    \item Holds for \emph{any} distribution of $\{f_t\}$.
+    \item Increasing $G$ \textbf{monotonically} lowers the finite-bagged
+      risk toward $\Qbag$.
+    \item Special cases: $\QbagG=\Qsub$ at $G=1$; $\QbagG\to\Qbag$ as
+      $G\to\infty$.
+    \item Finite bagging is the practitioner's object: intermediate between
+      the two limits, arbitrarily close to $\Qbag$ for large $G$.
+  \end{itemize}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{What can we say with \emph{no} structure?}
+  \footnotesize What survives if we know \emph{nothing} about $\Sig$
+  beyond $\Sig\succ0$ --- no common loading, no distribution of $\{f_t\}$?
+  \normalsize
+  \begin{block}{Two-sided sandwich}
+    \[
+      \Qopt\;\le\;\Qbag\;\le\;\Qsub .
+    \]
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Lower bound (feasibility).} $\bar v_k=\E_S[v_S]$ is an
+      admissible sum-to-one combination ($\bar v_k'\im=1$). Since $\wopt$
+      \emph{minimises} $w'\Sig w$ over all such $w$,
+      $\;\Qbag=\bar v_k'\Sig\bar v_k\ge\Qopt$.
+    \item \textbf{Upper bound (Jensen).} Convexity of $v\mapsto v'\Sig v$
+      gives $\Qbag\le\Qsub$.
+    \item \textbf{Anchored at the benchmarks.}
+      $Q_1^{\mathrm{bag},\infty}=\Qave$, $\;Q_m^{\mathrm{bag},\infty}=\Qopt$.
+  \end{itemize}
+  \begin{alertblock}{Takeaway}
+    In \emph{population} bagged RSM never beats the (infeasible) optimum and
+    never does worse than a single draw. Any out-of-sample \emph{win over
+    optimal} comes from the smaller inflation factor $\tfrac{T-1}{T-k}$ ---
+    not from population risk.
+  \end{alertblock}
+\end{frame}
+
+%=============================================================================
+\section{RSM as a Unifier}
+%=============================================================================
+
+\begin{frame}{Boundary cases: $k=1$ and $k=m$}
+  \textbf{Singletons ($k=1$):} every draw assigns full weight to one
+  forecast, $v_{\{i\},i}=1$. Drawn with prob.\ $1/m$:
+  \[
+    \bar v_{1,i}=\E_S[v_{S,i}]=\tfrac1m\Rightarrow
+    \bar v_1=\tfrac1m\im=\wave .
+  \]
+  \textbf{Full set ($k=m$):} only one subset, no randomness:
+  \[
+    \bar v_m=\frac{\Sig^{-1}\im}{\im'\Sig^{-1}\im}=\wopt .
+  \]
+  \begin{propositionX}[RSM as a unifier]
+    Both benchmarks are special cases of RSM: $k=1$ collapses (in
+    population) to \emph{equal weighting}; $k=m$ yields \emph{optimal
+    weighting}. RSM interpolates as $k$ grows.
+  \end{propositionX}
+  \footnotesize Homogeneous forecasts $\Rightarrow$ small $k$ optimal;
+  $T\gg m \Rightarrow k=m$. Most real panels are heterogeneous with short
+  $T$ $\Rightarrow$ an interior $1<k<m$ wins.
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Global vs.\ conditional weights}
+  With uniform size-$k$ subsets, $P(i\in S)=k/m$, so the global weight is
+  \[
+    \bar v_{k,i}=\E_S[v_{S,i}]
+    =P(i\in S)\,\E_S[w_{S,i}\mid i\in S]
+    =\frac{k}{m}\,\E_S[w_{S,i}\mid i\in S].
+  \]
+  \begin{propositionX}[Global--conditional correspondence]
+    \[
+      \bar v_{k,i}>\frac1m
+      \quad\Longleftrightarrow\quad
+      \E_S[w_{S,i}\mid i\in S]>\frac1k .
+    \]
+  \end{propositionX}
+  \begin{itemize}
+    \item A forecast earns above-average \emph{global} weight iff it earns
+      above-average weight \emph{within the subsets it appears in}.
+    \item ``Global importance is achieved locally.''
+    \item Propositions on this slide and the last require \emph{only}
+      $\Sig\succ0$ --- exact identities, no structural assumptions.
+  \end{itemize}
+\end{frame}
+
+%=============================================================================
+\section{Common-Loading Structure}
+%=============================================================================
+
+\begin{frame}{Common-loading heteroskedastic errors}
+  \begin{assumptionX}[Forecast errors]
+    \[
+      u_t=\lambda F_t\im+\xi_t,\qquad
+      \Var(\lambda F_t)=q>0,\quad
+      \Var(\xi_t)=D=\mathrm{diag}(\sigma_1^2,\dots,\sigma_m^2).
+    \]
+  \end{assumptionX}
+  A common shock (same loading $\lambda$) plus idiosyncratic noise:
+  \[
+    \Sig=q\,\im\im'+D,\qquad
+    \Sigma_{e,S}=q\,\ik\ik'+D_S .
+  \]
+  \begin{definitionX}[Precision and precision sums]
+    \[
+      \tau_i=\sigma_i^{-2},\qquad
+      A_S=\sum_{i\in S}\tau_i,\qquad
+      A_m=\sum_{i=1}^m\tau_i .
+    \]
+  \end{definitionX}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Subset risk under common loading}
+  \begin{propositionX}[Subset risk]
+    For any subset $S$ of size $k$,
+    \[
+      Q(S)=q+\frac{1}{A_S},
+      \qquad
+      w_{i,S}=\frac{\tau_i}{A_S}\ \ (i\in S).
+    \]
+  \end{propositionX}
+  \begin{itemize}
+    \item Loss $=$ irreducible common component $q$ $+$ inverse sum of
+      drawn precisions.
+    \item $Q(S)$ is strictly decreasing in $k$ along nested subsets ($\tau_i>0$);
+      minimised at $k=m$ ($\to\Qopt$).
+    \item \textbf{But} the inflation factor $I(T,m)$ may stop full optimal
+      from winning in practice.
+    \item Optimal subset weights depend only on the precisions $\tau$ ---
+      \emph{not} on $q$.
+  \end{itemize}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Optimal vs.\ equal weighting: the $B$--$H$ decomposition}
+  Optimal weight $w_i^{\mathrm{opt}}=\tau_i/A_m$, loss $\Qopt=q+1/A_m$.
+  Equal weighting ignores heterogeneity:
+  $\Qave=q+\bigl(\sum_i\tau_i^{-1}\bigr)/m^2$.
+
+  Define $B=1/\bar\tau$ (reciprocal mean precision; idiosyncratic
+  \emph{scale}) and $H=\overline{\sigma^2}\,\bar\tau$ (arithmetic/harmonic
+  variance ratio; \emph{dispersion}, $H\ge1$). Then:
+  \[
+    \boxed{\;\Qopt=q+\frac{B}{m},\qquad
+    \Qave=q+\frac{BH}{m},\qquad
+    \Qave-\Qopt=\frac{B(H-1)}{m}\;}
+  \]
+  \begin{itemize}
+    \item Equal weighting can never beat optimal in population.
+    \item They coincide iff variances are homogeneous ($H=1$).
+    \item RSM with $k>1$ pays off only when variances are
+      \textbf{dispersed enough} ($H$ large).
+  \end{itemize}
+\end{frame}
+
+%=============================================================================
+\section{RSM Risk and the Optimal $k^*$}
+%=============================================================================
+
+\begin{frame}{Average-subset RSM and the square-root rule}
+  \begin{propositionX}[Average-subset risk]
+    \[
+      \Qsub=q+\frac{1}{k\bar\tau}
+        +\frac{m-k}{k^2(m-1)}\frac{v_\tau}{\bar\tau^3}+O(k^{-3})
+      \;=\;q+\frac{B}{k}+O(k^{-2}).
+    \]
+  \end{propositionX}
+  Same shape as $\Qopt$, but divided by $k$ instead of $m$ --- and the
+  inflation cost is smaller, $I(T,k)<I(T,m)$.
+  \begin{block}{Optimal $k$ for average-subset RSM}
+    \[
+      \Lsub\approx\Bigl(\sigma_\varepsilon^2+q+\tfrac{B}{k}\Bigr)\frac{T-1}{T-k}\to\min
+      \;\Longrightarrow\;
+      k_{\mathrm{sub}}^*=\frac{-B+\sqrt{B^2+(\sigma_\varepsilon^2+q)BT}}{\sigma_\varepsilon^2+q}.
+    \]
+    \[
+      k^*=\min\{m,\max\{1,\mathrm{round}(k_{\mathrm{sub}}^*)\}\}
+      \;\sim\;O(\sqrt{T}).
+    \]
+  \end{block}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Why the bagged optimum resists the same derivation}
+  The $\sqrt{T}$ rule came from Taylor-expanding an \emph{unconditional}
+  expectation ($A_S=k\bar\tau+\epsilon_S$, $\E_S[\epsilon_S]=0$, known variance):
+  \[
+    \Qsub=q+\E_S\!\Bigl[\tfrac{1}{A_S}\Bigr]
+      =q+\frac{1}{k\bar\tau}+\frac{\Var_S(A_S)}{(k\bar\tau)^3}+\cdots
+  \]
+  The bagged risk instead needs the \emph{conditional} object
+  \[
+    g_i(k)=k\,\E_S\!\Bigl[\tfrac{1}{A_S}\,\Big|\,i\in S\Bigr]
+      =k\,\E\!\Bigl[\frac{1}{\tau_i+A_{S\setminus\{i\}}}\Bigr].
+  \]
+  \footnotesize
+  \begin{itemize}
+    \item A \textbf{shifted conditional harmonic mean}: $A_S=\tau_i+$ (sum of
+      $k-1$ \emph{other} precisions).
+    \item Depends on the size-$(k-1)$ precision sums of $\{\tau_j\}_{j\ne i}$
+      --- \textbf{a different distribution for each $i$}.
+    \item No closed form without restricting $\{\tau_i\}$: conditioning on
+      $i\in S$ destroys the factorisation.
+  \end{itemize}
+  \normalsize
+  \begin{alertblock}{Way forward}
+    Characterise $\Rk$ by Monte Carlo --- yet its \emph{endpoints} are exact,
+    enough to compare bagged RSM to both benchmarks with \emph{no} functional form.
+  \end{alertblock}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Infinite-bagged weights and the conservation law}
+  Let $g_i(k)=k\,\E_S\!\bigl[\tfrac{1}{A_S}\mid i\in S\bigr]$. The
+  infinite-bagged weight on forecast $i$ is
+  \[
+    \bar v_{k,i}=\E_S[v_{S,i}]
+      =\frac{k}{m}\,\E_S\!\Bigl[\frac{\tau_i}{A_S}\,\Big|\,i\in S\Bigr]
+      =\frac{\tau_i\,g_i(k)}{m}.
+  \]
+  Since $\sum_{i\in S}w_{S,i}=1$ for every $S$, we have
+  $\sum_i\bar v_{k,i}=1\Rightarrow\sum_i\tau_i g_i(k)=m$ for all $k$.
+  \begin{propositionX}[Conservation law]
+    For every $k\in\{1,\dots,m\}$,
+    \[
+      \sum_{i=1}^m \tau_i\Bigl[g_i(k)-\frac{1}{\tau_i}\Bigr]=0 .
+    \]
+  \end{propositionX}
+  \footnotesize
+  \begin{itemize}
+    \item $1/\tau_i$ is the $g$-reference giving \emph{equal} weights:
+      at $k=1$, $g_i(1)=1/\tau_i$ and $\bar v_{1,i}=1/m$.
+    \item Deviation $\tau_i[g_i(k)-1/\tau_i]=m\bar v_{k,i}-1$ is the
+      \emph{excess weight above equal weighting}, precision-rescaled.
+    \item RSM redistributes weight relative to EW with \textbf{zero}
+      net precision-weighted gain --- holds for all $k$, all $\{\tau_i\}$,
+      no distributional assumption.
+  \end{itemize}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Exact excess risk of the infinite-bagged RSM}
+  Weight deviation $\Delta_{i,k}=\bar v_{k,i}-w_i^{\mathrm{opt}}$ and excess
+  risk $\Rk=\Qbag-\Qopt$.
+  \begin{propositionX}[Exact excess risk]
+    Under common loading,
+    \[
+      \Rk=\sum_{i=1}^m\frac{\bigl(\bar v_{k,i}-w_i^{\mathrm{opt}}\bigr)^2}{\tau_i}
+        \;=\;\frac{1}{m^2}\sum_{i=1}^m\tau_i\Bigl(g_i(k)-\frac{1}{\bar\tau}\Bigr)^{\!2}\;\ge0 .
+    \]
+  \end{propositionX}
+  \footnotesize
+  The common-loading term drops because $\im'\Delta_k=0$; only the
+  idiosyncratic part $\sum_i\sigma_i^2\Delta_{i,k}^2$ survives.
+  \begin{itemize}
+    \item \textbf{Endpoints (exact):} $\Rk=0$ at $k=m$ ($\bar v_{m}=\wopt$);
+      $R_1=\Qave-\Qopt=\dfrac{B(H-1)}{m}>0$ unless all $\tau_i$ equal.
+    \item \textbf{Sharp Jensen bound:}
+      $\Rk\le\Qsub-\Qopt=B\,z_k$, with $z_k=\tfrac1k-\tfrac1m$ ---
+      tight iff homogeneous.
+    \item $\Rk$ \textbf{strictly decreasing} in $k$ --- its decay pins down $k^*$.
+  \end{itemize}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Comparing bagged RSM to benchmarks --- with \emph{no} form}
+  Write the inflated bagged loss using only its \emph{endpoints} and sign:
+  \[
+    \Lbag=\bigl(A+\Rk\bigr)\,\mathcal{I}(T,k),\qquad
+    A:=\sigma_\varepsilon^2+\Qopt,\quad \mathcal{I}(T,k)=\tfrac{T-1}{T-k}.
+  \]
+  \footnotesize Structural facts only: $R_1=\tfrac{B(H-1)}{m}$, $R_m=0$,
+  $\Rk\ge0$, and $\Rk\downarrow$ in $k$.\normalsize
+  \begin{propositionX}[Bagged RSM vs.\ benchmarks, $1\le k<m<T$]
+    \begin{enumerate}
+      \item[(i)] \textbf{Population bracketing:}
+        $\Qopt\le\Qbag\le\Qave$ for every $k$.
+      \item[(ii)] \textbf{Endpoint domination:}
+        $L_1^{\mathrm{bag},\infty}=\Lave$ and
+        $L_m^{\mathrm{bag},\infty}=\Lopt$, hence
+        \[
+          \min_{1\le k\le m}\Lbag\;\le\;\min\bigl(\Lave,\,\Lopt\bigr).
+        \]
+    \end{enumerate}
+  \end{propositionX}
+  \footnotesize
+  (ii) is \textbf{unconditional} --- it needs neither monotonicity nor a
+  closed form, only that $k=1$ and $k=m$ are admissible. RSM is therefore
+  \emph{never worse} than the better of the two benchmarks.
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Exact comparison conditions (still no form)}
+  \begin{propositionX}[Continued]
+    \begin{enumerate}
+      \item[(iii)] \textbf{Exact comparison conditions:}
+        \[
+          \Lbag<\Lopt\iff \Rk<\frac{A\,(m-k)}{T-m},
+        \]
+        \[
+          \Lbag<\Lave\iff A\,(k-1)<R_1(T-k)-\Rk(T-1).
+        \]
+      \item[(iv)] \textbf{Interior strict domination:} the interior optimum
+        beats \emph{both} endpoints provided
+        \[
+          R_1(T-2)-R_2(T-1)>A
+          \quad\text{and}\quad
+          R_{m-1}<\frac{A}{T-m}.
+        \]
+    \end{enumerate}
+  \end{propositionX}
+  \begin{block}{Conservative (tractable) version}
+    \footnotesize Jensen gives $\Rk\le B\,z_k$; substituting $B z_k$ for $\Rk$
+    in (iii) yields \emph{sufficient} conditions --- exactly those from the
+    average-subset $\sqrt{T}$ analysis.
+  \end{block}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Choosing $k^*$: when is it small, large, or interior?}
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabular}{@{}p{0.36\textwidth} p{0.30\textwidth} c@{}}
+    \toprule
+    \textbf{Regime} & \textbf{Condition} & \textbf{$k^*$} \\
+    \midrule
+    Homogeneous forecasts & $H\approx1$, so $R_1\approx0$ &
+      $\approx 1$ \\
+    Long sample / small pool & $T\gg m$ (inflation negligible) &
+      $\approx m$ \\
+    Heterogeneous, moderate $T$ & $H$ large, $T\sim m$ &
+      interior $1<k^*<m$ \\
+    Endogenous / $\Sig$ unknown & estimated forecasts &
+      $\approx\lfloor\sqrt{T}\rfloor$ \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item \textbf{Homogeneous} $\Rightarrow$ gains vanish, RSM collapses to
+      \emph{equal weighting}.
+    \item \textbf{$T\gg m$} $\Rightarrow$ estimation cheap, RSM tends to
+      \emph{full optimal}.
+    \item \textbf{Dispersed errors, short $T$} $\Rightarrow$ an interior
+      $k^*$ strictly dominates both benchmarks (Prop., part iv).
+    \item \textbf{Endogenous case} (forecasts themselves estimated):
+      $k^*\approx\lfloor\sqrt{T}\rfloor$ is a robust \emph{starting point}.
+  \end{itemize}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+\begin{frame}{Bounding $R_k$ from both sides: the optimal-$k$ window}
+  The Jensen ceiling $\Rk\le Bz_k$ has a matching \emph{projection floor},
+  giving an exact two-sided bracket:
+  \[
+    \underbrace{\frac{V_\delta^2}{m(H-1)\bar\tau}\,z_k^2}_{\text{projection floor}}
+    \;\lesssim\;\Rk\;\lesssim\;
+    \underbrace{B\,z_k}_{\text{Jensen ceiling}},
+    \qquad V_\delta=\frac{v_\tau}{\bar\tau^2},\ \ z_k=\tfrac1k-\tfrac1m .
+  \]
+  {\footnotesize (Floor: Cauchy--Schwarz projection of $\bar v_k-\wopt$ onto $\wave-\wopt$; exact for $\le2$ distinct precisions.)}
+  \begin{block}{A bounded window for $k^*$}
+    $0<z_k<1\Rightarrow z_k^2<z_k$, so $\Rk\sim z_k^\alpha$ with
+    $\alpha\in[1,2]$, and the optimal subset size is \textbf{confined} to
+    $\;\Theta(T^{1/3})\le k^*\le\Theta(T^{1/2}).$
+  \end{block}
+  {\footnotesize
+  \textbf{Cube root} ($\alpha=2$): bounded coherence \emph{and} dispersed
+  precisions.\quad
+  \textbf{Square root} ($\alpha=1$): a dominant forecaster, or the endogenous
+  case (estimated weights).}
+  \vspace{2pt}
+
+  \centering\structure{No functional form needed --- Monte Carlo locates the optimum inside the window.}
+\end{frame}
+
+%=============================================================================
+\begin{frame}{Summary of Section 4}
+  \begin{enumerate}
+    \item Unbiased combinations $\Rightarrow$ minimise variance
+      $\sigma_\varepsilon^2+w'\Sig w$.
+    \item RSM \textbf{unifies} equal weighting ($k=1$) and optimal weighting
+      ($k=m$); exact identities, no structure needed.
+    \item \textbf{Bagging bridge:}
+      $\Qbag\le\QbagG\le\Qsub$, monotone in $G$; with \emph{no} structure,
+      $\Qopt\le\Qbag\le\Qsub$.
+    \item Under common loading: $Q(S)=q+1/A_S$, the
+      $\Qave-\Qopt=B(H-1)/m$ decomposition, and the \textbf{conservation law}
+      $\sum_i\tau_i[g_i(k)-1/\tau_i]=0$.
+    \item \textbf{Exact excess risk}
+      $\Rk=\sum_i(\bar v_{k,i}-w_i^{\mathrm{opt}})^2/\tau_i\ge0$;
+      square-root rule for average-subset $k^*$ and a general FOC balancing
+      gain vs.\ inflation cost.
+  \end{enumerate}
+  \vfill
+  \centering\structure{\large Next: Monte Carlo evidence (Section 5).}
+\end{frame}
+
+%=============================================================================
+\begin{frame}[allowframebreaks]{References}
+  \footnotesize
+  \begin{thebibliography}{Elliott et al.(2013)}
+    \bibitem[Bates and Granger(1969)]{BatesGranger1969} Bates, J.M.\ \& Granger, C.W.J.\ (1969).
+      The combination of forecasts. \emph{OR}.
+    \bibitem[Granger and Ramanathan(1984)]{GrangerRamanathan1984} Granger, C.W.J.\ \& Ramanathan, R.\ (1984).
+      Improved methods of combining forecasts. \emph{J.\ Forecasting}.
+    \bibitem[Elliott and Liao(2025)]{ElliottLiao2025} Elliott, G.\ \& Liao, Y.\ (2025).
+      Forecast combination and the combination puzzle.
+    \bibitem[Elliott et al.(2013)]{ElliottGarganoTimmermann2013} Elliott, G., Gargano, A.\
+      \& Timmermann, A.\ (2013). Complete subset regressions.
+      \emph{J.\ Econometrics}.
+    \bibitem[Chen and Maung(2023)]{ChenMaung2023} Chen, J.\ \& Maung, K.\ (2023).
+      Nonparametric time-varying forecast combination.
+    \bibitem[Boot and Nibbering(2019)]{BootNibbering2019} Boot, T.\ \& Nibbering, D.\ (2019).
+      Forecasting using random subspace methods. \emph{J.\ Econometrics}.
+  \end{thebibliography}
+\end{frame}
+
+\end{document}

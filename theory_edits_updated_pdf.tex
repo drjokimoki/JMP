@@ -1,0 +1,91 @@
+% Paste-ready theory edits for Job_Market_paper_Kozyrev-2.pdf
+% Reviewed version: July 11, 2026, 18:27 CEST.
+
+% Add after Definition 2.
+The quantity $Q_k^{\mathrm{bag},G}$ is a population risk: the expectation is
+over the independent subset draws $S_1,\ldots,S_G$, while each subset weight
+is held at its population-optimal value.  It therefore excludes the sampling
+error in estimated subset coefficients and the covariance between coefficient
+estimates from overlapping regressions fitted on the same training sample.
+
+% Replace the interpretation following Proposition 2.
+Proposition~2 establishes two endpoints of the RSM family: equal weighting at
+$k=1$ and the population-optimal linear combination at $k=m$.  It does not
+imply that the weights or risks move monotonically between these endpoints.
+Intermediate values of $k$ can nevertheless be attractive because they trade
+off approximation to the oracle weights against weight-estimation error.  If
+$k$ is selected from the data, the cost of this tuning step must also be taken
+into account; dominance over both endpoints is therefore an empirical
+possibility rather than a consequence of Proposition~2.
+
+% Add immediately before the first use of the inflation factor for RSM.
+We use
+\[
+  I(T,k)=\frac{T-1}{T-k},\qquad 1\leq k<T,
+\]
+as a working finite-sample inflation factor.  For a single correctly specified
+restricted regression, this form follows under stronger random-design and
+independent-evaluation assumptions.  Assumptions~1--3 alone do not make it the
+exact risk inflation for bagged RSM, because subset regressions fitted on the
+same training sample have correlated coefficient-estimation errors.  Losses
+that multiply a population risk by $I(T,k)$ should therefore be interpreted as
+stylized finite-sample criteria.
+
+% Replace Proposition 5 with a finite-sample approximation statement.
+\begin{proposition}[Second-order approximation to average-subset risk]
+Under the common-loading model,
+\[
+ Q_k^{\mathrm{sub}}=q+E_S\!\left[\frac{1}{A_S}\right].
+\]
+A second-order Taylor expansion around $E_S[A_S]=k\bar\tau$ gives
+\[
+ Q_k^{\mathrm{sub}}
+ \approx q+\frac{1}{k\bar\tau}
+ +\frac{m-k}{k^2(m-1)}\frac{v_\tau}{\bar\tau^3}.
+\]
+The approximation is accurate when
+\[
+ \eta_k=\frac{\operatorname{Var}_S(A_S)}{E_S[A_S]^2}
+ =\frac{m-k}{k(m-1)}\frac{v_\tau}{\bar\tau^2}
+\]
+is small and the distribution of $A_S$ is not strongly skewed.  It is exact at
+$k=m$.  A formal $O(k^{-3})$ remainder requires a sequence with $k\to\infty$
+and uniformly bounded precisions; the subsequent interior rate calculation
+also uses $k/m\to0$.
+\end{proposition}
+
+% Add after Proposition 7.
+The lower bound is stated under cross-sectional heterogeneity, which makes its
+denominator strictly positive.  If all precisions are equal, the oracle weights
+are uniform and infinite bagging also produces uniform weights for every $k$;
+hence $R_k^{\mathrm{bag}}=0$ for all $k$.  The level bracket above does not by
+itself imply the marginal bounds imposed in Assumption~4.
+
+% Replace the opening sentence of Assumption 4.
+Consider a triangular array indexed by $T$, with $m=m_T$ and
+$R_{k,T}^{\mathrm{bag}}$.  For $1\ll k\ll m_T$, suppose there exist constants
+$0<d_L\le d_U<\infty$, uniform in $T$, $m_T$, and $k$, such that
+
+% Add at the end of Section 4.
+\paragraph{Scope of the theoretical guidance.}
+The finite-bagging bridge, the endpoint identities, and the oracle-distance
+representation are exact population results.  The average-subset square-root
+formula instead minimizes an approximate finite-sample criterion.  The
+cube-root--square-root window for infinite-bagged RSM is a conditional
+asymptotic result that additionally relies on the marginal-regularity
+assumption and a growing forecast pool.  Neither result makes
+$\sqrt{T}$ the exact finite-sample optimum of feasible RSM.  We therefore treat
+$k=\operatorname{round}(\sqrt{T})$ as a rule of thumb to be evaluated in the
+Monte Carlo and empirical sections, rather than as a theorem about the
+implemented estimator.
+
+% Replace the rate summary in the introduction.
+For the average-subset approximation, minimizing the stylized criterion gives
+a square-root rule, $k_{\mathrm{sub}}^*=O(\!\sqrt{T}\,)$.  For infinite-bagged
+RSM, the exact excess-risk representation combined with a uniform marginal-
+regularity condition yields the broader conditional window
+$T^{1/3}\lesssim k_T^*\lesssim T^{1/2}$.  These results motivate, but do not
+uniquely determine, finite-sample choices of $k$.
+
+% Preamble presentation fix, after loading hyperref.
+% \hypersetup{hidelinks}

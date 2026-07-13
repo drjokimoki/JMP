@@ -159,19 +159,22 @@ static void mvn_rows(int T, int p, const double *L, xrng *r, norm_state *st, dou
     }
 }
 
-/* ---------- AR(1) scalar with EXACT innovation variance s2 ---------- */
+/* ---------- Stationary AR(1) scalar with innovation variance s2 ---------- */
 static void gen_AR1_scalar_innovvar(int T, double phi, double s2, xrng *r, norm_state *st, double *x){
     double sd = sqrt(s2);
-    x[0]=0.0;
+    /* Start from the invariant distribution so the population-R2 calibration
+       remains valid throughout the simulated sample. */
+    x[0] = sqrt(s2 / (1.0 - phi*phi)) * xrng_normal(r, st);
     for (int t=1;t<T;t++) x[t] = phi*x[t-1] + sd*xrng_normal(r, st);
 }
 
-/* ---------- Vector AR(1) with EXACT innovation covariance Σ ---------- */
+/* ---------- Stationary vector AR(1) with innovation covariance Sigma ---------- */
 static void gen_E_AR1_innovcov(int T, int p, double phi,
                                const double *Sigma_chol, xrng *r, norm_state *st, double *E){
     double *Z = (double*)malloc(sizeof(double)*(size_t)T*p);
     mvn_rows(T, p, Sigma_chol, r, st, Z);               // Z_t ~ N(0, Σ)
-    for (int j=0;j<p;j++) E[j]=0.0;                      // e_0 = 0
+    const double stationary_scale = 1.0 / sqrt(1.0 - phi*phi);
+    for (int j=0;j<p;j++) E[j] = stationary_scale * Z[j]; /* invariant draw */
     for (int t=1;t<T;t++){
         double *e_t = E + (size_t)t*p;
         double *e_m = E + (size_t)(t-1)*p;
@@ -226,8 +229,9 @@ static void gather_lower(const double *S_lower, int N, const int *sub, int z, do
 static void sample_k_no_replace(xrng *r, int n, int k, int *pool, int *sub){
     for (int i=0;i<n;i++) pool[i]=i;
     for (int i=0;i<k;i++){
-        unsigned u = xrng_next(r);
-        int j = i + (int)((double)(n - i) * ((u>>1) / (double)0x7FFFFFFF));
+        /* The modulo introduces negligible bias here and, unlike the previous
+           floating-point mapping, can never produce the out-of-range index n. */
+        int j = i + (int)(xrng_next(r) % (unsigned)(n - i));
         int tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
         sub[i] = pool[i];
     }
@@ -315,14 +319,30 @@ int main(void){
 
     typedef struct { int T_len; double rho, R2_target, phi_f, phi_eta, phi_u; } Scenario;
 
-    const int num_scen = T_len_list_len * rho_list_len * R2_list_len * P;
+    /* Optional baseline T-scaling mode. The paper-design run remains the
+       default; set RSM_T_SCALING=1 for a fixed-DGP experiment varying only T. */
+    const char *scaling_env = getenv("RSM_T_SCALING");
+    const int scaling_mode = scaling_env && strcmp(scaling_env, "1") == 0;
+    const int scaling_T_grid[] = {75, 100, 150, 200, 300, 500, 800, 1200};
+    const int scaling_T_len = (int)(sizeof(scaling_T_grid) / sizeof(scaling_T_grid[0]));
+    const int num_scen = scaling_mode
+        ? scaling_T_len
+        : T_len_list_len * rho_list_len * R2_list_len * P;
     Scenario *scen = (Scenario*)malloc(sizeof(Scenario)*num_scen);
     int sidx=0;
-    for (int ti=0; ti<T_len_list_len; ti++)
-    for (int ri=0; ri<rho_list_len; ri++)
-    for (int r2=0; r2<R2_list_len; r2++)
-    for (int pi=0; pi<P; pi++){
-        scen[sidx++] = (Scenario){ T_len_list[ti], rho_list[ri], R2_list[r2], phi_f_arr[pi], phi_eta_arr[pi], phi_u_arr[pi] };
+    if (scaling_mode) {
+        for (int ti=0; ti<scaling_T_len; ti++) {
+            scen[sidx++] = (Scenario){scaling_T_grid[ti], 0.8, 0.3,
+                                      0.3, 0.7, 0.0};
+        }
+        printf("T-scaling mode: m=%d rho=0.8 R2=0.3 phis=(0.3,0.7,0.0)\n", N);
+    } else {
+        for (int ti=0; ti<T_len_list_len; ti++)
+        for (int ri=0; ri<rho_list_len; ri++)
+        for (int r2=0; r2<R2_list_len; r2++)
+        for (int pi=0; pi<P; pi++){
+            scen[sidx++] = (Scenario){ T_len_list[ti], rho_list[ri], R2_list[r2], phi_f_arr[pi], phi_eta_arr[pi], phi_u_arr[pi] };
+        }
     }
 
     for (int s=0; s<num_scen; s++){
@@ -333,11 +353,14 @@ int main(void){
         const double phi_eta = scen[s].phi_eta;
         const double phi_u = scen[s].phi_u; /* reported but unused for u_t (iid) */
 
-        const int oos_length = OOS_LEN_FIXED;   // 20
-        const int steps = oos_length - 1;
+        const int oos_length = OOS_LEN_FIXED;   // exactly 20 evaluated forecasts
+        const int steps = oos_length;
         const int init_window = T_len - oos_length;
         const int start = init_window + 1;
-        const int end   = T_len - 1;
+        const int end   = T_len;
+        /* One extra terminal observation is needed because Y[t] is predicted
+           from X[t-1]. T_len remains the paper's reported sample size. */
+        const int sim_len = T_len + 1;
 
         /* Sigma (and its chol) per scenario */
         double *Sigma = (double*)malloc(sizeof(double)*N*N);
@@ -345,13 +368,24 @@ int main(void){
         double *Sigma_chol = (double*)malloc(sizeof(double)*N*N);
         if (chol_copy(Sigma, N, Sigma_chol)!=0){ fprintf(stderr,"Sigma chol failed\n"); return 1; }
 
-        /* Q and beta scaling */
+        /* Population-R2 scaling based on the stationary covariance
+             Var(x_t) = 11'/(1-phi_f^2) + Sigma/(1-phi_eta^2).
+           With beta = C*beta_raw and Var(u)=sigma_e^2, choose C so that
+             Var(beta'x_t) / (Var(beta'x_t)+sigma_e^2) = R2_target. */
+        const double factor_var_scale = 1.0 / (1.0 - phi_f*phi_f);
+        const double eta_var_scale = 1.0 / (1.0 - phi_eta*phi_eta);
         double V_signal=0.0;
         for (int i=0;i<N;i++)
             for (int k=0;k<N;k++)
-                V_signal += beta_raw[i]*(Sigma[i*N+k] + 1.0*1.0)*beta_raw[k];
-        double C = sqrt( (R2_target/(1.0-R2_target)) / V_signal );
+                V_signal += beta_raw[i]
+                          * (factor_var_scale + eta_var_scale*Sigma[i*N+k])
+                          * beta_raw[k];
+        double C = sqrt((R2_target/(1.0-R2_target))
+                        * (sigma_e*sigma_e) / V_signal);
         double beta_true[N]; for (int i=0;i<N;i++) beta_true[i] = C*beta_raw[i];
+        const double signal_var = C*C*V_signal;
+        const double achieved_R2 = signal_var / (signal_var + sigma_e*sigma_e);
+        printf("R2 check: target=%.6f analytical=%.6f\n", R2_target, achieved_R2);
 
         /* z candidates: iterate all from 2..N (inclusive) */
         int z_candidates[N-1]; int zc = 0;
@@ -366,22 +400,22 @@ int main(void){
             unsigned seed = MAIN_SEED ^ (unsigned)(s*1315423911u) ^ (unsigned)(repl*2654435761u);
             xrng_seed(&r, seed);
 
-            double *F_t = (double*)malloc(sizeof(double)*T_len);
-            double *u_t = (double*)malloc(sizeof(double)*T_len);
-            double *Y   = (double*)malloc(sizeof(double)*T_len);
-            double *E_t = (double*)malloc(sizeof(double)*(size_t)T_len*N);
-            double *X   = (double*)malloc(sizeof(double)*(size_t)T_len*N);
-            double *y_tr= (double*)malloc(sizeof(double)*T_len);
+            double *F_t = (double*)malloc(sizeof(double)*sim_len);
+            double *u_t = (double*)malloc(sizeof(double)*sim_len);
+            double *Y   = (double*)malloc(sizeof(double)*sim_len);
+            double *E_t = (double*)malloc(sizeof(double)*(size_t)sim_len*N);
+            double *X   = (double*)malloc(sizeof(double)*(size_t)sim_len*N);
+            double *y_tr= (double*)malloc(sizeof(double)*sim_len);
             double *csq = (double*)malloc(sizeof(double)*N);
             double *cxy = (double*)malloc(sizeof(double)*N);
             double *gamma=(double*)malloc(sizeof(double)*N);
             double *f_base=(double*)malloc(sizeof(double)*steps);
 
             /* DGP */
-            gen_AR1_scalar_innovvar(T_len, phi_f, 1.0, &r, &st, F_t);
-            gen_E_AR1_innovcov(T_len, N, phi_eta, Sigma_chol, &r, &st, E_t);
+            gen_AR1_scalar_innovvar(sim_len, phi_f, 1.0, &r, &st, F_t);
+            gen_E_AR1_innovcov(sim_len, N, phi_eta, Sigma_chol, &r, &st, E_t);
 
-            for (int t=0;t<T_len;t++){
+            for (int t=0;t<sim_len;t++){
                 const double Ft = F_t[t];
                 double *xrow = X + (size_t)t*N;
                 const double *erow = E_t + (size_t)t*N;
@@ -389,10 +423,10 @@ int main(void){
             }
 
             /* u_t i.i.d. N(0, sigma_e^2) */
-            gen_iid_noise(T_len, sigma_e*sigma_e, &r, &st, u_t);
+            gen_iid_noise(sim_len, sigma_e*sigma_e, &r, &st, u_t);
 
             Y[0]=NAN;
-            for (int t=1;t<T_len;t++){
+            for (int t=1;t<sim_len;t++){
                 const double *xlag = X + (size_t)(t-1)*N;
                 double ssum=0.0; for (int i=0;i<N;i++) ssum += xlag[i]*beta_true[i];
                 Y[t] = ssum + u_t[t];
@@ -448,7 +482,7 @@ int main(void){
             double sum_Q_ols = 0.0, cnt_Q_ols = 0.0;
             double sum_Q_rs_bag  = 0.0, cnt_Q_rs_bag  = 0.0;
             double sum_Q_rs_sub  = 0.0, cnt_Q_rs_sub  = 0.0;
-            /* NEW: sums of L_est = Q * (1 + (m-1)/T_tr) */
+            /* Optional sanity-check losses using I(T,k)=(T-1)/(T-k). */
             double sum_L_ols = 0.0, cnt_L_ols = 0.0;
             double sum_L_rs_bag = 0.0, cnt_L_rs_bag = 0.0;
             double sum_L_rs_sub = 0.0, cnt_L_rs_sub = 0.0;
@@ -459,12 +493,12 @@ int main(void){
                 unsigned seed = MAIN_SEED ^ (unsigned)(s*1315423911u) ^ (unsigned)(repl*2654435761u);
                 xrng_seed(&r, seed);
 
-                double *F_t = (double*)malloc(sizeof(double)*T_len);
-                double *u_t = (double*)malloc(sizeof(double)*T_len);
-                double *Y   = (double*)malloc(sizeof(double)*T_len);
-                double *E_t = (double*)malloc(sizeof(double)*(size_t)T_len*N);
-                double *X   = (double*)malloc(sizeof(double)*(size_t)T_len*N);
-                double *y_tr= (double*)malloc(sizeof(double)*T_len);
+                double *F_t = (double*)malloc(sizeof(double)*sim_len);
+                double *u_t = (double*)malloc(sizeof(double)*sim_len);
+                double *Y   = (double*)malloc(sizeof(double)*sim_len);
+                double *E_t = (double*)malloc(sizeof(double)*(size_t)sim_len*N);
+                double *X   = (double*)malloc(sizeof(double)*(size_t)sim_len*N);
+                double *y_tr= (double*)malloc(sizeof(double)*sim_len);
                 double *csq = (double*)malloc(sizeof(double)*N);
                 double *cxy = (double*)malloc(sizeof(double)*N);
                 double *gamma=(double*)malloc(sizeof(double)*N);
@@ -478,19 +512,19 @@ int main(void){
                 double *Sigma_u_lower = (double*)malloc(sizeof(double)*N*N);
 
                 /* DGP */
-                gen_AR1_scalar_innovvar(T_len, phi_f, 1.0, &r, &st, F_t);
-                gen_E_AR1_innovcov(T_len, N, phi_eta, Sigma_chol, &r, &st, E_t);
-                for (int t=0;t<T_len;t++){
+                gen_AR1_scalar_innovvar(sim_len, phi_f, 1.0, &r, &st, F_t);
+                gen_E_AR1_innovcov(sim_len, N, phi_eta, Sigma_chol, &r, &st, E_t);
+                for (int t=0;t<sim_len;t++){
                     const double Ft = F_t[t];
                     double *xrow = X + (size_t)t*N;
                     const double *erow = E_t + (size_t)t*N;
                     for (int i=0;i<N;i++) xrow[i] = Ft*1.0 + erow[i];
                 }
                 /* u_t iid */
-                gen_iid_noise(T_len, sigma_e*sigma_e, &r, &st, u_t);
+                gen_iid_noise(sim_len, sigma_e*sigma_e, &r, &st, u_t);
 
                 Y[0]=NAN;
-                for (int t=1;t<T_len;t++){
+                for (int t=1;t<sim_len;t++){
                     const double *xlag = X + (size_t)(t-1)*N;
                     double ssum=0.0; for (int i=0;i<N;i++) ssum += xlag[i]*beta_true[i];
                     Y[t] = ssum + u_t[t];
@@ -525,9 +559,13 @@ int main(void){
                         double w_star_tmp[128];
                         double QN = NAN;
                         if (sum_to_one_weights_from_cov_lower(Sigma_u_lower, N, w_star_tmp, &QN)==0){
-                            double infl_ols = 1.0 + ((double)N - 1.0) / (double)T_tr;
+                            double infl_ols = (T_tr > N)
+                                ? ((double)T_tr - 1.0) / ((double)T_tr - (double)N)
+                                : NAN;
                             sum_Q_ols += QN;          cnt_Q_ols += 1.0;
-                            sum_L_ols += QN * infl_ols; cnt_L_ols += 1.0;
+                            if (isfinite(infl_ols)) {
+                                sum_L_ols += QN * infl_ols; cnt_L_ols += 1.0;
+                            }
                         }
                     }
 
@@ -537,11 +575,21 @@ int main(void){
                     double pred_k = 0.0;
 
                     if (current_z == N){
-                        /* use Q_ols weights for prediction when z=N */
+                        /* Use full-pool constrained-optimal weights when z=N.
+                           Populate the RSM Q/L columns too, because at this
+                           endpoint RSM, subset-average, and full-pool coincide. */
                         double wN[128]; double QNdummy = NAN;
                         if (sum_to_one_weights_from_cov_lower(Sigma_u_lower, N, wN, &QNdummy)==0){
                             double acc=0.0; for (int i=0;i<N;i++) acc += wN[i]*f_now[i];
                             pred_k = acc;
+                            sum_Q_rs_bag += QNdummy; cnt_Q_rs_bag += 1.0;
+                            sum_Q_rs_sub += QNdummy; cnt_Q_rs_sub += 1.0;
+                            if (T_tr > N) {
+                                double infl_full = ((double)T_tr - 1.0) /
+                                                   ((double)T_tr - (double)N);
+                                sum_L_rs_bag += QNdummy * infl_full; cnt_L_rs_bag += 1.0;
+                                sum_L_rs_sub += QNdummy * infl_full; cnt_L_rs_sub += 1.0;
+                            }
                         } else pred_k = 0.0;
                     } else {
                         /* RS: average predictions; build bagged weight; average per-subset Q */
@@ -578,12 +626,17 @@ int main(void){
                             double Q_bag = quadform_lower(Sigma_u_lower, N, w_bar);
                             double Q_subavg = acc_Q_sub / (double)succ;
 
-                            double infl_rs = 1.0 + ((double)current_z - 1.0) / (double)T_tr;
+                            double infl_rs = (T_tr > current_z)
+                                ? ((double)T_tr - 1.0) /
+                                  ((double)T_tr - (double)current_z)
+                                : NAN;
 
                             sum_Q_rs_bag += Q_bag;           cnt_Q_rs_bag += 1.0;
                             sum_Q_rs_sub += Q_subavg;        cnt_Q_rs_sub += 1.0;
-                            sum_L_rs_bag += Q_bag * infl_rs; cnt_L_rs_bag += 1.0;
-                            sum_L_rs_sub += Q_subavg * infl_rs; cnt_L_rs_sub += 1.0;
+                            if (isfinite(infl_rs)) {
+                                sum_L_rs_bag += Q_bag * infl_rs; cnt_L_rs_bag += 1.0;
+                                sum_L_rs_sub += Q_subavg * infl_rs; cnt_L_rs_sub += 1.0;
+                            }
                         } else {
                             pred_k = 0.0; /* extremely rare */
                         }

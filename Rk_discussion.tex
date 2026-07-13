@@ -1,0 +1,648 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage[margin=1in]{geometry}
+
+\newcommand{\Sig}{\Sigma_e}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\Rk}{R_k^{\mathrm{bag},\infty}}
+\newcommand{\Qsub}{Q_k^{\mathrm{sub}}}
+\newcommand{\Qopt}{Q^{\mathrm{opt}}}
+\newcommand{\iotab}{\bm{\iota}}
+
+\newtheorem{assumption}{Assumption}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+\title{The Infinite-Bagged RSM Remainder $R_k$:\\
+What Holds Exactly, and What Needs Assumptions}
+\date{June 19, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note separates, as cleanly as possible, the results on the infinite-bagged
+RSM excess risk $\Rk=Q_k^{\mathrm{bag},\infty}-\Qopt$ into two tiers: (i) what is
+\emph{exact} --- true under the common-loading structure with no further assumption,
+no approximation, and no asymptotics; and (ii) what \emph{rate} statements
+($\Rk\asymp z_k^2$, hence the cube-root rule $k^\ast\asymp T^{1/3}$) require, namely
+two explicit, checkable, and minimal assumptions. The exact tier gives a computable
+two-sided bracket and a complete characterization of the optimal $k$; the rate tier
+is governed entirely by which of two assumptions is binding, mapping the effective
+exponent $\alpha\in[1,2]$ to the bounded-coherence/heterogeneity regime.
+\end{abstract}
+
+%==========================================================================
+\section{Setup and notation}
+Assume the common-loading covariance structure of the forecast errors,
+\[
+  \Sig = q\,\iotab\iotab' + D,\qquad D=\diag(\sigma_1^2,\dots,\sigma_m^2),
+  \qquad \tau_i=\sigma_i^{-2}>0,
+\]
+where $q\ge0$ is the variance of the common (unforecastable) shock and $\tau_i$ is the
+precision of forecaster $i$'s idiosyncratic error. Write
+\[
+  A_m=\sum_{i=1}^m\tau_i=m\bar\tau,\qquad \ell_i=\frac{\tau_i}{A_m},
+  \qquad \sum_{i=1}^m\ell_i=1,
+\]
+and for a subset $S$ of size $k$, $A_S=\sum_{j\in S}\tau_j$. RSM draws subsets $S$
+uniformly at random, fits the constrained (sum-to-one) optimal weights
+$v_{S,i}=\mathbf 1\{i\in S\}\,\tau_i/A_S$ within each, and bags. The
+infinite-bagging ($G\to\infty$) weight is $\bar v_{k,i}=\E_S[v_{S,i}]$, and the object
+of interest is the population excess risk
+\[
+  \Rk=Q_k^{\mathrm{bag},\infty}-\Qopt=\bar v_k'\Sig\bar v_k-\Qopt .
+\]
+Two population functionals carry the entire story:
+\[
+  V_\delta=\frac1m\sum_{i=1}^m\Big(\frac{\tau_i}{\bar\tau}-1\Big)^2
+  =\frac{\Var(\tau)}{\bar\tau^2}\quad(\text{normalized precision dispersion}),
+  \qquad
+  H=\overline{\sigma^2}\,\bar\tau=\Big(\tfrac1m\textstyle\sum_i\sigma_i^2\Big)\bar\tau\ge1,
+\]
+the latter being the arithmetic-vs-harmonic gap (Cauchy--Schwarz), with $H=1$ iff all
+precisions are equal. Throughout, $z_k=\dfrac1k-\dfrac1m=\dfrac{m-k}{km}$.
+
+%==========================================================================
+\section{Tier I: what holds exactly (no assumptions)}
+Every statement in this section is an identity or inequality that holds for an
+arbitrary positive precision vector $(\tau_1,\dots,\tau_m)$ and every $1\le k\le m$.
+No balanced-leverage, no distributional assumption, no Taylor expansion, no
+$T\to\infty$ or $m\to\infty$ limit.
+
+\begin{proposition}[Oracle weights are leverage scores]\label{prop:oracle}
+The constrained-optimal full combination is $w_i^\ast=\tau_i/A_m=\ell_i$, with
+$\Qopt=q+1/A_m$, and for any subset $Q(S)=q+1/A_S$.
+\end{proposition}
+\begin{proof}
+Since $\iotab'w=1$, $w'q\iotab\iotab'w=q$ is constant, so minimizing $w'\Sig w$ reduces
+to minimizing $\sum_i w_i^2\sigma_i^2$ subject to $\sum_iw_i=1$; the Lagrange solution is
+$w_i\propto\tau_i$. Substituting gives $\Qopt=q+\sum_i\ell_i^2/\tau_i=q+1/A_m$. The subset
+claim is the same argument restricted to $S$.
+\end{proof}
+
+\begin{proposition}[Exact quadratic-form identity]\label{prop:identity}
+Because $w^\ast$ is the constrained minimizer, the cross term vanishes and
+\[
+  \Rk=(\bar v_k-w^\ast)'\Sig(\bar v_k-w^\ast)
+  =\frac{1}{A_m}\sum_{i=1}^m\ell_i\Big(\frac{\bar v_{k,i}}{\ell_i}-1\Big)^2
+  =\frac{1}{m^2}\sum_{i=1}^m\tau_i\Big(g_i-\frac1{\bar\tau}\Big)^2,
+\]
+where $g_i(k)=k\,\E_S[1/A_S\mid i\in S]$ and $\bar v_{k,i}=\tau_i g_i(k)/m$.
+\end{proposition}
+\begin{proof}
+$\Sig w^\ast=(q+1/A_m)\iotab=\Qopt\iotab$, and since $\iotab'(\bar v_k-w^\ast)=0$
+(both weight vectors sum to one), $(\bar v_k-w^\ast)'\Sig w^\ast=0$. The common
+factor $q\iotab\iotab'$ then drops for the same reason, leaving
+$\sum_i(\bar v_{k,i}-\ell_i)^2/\tau_i$; the two displayed forms are algebraic rewrites
+using $w_i^\ast=\ell_i$ and $\tau_i=A_m\ell_i$.
+\end{proof}
+
+\begin{proposition}[Endpoints: RSM bridges averaging and the oracle]\label{prop:endpoints}
+At $k=1$, $\bar v_1=\tfrac1m\iotab$ (simple averaging), so $R_1$ equals exactly the
+excess risk of the equal-weight combination. At $k=m$, $\bar v_m=w^\ast$, so $R_m=0$.
+Thus $k$ traces, in population, a path from simple averaging to the oracle combination.
+\end{proposition}
+
+\begin{lemma}[Two exact moment identities]\label{lem:moments}
+For all $k$,
+\[
+  \sum_{i=1}^m\tau_i g_i=m\quad(\text{conservation law}),\qquad
+  \sum_{i=1}^m g_i=km\,\E_S[1/A_S].
+\]
+\end{lemma}
+
+\begin{proposition}[Jensen sandwich]\label{prop:jensen}
+For all $1\le k\le m$,
+\[
+  0\le \Rk\le \Qsub-\Qopt=\E_S[1/A_S]-\frac1{A_m}.
+\]
+\end{proposition}
+\begin{proof}
+Lower bound: $w^\ast$ is the global sum-to-one minimizer and $\bar v_k$ is feasible.
+Upper bound: $Q_k^{\mathrm{bag},\infty}=(\E_S v_S)'\Sig(\E_S v_S)\le\E_S[v_S'\Sig v_S]=\Qsub$
+by Jensen ($\Sig\succeq0$). Subtract $\Qopt$ and use $Q(S)=q+1/A_S$, $\Qopt=q+1/A_m$.
+\end{proof}
+
+\begin{proposition}[Exact two-sided bracket]\label{prop:bracket}
+For all $1\le k\le m$,
+\[
+  \frac{\big(k\,\E_S[1/A_S]-1/\bar\tau\big)^2}{\sum_i\sigma_i^2-m/\bar\tau}
+  \;\le\;\Rk\;\le\;\E_S[1/A_S]-\frac1{A_m}.
+\]
+Both ends are computable exactly from $\{\tau_i\}$ and the scalar $\E_S[1/A_S]$. The
+denominator $\sum_i\sigma_i^2-m/\bar\tau\ge0$ by Cauchy--Schwarz, with equality iff all
+$\tau_i$ are equal (in which case $\Rk=0$). The lower bound is \emph{exact} whenever the
+precision profile takes at most two distinct values, and a convergent hierarchy of exact
+lower bounds follows by appending higher moment identities to Lemma~\ref{lem:moments}.
+\end{proposition}
+\begin{proof}
+The upper bound is Proposition~\ref{prop:jensen}. For the lower bound, minimize
+$\sum_i\tau_ig_i^2$ over all vectors satisfying the two identities of
+Lemma~\ref{lem:moments}. In the inner product $\langle x,y\rangle_\tau=\sum_i\tau_ix_iy_i$
+these read $\langle g,\iotab\rangle_\tau=m$ and $\langle g,c\rangle_\tau=km\,\E_S[1/A_S]$
+with $c_i=1/\tau_i$. With $\|\iotab\|_\tau^2=A_m$, $\langle c,\iotab\rangle_\tau=m$, and
+$\|c\|_\tau^2=\sum_i1/\tau_i$,
+\[
+  \min\sum_i\tau_ig_i^2=\frac{m}{\bar\tau}
+  +\frac{m^2\big(k\E_S[1/A_S]-1/\bar\tau\big)^2}{\sum_i1/\tau_i-m/\bar\tau}.
+\]
+Substituting into Proposition~\ref{prop:identity} and using
+$\tfrac1{m^2}\cdot\tfrac{m}{\bar\tau}=1/A_m$, the oracle term cancels.
+\end{proof}
+
+\begin{corollary}[The unconditional open bracket]\label{cor:open}
+Expanding both ends of Proposition~\ref{prop:bracket} to leading order, using the exact
+moments $\E_S[A_S]=k\bar\tau$, $\Var_S(A_S)=k\frac{m-k}{m(m-1)}V$ with
+$V=\sum_i(\tau_i-\bar\tau)^2=m\bar\tau^2V_\delta$, and
+$\E_S[1/A_S]=\frac1{k\bar\tau}+\frac{\Var_S(A_S)}{(k\bar\tau)^3}+\cdots$,
+\[
+  \underbrace{\frac{V_\delta^2}{m(H-1)\,\bar\tau}\,z_k^2}_{\text{floor}}
+  \;\lesssim\;\Rk\;\lesssim\;
+  \underbrace{\frac{1}{\bar\tau}\,z_k}_{\text{ceiling}} .
+\]
+\end{corollary}
+\begin{remark}[The two ends answer to different things]\label{rem:asym}
+Since $0<z_k<1$ we have $z_k^2<z_k$, so the bracket has a \emph{gap between exponents}:
+unconditionally one can only conclude $\Rk\sim z_k^\alpha$ with $\alpha\in[1,2]$, hence
+$k^\ast\in[\Theta(T^{1/3}),\Theta(T^{1/2})]$. Crucially the gap is asymmetric:
+\begin{itemize}
+\item the \textbf{floor} $z_k^2$ is produced by the \emph{dispersion} $V_\delta$
+  (numerator of the Gram bound) and is present whenever the forecasters are
+  heterogeneous --- coherence plays no role in the exponent;
+\item the \textbf{ceiling} $z_k$ is the Jensen/average-subset bound, which is
+  intrinsically first order because it cannot see that bagging cancels the leading term.
+\end{itemize}
+The effective exponent is therefore read off the \emph{ceiling}: the floor is always
+$z_k^2$, and where $\alpha$ actually lands is decided by how far the ceiling can be pulled
+down. This is the entire role of Tier~II: \emph{Assumption~A moves the ceiling,
+Assumption~B sets the floor.}
+\end{remark}
+
+\begin{proposition}[Strict monotonicity]\label{prop:mono}
+If each $g_i(k)$ is monotone in $k$, then $\Rk$ is strictly decreasing in $k$ for any
+non-degenerate precision profile:
+\[
+  \frac{d\Rk}{dk}=\frac{2}{m^2}\sum_i\tau_i\Big(g_i-\frac1{\bar\tau}\Big)\dot g_i<0 .
+\]
+\end{proposition}
+\begin{proof}
+From Proposition~\ref{prop:identity} and $\sum_i\tau_i\dot g_i=0$ (differentiating the
+conservation law), $\frac{d\Rk}{dk}=\frac2{m^2}\sum_i\tau_i(g_i-1/\bar\tau)\dot g_i$.
+Each $g_i$ runs from $g_i(1)=1/\tau_i$ to $g_i(m)=1/\bar\tau$; under monotonicity, a
+high-precision coordinate ($\tau_i>\bar\tau$) has $g_i\le1/\bar\tau$ throughout with
+$\dot g_i\ge0$, and a low-precision one the reverse, so every product is $\le0$, strictly
+for at least one $i$ unless all $\tau_i$ are equal.
+\end{proof}
+\begin{remark}
+The monotonicity of each $g_i$ is the one lemma in Tier~I that requires its own proof;
+the unconditional bound $\Rk\le R_1$ (Jensen on the harmonic mean) survives without it.
+Proposition~\ref{prop:mono} has a sharp consequence: \emph{in population there is no
+bias--variance trade-off in $k$} --- larger $k$ is always weakly better. An interior
+optimum exists \emph{only} once estimation error enters through the finite-$T$ inflation
+factor below.
+\end{remark}
+
+\begin{proposition}[Exact optimal-$k$ condition]\label{prop:foc}
+Let $A=\sigma_\varepsilon^2+\Qopt$ and let the idealized infinite-bagged loss be
+$L_k=(A+\Rk)\frac{T-1}{T-k}$. The discrete optimum $k^\ast$ satisfies
+\[
+  (T-k^\ast)\,(R_{k^\ast}-R_{k^\ast+1})=A+R_{k^\ast}.
+\]
+\end{proposition}
+
+\begin{proposition}[RSM dominates CSR]\label{prop:csr}
+For every $k$, $Q_k^{\mathrm{RSM}}\le Q_k^{\mathrm{CSR}}$: within each subset the
+constrained-OLS weight minimizes $w'\Sig w$ over the equal-weight choice $1/k$; take
+expectations over $S$.
+\end{proposition}
+
+%==========================================================================
+\section{Tier II: the assumptions needed for a rate}
+The unconditional bracket of Corollary~\ref{cor:open} is already two-sided, but its two
+exponents differ: floor $z_k^2$, ceiling $z_k$. By Remark~\ref{rem:asym} the floor is
+fixed by dispersion alone, so the only thing standing between us and a genuine rate
+$\Rk\asymp z_k^2$ is closing the \emph{ceiling} from $z_k$ down to $z_k^2$. This requires
+exactly two assumptions, and they are not interchangeable: Assumption~\ref{ass:A}
+sharpens the ceiling, Assumption~\ref{ass:B} guarantees the floor is non-degenerate.
+
+\begin{assumption}[Bounded coherence]\label{ass:A}
+There exist constants $0<c\le C<\infty$, independent of $m$, such that
+$c\le\tau_i/\bar\tau\le C$ for all $i$.
+\end{assumption}
+\noindent\emph{Role.} The upper part ($C$) is ``no dominant forecaster'':
+$\kappa=\tau_{\max}/\bar\tau\le C$. The lower part ($c$) is ``no negligible
+forecaster'': it forces $A_S\ge ck\bar\tau$, keeping $1/A_S$ and all its reciprocal
+moments bounded. This is what makes the expansion
+$\E_S[1/A_S]=\frac1{k\bar\tau}+\frac{\Var_S(A_S)}{(k\bar\tau)^3}+\cdots$ rigorous, with
+an explicit, bounded remainder, rather than a heuristic.
+
+\begin{assumption}[Non-degenerate dispersion]\label{ass:B}
+There exists $v>0$, independent of $m$, such that $V_\delta\ge v$.
+\end{assumption}
+\noindent\emph{Role.} Genuine heterogeneity. Without it $\Rk\to0$ and there is nothing to
+bound (simple averaging is near-optimal). The upper bound $V_\delta\le(C-1)^2$ and
+$H\le C/c$ are already implied by Assumption~\ref{ass:A}.
+
+\begin{theorem}[Two-sided $z_k^2$ bound]\label{thm:rate}
+Under Assumptions~\ref{ass:A} and \ref{ass:B} there are constants $0<c_1\le c_2<\infty$,
+depending only on $c,C,v$, such that for all $2\le k<m$,
+\[
+  \frac{c_1}{m\bar\tau}\,z_k^2\;\le\;\Rk\;\le\;\frac{c_2}{m\bar\tau}\,z_k^2 .
+\]
+Consequently the effective exponent is $\alpha=2$ exactly, and the optimal subset size
+satisfies $k^\ast\asymp T^{1/3}$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+\emph{Upper.} Under Assumption~\ref{ass:A}, the reciprocal expansion of
+$\E_R[1/L_{i,R}]$ has a remainder controlled by $A_S\ge ck\bar\tau$; combined with the
+SRSWOR variance bound
+$\Var_R(L_{i,R})\le\frac{(k-1)(m-k)}{m(m-1)(m-2)}V_\delta$ this gives
+$|\bar v_{k,i}/\ell_i-1|\le K_{c}z_k(|h_i|+V_\delta)$ with $h_i=\tau_i/\bar\tau-1$.
+Plugging into Proposition~\ref{prop:identity} and using $\ell_i\le C/m$,
+$\sum_i\ell_ih_i^2\le CV_\delta$, yields
+$\Rk\le\frac{K_{c,C}}{m\bar\tau}(V_\delta+V_\delta^2)z_k^2$. \emph{Lower.} In
+Proposition~\ref{prop:bracket}, $k\E_S[1/A_S]-1/\bar\tau\asymp V_\delta z_k$ and the
+denominator $\sum_i\sigma_i^2-m/\bar\tau=m\bar\tau^{-1}(H-1)$ is bounded by
+Assumption~\ref{ass:A}; with $V_\delta\ge v$ this gives
+$\Rk\ge\frac{v^2}{m(H-1)\bar\tau}z_k^2$. The rate for $k^\ast$ follows by inserting
+$\Rk\asymp C_R z_k^2$ (with $z_k\approx1/k$ for $k\ll m$) into
+Proposition~\ref{prop:foc}: $Ak^3+3C_Rk-2C_RT=0$, so $k^\ast\approx(2C_RT/A)^{1/3}$.
+\end{proof}
+
+\begin{remark}[How each assumption acts, and two caveats]\label{rem:caveats}
+Relative to Corollary~\ref{cor:open}, the theorem changes \emph{only the ceiling}:
+Assumption~\ref{ass:A} replaces the Jensen $z_k$ bound by a $z_k^2$ bound, collapsing the
+bracket onto the floor that Assumption~\ref{ass:B} already pins at $z_k^2$. Two caveats
+keep this honest.
+\begin{enumerate}
+\item \emph{The floor stays valid but loosens under high coherence.} If a dominant
+forecaster does appear, the true $\Rk$ rises toward the $z_k$ ceiling ($\alpha\to1$), so
+the $z_k^2$ floor remains a correct lower bound but is no longer tight. A floor never
+certifies $\alpha=2$; only the ceiling coming down does.
+\item \emph{The floor's constant is uniform in $m$ only under Assumption~\ref{ass:A}.}
+The lower constant is $\propto V_\delta^2/\big(m(H-1)\bar\tau\big)$, and $H$ is bounded
+uniformly in $m$ only under \ref{ass:A} (a near-negligible forecaster makes $H$ blow up
+and the floor sag). For a fixed profile this is irrelevant --- $H$ is a finite number and
+the floor is a fixed constant times $z_k^2$ --- so the $z_k^2$ \emph{exponent} on the
+floor is owed to \ref{ass:B} alone; only its uniform constant borrows from \ref{ass:A}.
+\end{enumerate}
+\end{remark}
+
+%==========================================================================
+\section{The explicit leading constant}\label{sec:constant}
+Theorem~\ref{thm:rate} shows $\Rk\asymp z_k^2$ with constants $c_1,c_2$ left abstract.
+Under the same assumptions one can compute the leading constant in closed form from the
+first three moments of the precision profile. The result instantiates $c_1=c_2=D_\tau$
+(up to the $(m/(m-1))^2$ factor) \emph{inside} the bracket; it is a leading-order
+approximation, not a new bound.
+
+Recall $h_i=\tau_i/\bar\tau-1$ (so $\sum_ih_i=0$ and $V_\delta=\frac1m\sum_ih_i^2$), and
+define the third moment and the \emph{weighted heterogeneity constant}
+\[
+  M_3=\frac1m\sum_{i=1}^m h_i^3,\qquad
+  C_\tau=\frac1m\sum_{i=1}^m(1+h_i)(h_i-V_\delta)^2=V_\delta+M_3-V_\delta^2 .
+\]
+Since $1+h_i=\tau_i/\bar\tau=m\ell_i>0$, we have $C_\tau=\sum_i\ell_i(h_i-V_\delta)^2\ge0$:
+it is exactly the variance of $h$ under the leverage (precision-weighted) distribution
+$\ell_i=\tau_i/A_m$, linking it to the coherence picture. If heterogeneity is mild,
+$M_3,V_\delta^2$ are higher order and $C_\tau\approx V_\delta$.
+
+\begin{lemma}[Conservation-consistent first-order expansion]\label{lem:expand}
+Under Assumption~\ref{ass:A}, to first order in $z_k$,
+\[
+  g_i(k)=\frac1{\bar\tau}\Big[1+\frac{m}{m-1}\,z_k\,(V_\delta-h_i)\Big]+o(z_k).
+\]
+\end{lemma}
+\begin{proof}[Derivation]
+Conditioning on $i\in S$, $\E_S[A_S\mid i\in S]=k\bar\tau\big[1+\frac{m}{m-1}z_k\,h_i\big]$,
+so the delta method gives $g_i\approx\frac1{\bar\tau}[1-\frac{m}{m-1}z_k\,h_i]$. This
+violates the exact identity $\sum_i\tau_ig_i=m$ (Lemma~\ref{lem:moments}) by
+$-\frac{m}{m-1}z_k\,mV_\delta$. The discrepancy is removed by recentering $h_i$ at its
+\emph{precision-weighted} mean, which is exactly $V_\delta$:
+$\frac{\sum_i\tau_ih_i}{\sum_i\tau_i}=\frac1m\sum_i(h_i+h_i^2)=V_\delta$. Replacing $h_i$
+by $h_i-V_\delta$ restores $\sum_i\tau_ig_i=m$ identically and yields the stated form; the
+second-order reciprocal term contributes at $o(z_k)$ under Assumption~\ref{ass:A}.
+\end{proof}
+
+\begin{proposition}[Closed-form leading constant]\label{prop:Dtau}
+Under Assumptions~\ref{ass:A}--\ref{ass:B}, with $B=1/\bar\tau$,
+\[
+  \Rk\approx D_\tau\,z_k^2,\qquad
+  D_\tau=\frac{B}{m}\Big(\frac{m}{m-1}\Big)^2 C_\tau,
+\]
+equivalently $Q_k^{\mathrm{bag},\infty}\approx\Qopt+D_\tau z_k^2$ with $\Qopt=q+B/m$. In
+the mild-heterogeneity limit $C_\tau\to V_\delta$, so $D_\tau\to V_\delta/(m\bar\tau)$,
+recovering the H\'ajek/$\alpha=2$ leading term.
+\end{proposition}
+\begin{proof}
+Substitute Lemma~\ref{lem:expand} into the exact identity
+$\Rk=\frac1{m^2}\sum_i\tau_i(g_i-\frac1{\bar\tau})^2$. With
+$g_i-\frac1{\bar\tau}=-\frac1{\bar\tau}\frac{m}{m-1}z_k(h_i-V_\delta)$,
+\[
+  \Rk\approx\frac1{m^2}\Big(\frac{m}{m-1}\Big)^2\frac{z_k^2}{\bar\tau^2}
+  \sum_i\tau_i(h_i-V_\delta)^2
+  =\frac1{m\bar\tau}\Big(\frac{m}{m-1}\Big)^2 C_\tau\,z_k^2,
+\]
+using $\sum_i\tau_i(h_i-V_\delta)^2=\bar\tau\sum_i(1+h_i)(h_i-V_\delta)^2=\bar\tau mC_\tau$.
+\end{proof}
+
+\begin{corollary}[Explicit cube-root rule]\label{cor:kstar-explicit}
+With $A=\sigma_\varepsilon^2+\Qopt$ and $L_k=(A+D_\tau z_k^2)\frac{T-1}{T-k}$, the exact
+first-order condition is $A+D_\tau z_k^2=\dfrac{2D_\tau z_k(T-k)}{k^2}$, which for large
+$T$ (and $z_k\approx1/k$) gives
+\[
+  k^\ast\approx\Big(\frac{2D_\tau T}{A}\Big)^{1/3} .
+\]
+This is a directly computable plug-in: estimate $\bar\tau$, $V_\delta$, $M_3$, form
+$D_\tau$, and minimize $L_k$ over integer $k$.
+\end{corollary}
+
+\begin{remark}[Status: approximation, not bound]\label{rem:status}
+Proposition~\ref{prop:Dtau} is the \emph{leading-order} term, obtained from a first-order
+expansion of $1/A_S$; it is not a two-sided bound and does not supersede
+Proposition~\ref{prop:bracket}. Its role is to supply the explicit value of the constant
+inside the closed bracket of Theorem~\ref{thm:rate}. Three qualifications:
+(i) the expansion of $1/A_S$ requires $A_S$ bounded away from zero, i.e.\
+Assumption~\ref{ass:A}; (ii) it is a single power of $z_k$, accurate for mild-to-moderate
+heterogeneity --- for strongly heterogeneous (factor-type) profiles the curvature at
+small $k$ is governed by $M_3$ and higher moments, so a single leading term understates
+the small-$k$ decay; (iii) when the precisions $\tau_i$ are estimated, $D_\tau$ inherits
+the sampling noise in $V_\delta$ and especially $M_3$. Within these limits it is the
+correct and useful closed form for the $z_k^2$ constant, consistent in the mild limit
+with the H\'ajek term and with the $T^{1/3}$ scaling observed in the Monte Carlo.
+\end{remark}
+
+%==========================================================================
+\section{Convergence along the path}\label{sec:path}
+Proposition~\ref{prop:endpoints} says $\bar v_k$ is a \emph{path} in weight space from
+$w^{ave}=\frac1m\iotab$ (at $k=1$) to $w^\ast$ (at $k=m$), so
+$\Rk=\|\bar v_k-w^\ast\|_\tau^2$ is the squared \emph{distance still to travel}, where
+$\langle a,b\rangle_\tau=\sum_i a_ib_i/\tau_i$. Bounding $\Rk$ is then a question about how
+the weights converge, and heterogeneity governs the shape of that convergence. Write the
+per-coordinate fractional progress
+\[
+  \pi_i(k)=\frac{\bar v_{k,i}-1/m}{\ell_i-1/m}\in[0,1],\qquad \pi_i(1)=0,\ \ \pi_i(m)=1 .
+\]
+
+\begin{proposition}[Homogeneous convergence $\Rightarrow$ straight line]\label{prop:homog}
+If the coordinates progress uniformly, $\pi_i(k)\equiv\pi(k)$, then the path is the line
+$w^{ave}\!\to\! w^\ast$, the deviation $\delta_k=\bar v_k-w^\ast$ stays parallel (in the
+$\tau$-metric) to $\eta=w^{ave}-w^\ast$, and
+\[
+  \Rk=(1-\pi(k))^2\,R_1,\qquad R_1=\frac{H-1}{m\bar\tau}.
+\]
+In this case the Gram/projection lower bound of Proposition~\ref{prop:bracket} holds with
+\emph{equality}.
+\end{proposition}
+\noindent This recovers the tightness condition of Proposition~\ref{prop:bracket}
+(equality for $\le2$ distinct precision types) in path language: uniform convergence
+$\Leftrightarrow$ $\delta_k\parallel_\tau\eta$ $\Leftrightarrow$ the projection bound is exact.
+
+\begin{remark}[Heterogeneity bends the path]\label{rem:bend}
+With genuine heterogeneity the coordinates do not move in lockstep. From
+Lemma~\ref{lem:expand}, to leading order
+\[
+  \bar v_{k,i}-w^\ast_i\approx z_k\,u_i,\qquad u_i\propto \tau_i(h_i-V_\delta)
+  =\bar\tau(1+h_i)(h_i-V_\delta),
+\]
+so convergence is self-similar in $z_k$ but along the direction $u$, whereas the
+projection of Proposition~\ref{prop:bracket} uses the single direction
+$\eta_i=\tfrac1m-\ell_i=-h_i/m$. The two coincide only in the homogeneous/$\le2$-type
+limit; in general the \emph{angle between $u$ and $\eta$ is the heterogeneity}. This is
+exactly why the single-direction bound is loose:
+\begin{itemize}
+\item projecting onto $\eta$ keeps only $u$'s $\eta$-component, giving the floor constant
+  $V_\delta^2/(H-1)$ (Cor.~\ref{cor:open});
+\item using the true direction $u$ keeps all of it, giving back $\Rk\approx D_\tau z_k^2$
+  with $C_\tau=\frac1m\sum_i(1+h_i)(h_i-V_\delta)^2$ (Prop.~\ref{prop:Dtau}).
+\end{itemize}
+The two agree in the mild limit, where $H-1\to V_\delta$ and $C_\tau\to V_\delta$.
+\end{remark}
+
+\begin{remark}[The exponent is the slowest coordinate's convergence rate]\label{rem:slowest}
+Since $\Rk=\sum_i\delta_{k,i}^2/\tau_i$, the exponent $\alpha$ is set by which weight
+converges slowest.
+\begin{itemize}
+\item Bounded coherence (heterogeneous, no dominant forecaster): every coordinate
+  converges at the common rate $\delta_{k,i}\sim z_k$, so $\Rk\sim z_k^2$ and $\alpha=2$.
+\item Dominant forecaster (high coherence): a single coordinate $i^\ast$ with huge
+  $\tau_{i^\ast}$ is heavily under-weighted at equal weights ($1/m\ll\ell_{i^\ast}$) and
+  converges slowly, retaining a persistent $\eta$-aligned component; its term dominates
+  and $\Rk\sim z_k$, so $\alpha\to1$.
+\end{itemize}
+Thus the bagging exponent is governed by the convergence rate of the slowest-converging
+weight --- the convergence-theoretic face of the floor/ceiling bracket.
+\end{remark}
+
+\noindent\textbf{Usable form.} The path view gives the anchored distance-remaining model
+\[
+  \Rk=R_1\,\phi(z_k)^2,\qquad \phi(z_1)=1,\ \ \phi(0)=0,\ \
+  \phi(z_k)\approx\sqrt{D_\tau/R_1}\;z_k\ \ (\text{leading order}),
+\]
+with $\phi$ the normalized distance still to travel and heterogeneity setting its shape
+through $u$: homogeneous convergence gives $\phi(z_k)=z_k/z_1$ ($\alpha=2$), a dominant
+forecaster flattens $\phi$ toward $\sqrt{z_k}$ ($\alpha\to1$), and minimization returns
+$k^\ast\propto T^{1/(\alpha+1)}$ as in Corollary~\ref{cor:kstar-explicit}. To tighten the
+\emph{lower bound} rigorously, project onto the two-dimensional span $\{\eta,u\}$
+(equivalently append the moment $\sum_i\tau_i^2g_i$): exact for $\le3$ precision types, the
+geometric form of the moment hierarchy of Proposition~\ref{prop:bracket}.
+
+%==========================================================================
+\section{U-statistic structure and finite-ensemble convergence}\label{sec:ustat}
+Two idealizations sit outside the bracket: $k$ is treated as a growing tuning size, and
+bagging is taken to the infinite-ensemble limit $G\to\infty$. The generalized-U-statistic
+theory of Peng, Coleman \& Mentch (2022) closes the first, and the algorithmic-convergence
+analysis of Lopes, Wu \& Lee (2019) the second.
+
+\subsection*{The bagged weight is a generalized U-statistic}
+The infinite-bagged weight $\bar v_{k,i}=\E_S[h_i(S)]$ is a complete generalized
+U-statistic of degree $k$ on the $m$ forecasters, with kernel $h_i(S)=\tau_i/A_S$; the
+realized RSM weight $\hat{\bar v}_{k,i}=\frac1G\sum_{g=1}^G v_{S_g,i}$ over $G$ random
+subsets is its incomplete version. Write $\zeta_k=\Var_S(h_i)$ (full kernel variance) and
+$\zeta_1=\Var\big(\E[h_i\mid\text{one forecaster fixed}]\big)$ (the H\'ajek/first-order
+variance). The variance ratio $\zeta_k/(k\zeta_1)$ measures asymptotic linearity: it tends
+to $1$ exactly when the H\'ajek projection dominates.
+
+\begin{remark}[H\'ajek projection is the exact leading term]\label{rem:hajek}
+Because $h_i=\tau_i/A_S$ is a smooth, OLS-type functional of the subset precisions, its
+variance ratio is bounded (Peng--Coleman--Mentch, Prop.~1--4 and App.~B.3 for OLS), so
+$\bar v_{k,i}$ is asymptotically linear and the H\'ajek projection \emph{is} the leading
+term. This is the rigorous justification for treating the $z_k^2$ expansion of
+Proposition~\ref{prop:Dtau} as the exact leading order (not a heuristic): the
+small-heterogeneity result and the H\'ajek first-order projection coincide, fixing
+$\alpha=2$ under bounded coherence. The Berry--Esseen bound of Peng--Coleman--Mentch
+(Thm.~3) quantifies the rate of normality as $\propto n^{-1/2}+\{\tfrac kn(\tfrac{\zeta_k}
+{k\zeta_1}-1)\}^{1/2}$, making the roles of $k$ and the sample size explicit.
+\end{remark}
+
+\subsection*{Finite-ensemble ($G<\infty$) inflation}
+Under common loading the gap between the realized finite-$G$ risk and the infinite-bagged
+risk is exact and of order $1/G$.
+
+\begin{proposition}[Finite-$G$ risk inflation]\label{prop:finiteG}
+Let $\hat{\bar v}_k=\frac1G\sum_{g=1}^G v_{S_g}$ with $S_1,\dots,S_G$ i.i.d.\ uniform
+size-$k$ subsets, and $\hat Q_G=\hat{\bar v}_k'\Sig\hat{\bar v}_k$. Since each $v_{S_g}$
+sums to one, so does $\hat{\bar v}_k$, and
+\[
+  \E_G[\hat Q_G]=Q_k^{\mathrm{bag},\infty}+\frac{\Gamma_k}{G},\qquad
+  \Gamma_k=\sum_{i=1}^m\frac{\Var_S(v_{S,i})}{\tau_i}\ \ge0 .
+\]
+\end{proposition}
+\begin{proof}
+The draws are i.i.d., so $\E_G[\hat{\bar v}_{k,i}]=\bar v_{k,i}$ and
+$\Var_G(\hat{\bar v}_{k,i})=\Var_S(v_{S,i})/G$. As in
+Proposition~\ref{prop:identity} the common factor and cross terms drop for a sum-to-one
+vector, giving $\hat Q_G=q+\sum_i\hat{\bar v}_{k,i}^2/\tau_i$; take expectations and use
+$\E_G[\hat{\bar v}_{k,i}^2]=\bar v_{k,i}^2+\Var_S(v_{S,i})/G$.
+\end{proof}
+
+\begin{remark}[Reading $\Gamma_k$ and choosing $G$]\label{rem:G}
+$\Gamma_k$ is the ensemble (Monte-Carlo) variance --- the common-loading analogue of the
+Peng--Coleman--Mentch incomplete-U-statistic term $\zeta_k/N$ with $N=G$, and it matches
+the $O(1/t)$ algorithmic-convergence rate of Scornet (2016) and Lopes--Wu--Lee. It
+\emph{decreases in $k$}: at $k=1$, $v_{S,i}$ is Bernoulli$(1/m)$ with variance
+$\tfrac1m(1-\tfrac1m)$, while at $k=m$ it is the deterministic $\ell_i$ with zero variance.
+Hence \textbf{small $k$ needs more bags}. Practically, require the finite-$G$ inflation
+$\Gamma_k/G$ to be small relative to the bagging gain $R_1-R_k$; or, without computing
+$\Gamma_k$, use the Lopes--Wu--Lee \emph{ensemble bootstrap} --- resample the $G$
+subset-weights with replacement to estimate the $(1-\alpha)$-quantile $q_{1-\alpha}(G)$ of
+$\hat Q_G-Q_k^{\mathrm{bag},\infty}$ from a single run --- and raise $G$ until
+$q_{1-\alpha}(G)$ is below tolerance. Lopes--Wu--Lee (\S2.2) also note that some
+coordinates' weights converge more slowly, distorting them: the same slowest-coordinate
+effect as Remark~\ref{rem:slowest}.
+\end{remark}
+
+\begin{remark}[Two error sources in the endogenous case]\label{rem:endoG}
+When the weights are estimated from $T$ observations there are two independent error
+sources, and the incomplete-U-statistic variance takes the Peng--Coleman--Mentch form
+\[
+  \approx \underbrace{\frac{C_1}{T}}_{\text{estimation (data)}}
+  +\underbrace{\frac{\Gamma_k}{G}}_{\text{ensemble}} .
+\]
+The variance ratio $\zeta_k/(k\zeta_1)$ governs which dominates; the two are comparable
+when $G\sim T\,\Gamma_k/C_1$, so $G\sim T$ suffices and $G\gg T$ is unnecessary. The data
+term is the estimation-error/Kan--Zhou contribution that drives the gap between the
+exogenous and endogenous optimal $k$.
+\end{remark}
+
+%==========================================================================
+\section{Minimality: each failure mode collapses one side}
+The two assumptions are tight; because each governs a different end of the bracket,
+dropping either one degrades the bound in a specific, interpretable way. The following
+table reads off the floor and ceiling under each combination.
+
+\begin{center}
+\begin{tabular}{lcccc}
+\hline
+Assumptions & Floor & Ceiling & $\alpha$ & $k^\ast$ \\
+\hline
+\ref{ass:A} and \ref{ass:B} & $z_k^2$ & $z_k^2$ & $2$ & $\Theta(T^{1/3})$ \\
+\ref{ass:B} only (no \ref{ass:A}) & $z_k^2$ & $z_k$ & $[1,2]$ & $[\Theta(T^{1/3}),\Theta(T^{1/2})]$ \\
+\ref{ass:A} only (no \ref{ass:B}) & $0$ & $z_k^2$ & $[0,2]$ & up to $\Theta(T^{1/3})$ \\
+neither & $0$ & $z_k$ & $[0,2]$ & --- \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The middle row is the case discussed throughout: drop bounded coherence and the
+\emph{floor is unchanged} at $z_k^2$ (it is owed to dispersion, \ref{ass:B}), while the
+\emph{ceiling springs back} from $z_k^2$ to the Jensen value $z_k$ --- precisely the open
+bracket of Corollary~\ref{cor:open}. The economic content of each failure mode:
+
+\begin{center}
+\begin{tabular}{lll l}
+\hline
+Assumption dropped & Regime & What survives & Rate \\
+\hline
+\ref{ass:A}-lower ($\tau_{\min}/\bar\tau\to0$) & dominant/negligible forecaster
+  & only Jensen, $\Rk\lesssim z_k$ & $k^\ast\asymp T^{1/2}$ \\
+\ref{ass:B}-lower ($V_\delta\to0$) & homogeneous forecasters
+  & $\Rk\to0$ & no tuning; averaging optimal \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent Thus the cube root is precisely the \emph{bounded-coherence, heterogeneous}
+regime; the square root and the degenerate case are its two boundaries. The effective
+exponent $\alpha\in[1,2]$ is therefore not a fitted quantity but a map of which
+assumption is binding --- and, by Remark~\ref{rem:asym}, it is the ceiling that moves.
+
+%==========================================================================
+\section{Discussion: plausibility, and a fixed-$m$ alternative}
+\paragraph{Empirical content.} The two assumptions are checkable, and they align with the
+applications. Assumption~\ref{ass:B} (heterogeneity) is the ``there are gains'' condition:
+it holds in the heterogeneous vintage panels, where RSM delivers real gains, and fails for
+near-homogeneous professional-forecaster consensus data, where gains are negligible ---
+exactly the dividing line the empirical work traces. Assumption~\ref{ass:A} (no dominant
+forecaster) is the same economic point made in the forecast-combination literature: a
+single super-precise or strongly negatively correlated forecaster is the case where
+averaging fails badly and is empirically unlikely; assuming \ref{ass:A} assumes that
+pathology away.
+
+\paragraph{Uniformity is only for the large-$m$ story.} Assumptions~\ref{ass:A} and
+\ref{ass:B} are stated with constants independent of $m$ because that is what a
+\emph{rate in $m$} (a stable exponent as the panel grows) requires. If only a fixed panel
+is of interest, no uniformity is needed: the exact bracket
+(Proposition~\ref{prop:bracket}) already supplies finite, computable two-sided bounds, and
+the only condition required for a non-trivial statement is the non-degeneracy
+$V_\delta>0$. In short:
+\[
+  \text{fixed }m:\ \ V_\delta>0 \text{ plus the exact bracket};\qquad
+  \text{large }m / \text{rate}:\ \ \text{uniform Assumptions~\ref{ass:A} and \ref{ass:B}.}
+\]
+
+\paragraph{Scope.} All of the above governs the population object $\Rk$ (infinite
+bagging). The map from $\Rk$ to a realized, finite-$G$, finite-$T$ mean-squared forecast
+error still involves the bagging idealization ($G\to\infty$) and the estimation-error
+inflation factor $\frac{T-1}{T-k}$, which are modeling choices outside the bracket and
+should be stated as such.
+
+%==========================================================================
+\section{Summary}
+\begin{enumerate}
+\item \textbf{Exact, no assumptions:} oracle weights are leverage scores
+(Prop.~\ref{prop:oracle}); $\Rk$ is an exact quadratic form in the weight deviation
+(Prop.~\ref{prop:identity}); RSM bridges averaging ($k=1$) and the oracle ($k=m$)
+(Prop.~\ref{prop:endpoints}); a computable two-sided bracket
+(Prop.~\ref{prop:bracket}); strict monotonicity, so no population bias--variance
+trade-off (Prop.~\ref{prop:mono}); an exact optimal-$k$ condition
+(Prop.~\ref{prop:foc}); and RSM $\succeq$ CSR (Prop.~\ref{prop:csr}).
+\item \textbf{Unconditional open bracket:} $z_k^2\lesssim\Rk\lesssim z_k$
+(Cor.~\ref{cor:open}), with the floor $z_k^2$ set by dispersion and the ceiling $z_k$ the
+Jensen bound; hence $\alpha\in[1,2]$, $k^\ast\in[\Theta(T^{1/3}),\Theta(T^{1/2})]$.
+\item \textbf{Rate, two assumptions:} \emph{Assumption~\ref{ass:A} moves the ceiling}
+($z_k\to z_k^2$); \emph{Assumption~\ref{ass:B} sets the floor} ($z_k^2$). Together the
+bracket closes: $\Rk\asymp z_k^2$ and $k^\ast\asymp T^{1/3}$ (Thm.~\ref{thm:rate}).
+\item \textbf{Explicit constant:} under both assumptions the leading constant is closed
+form, $\Rk\approx D_\tau z_k^2$ with $D_\tau=\frac{B}{m}(\frac{m}{m-1})^2C_\tau$ and
+$C_\tau=V_\delta+M_3-V_\delta^2$ the leverage-weighted dispersion of $h$
+(Prop.~\ref{prop:Dtau}); it gives the plug-in $k^\ast\approx(2D_\tau T/A)^{1/3}$
+(Cor.~\ref{cor:kstar-explicit}) and reduces to the H\'ajek term $V_\delta/(m\bar\tau)$ in
+the mild limit. It is a leading-order approximation inside the bracket, not a new bound
+(Rem.~\ref{rem:status}).
+\item \textbf{Convergence view:} $\Rk=\|\bar v_k-w^\ast\|_\tau^2$ is the squared
+distance-to-go on the averaging$\to$oracle path (Prop.~\ref{prop:endpoints}). Uniform
+convergence gives $\Rk=(1-\pi(k))^2R_1$ and makes the projection bound exact
+(Prop.~\ref{prop:homog}); heterogeneity bends the convergence direction from $\eta$ toward
+$u\propto\tau(h-V_\delta)$ (Rem.~\ref{rem:bend}), and $\alpha$ is the slowest coordinate's
+convergence rate (Rem.~\ref{rem:slowest}).
+\item \textbf{U-statistic / finite ensemble:} $\bar v_{k,i}$ is a generalized U-statistic
+with kernel $\tau_i/A_S$; its bounded variance ratio makes the H\'ajek projection the exact
+leading term, rigorizing $\alpha=2$ (Rem.~\ref{rem:hajek}). The realized finite-$G$ risk
+satisfies $\E_G[\hat Q_G]=Q_k^{\mathrm{bag},\infty}+\Gamma_k/G$
+(Prop.~\ref{prop:finiteG}), with $\Gamma_k$ decreasing in $k$ (small $k$ needs more bags);
+in the endogenous case the variance splits as $C_1/T+\Gamma_k/G$, so $G\sim T$ suffices
+(Rems.~\ref{rem:G}--\ref{rem:endoG}).
+\item \textbf{Minimality:} dropping \ref{ass:A} reopens the ceiling to $z_k$
+(square-root regime, $\alpha\to1$); dropping \ref{ass:B} drops the floor to $0$
+(degenerate, averaging-optimal). The exponent $\alpha\in[1,2]$ indexes which assumption
+binds, and it is the ceiling that moves.
+\end{enumerate}
+
+\end{document}
